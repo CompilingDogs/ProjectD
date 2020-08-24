@@ -1,3 +1,0 @@
-Ö2020-08-24 21:46:00,851 INFO s.LexicalAnalyzer [Test worker]: Initializing Lexical Analyzer for Parsing /home/miserable/Documents/Study/Study/Fall 2020/Compiler Construction/ProjectD/src/test/resources/case_8.pd. 
-2020-08-24 21:46:00,860 INFO s.LexicalAnalyzer [Test worker]: Lexical Analyzer initialized correctly. Starting parsing phase. 
-Œ2020-08-24 21:46:00,898 INFO s.LexicalAnalyzer [Test worker]: Parsing finished successfully. Time taken to parse sourcecode: 36.979414 ms. 
