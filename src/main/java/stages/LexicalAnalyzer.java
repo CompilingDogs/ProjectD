@@ -1,6 +1,6 @@
 package stages;
 
-import exception.LexicalAnalysisExceprion;
+import exception.LexicalAnalysisException;
 import lombok.extern.slf4j.Slf4j;
 import tokens.Token;
 
@@ -22,6 +22,40 @@ import static tokens.Separator.*;
 
 @Slf4j
 public class LexicalAnalyzer {
+    public static final String COLON_ASSIGNMENT_OPERATOR_TOKEN = ":";
+    private static final HashSet<String> bracketTokenChars = new HashSet<>(
+            Arrays.asList(
+                    OPENING_PARENTHESIS_SEPARATOR_TOKEN,
+                    CLOSING_PARENTHESIS_SEPARATOR_TOKEN,
+                    OPENING_BRACKET_SEPARATOR_TOKEN,
+                    CLOSING_BRACKET_SEPARATOR_TOKEN,
+                    OPENING_CURLY_BRACKET_SEPARATOR_TOKEN,
+                    CLOSING_CURLY_BRACKET_SEPARATOR_TOKEN
+            )
+    );
+    private static final HashSet<String> operatorTokenChars = new HashSet<>(
+            Arrays.asList(
+                    ARITHMETIC_DIVISION_OPERATOR_TOKEN,
+                    ARITHMETIC_MINUS_OPERATOR_TOKEN,
+                    ARITHMETIC_MULTIPLICATION_OPERATOR_TOKEN,
+                    ARITHMETIC_PLUS_OPERATOR_TOKEN,
+                    COMPARISON_EQUAL_OPERATOR_TOKEN,
+                    COMPARISON_GREATER_OPERATOR_TOKEN,
+                    COMPARISON_LESS_OPERATOR_TOKEN,
+                    COLON_ASSIGNMENT_OPERATOR_TOKEN
+            )
+    );
+    private static final HashSet<String> separatorTokenChars = new HashSet<>(
+            Arrays.asList(
+                    SEMICOLON_SEPARATOR_TOKEN,
+                    COMMA_SEPARATOR_TOKEN,
+                    PERIOD_SEPARATOR_TOKEN,
+                    WHITE_SPACE_SEPARATOR_TOKEN,
+                    TAB_SPACE_SEPARATOR_TOKEN,
+                    NEW_LINE_SEPARATOR_TOKEN
+            )
+    );
+
     private static LexicalAnalyzer instance;
 
     private LexicalAnalyzer() {
@@ -34,41 +68,6 @@ public class LexicalAnalyzer {
         }
         return instance;
     }
-
-    private static final HashSet<String> bracketTokenChars = new HashSet<>(
-            Arrays.asList(
-                    OPENING_PARENTHESIS_SEPARATOR_TOKEN,
-                    CLOSING_PARENTHESIS_SEPARATOR_TOKEN,
-                    OPENING_BRACKET_SEPARATOR_TOKEN,
-                    CLOSING_BRACKET_SEPARATOR_TOKEN,
-                    OPENING_CURLY_BRACKET_SEPARATOR_TOKEN,
-                    CLOSING_CURLY_BRACKET_SEPARATOR_TOKEN
-            )
-    );
-
-    private static final HashSet<String> operatorTokenChars = new HashSet<>(
-            Arrays.asList(
-                    ARITHMETIC_DIVISION_OPERATOR_TOKEN,
-                    ARITHMETIC_MINUS_OPERATOR_TOKEN,
-                    ARITHMETIC_MULTIPLICATION_OPERATOR_TOKEN,
-                    ARITHMETIC_PLUS_OPERATOR_TOKEN,
-                    COMPARISON_EQUAL_OPERATOR_TOKEN,
-                    COMPARISON_GREATER_OPERATOR_TOKEN,
-                    COMPARISON_LESS_OPERATOR_TOKEN,
-                    ":"
-            )
-    );
-
-    private static final HashSet<String> separatorTokenChars = new HashSet<>(
-            Arrays.asList(
-                    SEMICOLON_SEPARATOR_TOKEN,
-                    COMMA_SEPARATOR_TOKEN,
-                    PERIOD_SEPARATOR_TOKEN,
-                    WHITE_SPACE_SEPARATOR_TOKEN,
-                    TAB_SPACE_SEPARATOR_TOKEN,
-                    NEW_LINE_SEPARATOR_TOKEN
-            )
-    );
 
     private static Boolean isBracketTokenChar(Character curChar) {
         return bracketTokenChars.contains(String.valueOf(curChar));
@@ -91,12 +90,13 @@ public class LexicalAnalyzer {
 
     /**
      * Function, that scans given input file and returns list of tokens
+     *
      * @param inputFile file containing source code
      * @return List of tokens
-     * @throws IOException if <b>input file</b> does not exist.
-     * @throws LexicalAnalysisExceprion if <b>input file</b> contains lexically incorrect program.
+     * @throws IOException              if <b>input file</b> does not exist.
+     * @throws LexicalAnalysisException if <b>input file</b> contains lexically incorrect program.
      */
-    public List<Token> tokenize(File inputFile) throws IOException, LexicalAnalysisExceprion {
+    public List<Token> tokenize(File inputFile) throws IOException, LexicalAnalysisException {
         log.info("Initializing Lexical Analyzer for Parsing {}.", inputFile.getAbsolutePath());
         this.initialize(inputFile);
         log.info("Lexical Analyzer initialized correctly. Starting parsing phase.");
@@ -120,7 +120,8 @@ public class LexicalAnalyzer {
                 } else {
                     this.commitBufferedToken();
                     currState = newState;
-                    if (newState == READ_ALPHA || newState == READ_OP || isPersistentSeparator(String.valueOf(currChar))) {
+                    if (newState == READ_ALPHA || newState == READ_OP || isPersistentSeparator(
+                            String.valueOf(currChar))) {
                         buffer.append(currChar);
                     }
                 }
@@ -130,7 +131,10 @@ public class LexicalAnalyzer {
         this.commitBufferedToken();
         long elapsedTime = System.nanoTime() - startTime;
 
-        log.info("Parsing finished successfully. Time taken to parse sourcecode: {} ms.", elapsedTime / 1000000.0);
+        log.info(
+                "Parsing finished successfully. Time taken to parse sourcecode: {} ms.",
+                elapsedTime / 1000000.0
+        );
         return tokens;
     }
 
@@ -147,12 +151,12 @@ public class LexicalAnalyzer {
     }
 
     private void initialize(File inputFile) throws FileNotFoundException {
-            this.tokens = new ArrayList<Token>();
-            this.reader = new FileReader(inputFile);
-            this.buffer = new StringBuilder();
-            this.currState = EMPTY;
-            this.column = 1;
-            this.line = 1;
+        this.tokens = new ArrayList<Token>();
+        this.reader = new FileReader(inputFile);
+        this.buffer = new StringBuilder();
+        this.currState = EMPTY;
+        this.column = 1;
+        this.line = 1;
     }
 
     private void readStringLiteral(Character startingQuote) throws IOException {
@@ -188,7 +192,8 @@ public class LexicalAnalyzer {
     }
 
     private void skipOneLineComment() throws IOException {
-        while ((char) this.reader.read() != '\n') ;
+        while ((char) this.reader.read() != '\n') {
+        }
         this.setNewPosition('\n');
         this.cleanBuffer();
     }

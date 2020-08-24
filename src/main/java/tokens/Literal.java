@@ -1,8 +1,7 @@
 package tokens;
 
-import exception.LexicalAnalysisExceprion;
+import exception.LexicalAnalysisException;
 import lombok.Getter;
-import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.regex.Pattern;
@@ -38,15 +37,20 @@ public class Literal extends Token {
     }
 
     public static Boolean isIntegerLiteral(String token) {
-        return isNumeric(token) && Integer.valueOf(Integer.parseInt(token)).toString().equals(token.trim());
+        return isNumeric(token) && Integer.valueOf(Integer.parseInt(token))
+                                          .toString()
+                                          .equals(token.trim());
     }
 
     public static Boolean isRealLiteral(String token) {
-        return isNumeric(token) && Double.valueOf(Double.parseDouble(token)).toString().equals(token.trim());
+        return isNumeric(token) && Double.valueOf(Double.parseDouble(token))
+                                         .toString()
+                                         .equals(token.trim());
     }
 
     public static Boolean isLiteral(String token) {
-        return isRealLiteral(token) || isIntegerLiteral(token) || isStringLiteral(token) || isEmptyLiteral(token);
+        return isRealLiteral(token) || isIntegerLiteral(token) || isStringLiteral(token) || isEmptyLiteral(
+                token);
     }
 
     /**
@@ -57,7 +61,11 @@ public class Literal extends Token {
      * @param column - Column number of the token's first character occurrence
      * @return Instance of one of Literal's Successors.
      */
-    public static Literal getLiteral(String token, Integer line, Integer column) throws LexicalAnalysisExceprion {
+    public static Literal getLiteral(
+            String token,
+            Integer line,
+            Integer column
+    ) throws LexicalAnalysisException {
         log.debug("Parsing token as literal {}: ({}:{}).", token, line, column);
         if (isEmptyLiteral(token)) {
             return new EmptyLiteral(token, line, column);
@@ -72,7 +80,7 @@ public class Literal extends Token {
                     "Error in lexical analysis at line - %d, column - %d. Unacceptable literal: %s.",
                     line, column, token
             );
-            throw new LexicalAnalysisExceprion(message);
+            throw new LexicalAnalysisException(message);
         }
     }
 
@@ -116,5 +124,4 @@ public class Literal extends Token {
             super(token, line, column);
         }
     }
-
 }

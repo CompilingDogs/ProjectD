@@ -1,6 +1,6 @@
 package tokens;
 
-import exception.LexicalAnalysisExceprion;
+import exception.LexicalAnalysisException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Arrays;
@@ -39,11 +39,30 @@ public class Keyword extends Token {
 
     private static final HashSet<String> keywordTokens = new HashSet<>(
             Arrays.asList(
-                    VAR_KEYWORD_TOKEN, TRUE_KEYWORD_TOKEN, FALSE_KEYWORD_TOKEN, IS_KEYWORD_TOKEN, END_KEYWORD_TOKEN,
-                    IF_KEYWORD_TOKEN, THEN_KEYWORD_TOKEN, ELSE_KEYWORD_TOKEN, FOR_KEYWORD_TOKEN, WHILE_KEYWORD_TOKEN,
-                    IN_KEYWORD_TOKEN, LOOP_KEYWORD_TOKEN, PRINT_KEYWORD_TOKEN, RETURN_KEYWORD_TOKEN, INT_KEYWORD_TOKEN,
-                    REAL_KEYWORD_TOKEN, BOOL_KEYWORD_TOKEN, STRING_KEYWORD_TOKEN, EMPTY_KEYWORD_TOKEN, FUNC_KEYWORD_TOKEN,
-                    ARRAY_KEYWORD_TOKEN, TUPLE_KEYWORD_TOKEN, READ_INT_KEYWORD_TOKEN, READ_REAL_KEYWORD_TOKEN,
+                    VAR_KEYWORD_TOKEN,
+                    TRUE_KEYWORD_TOKEN,
+                    FALSE_KEYWORD_TOKEN,
+                    IS_KEYWORD_TOKEN,
+                    END_KEYWORD_TOKEN,
+                    IF_KEYWORD_TOKEN,
+                    THEN_KEYWORD_TOKEN,
+                    ELSE_KEYWORD_TOKEN,
+                    FOR_KEYWORD_TOKEN,
+                    WHILE_KEYWORD_TOKEN,
+                    IN_KEYWORD_TOKEN,
+                    LOOP_KEYWORD_TOKEN,
+                    PRINT_KEYWORD_TOKEN,
+                    RETURN_KEYWORD_TOKEN,
+                    INT_KEYWORD_TOKEN,
+                    REAL_KEYWORD_TOKEN,
+                    BOOL_KEYWORD_TOKEN,
+                    STRING_KEYWORD_TOKEN,
+                    EMPTY_KEYWORD_TOKEN,
+                    FUNC_KEYWORD_TOKEN,
+                    ARRAY_KEYWORD_TOKEN,
+                    TUPLE_KEYWORD_TOKEN,
+                    READ_INT_KEYWORD_TOKEN,
+                    READ_REAL_KEYWORD_TOKEN,
                     READ_STRING_KEYWORD_TOKEN
             )
     );
@@ -64,7 +83,11 @@ public class Keyword extends Token {
      * @param column - Column number of the token's first character occurrence
      * @return Instance of one of Keyword's Successors.
      */
-    public static Keyword getKeyword(String token, Integer line, Integer column) throws LexicalAnalysisExceprion {
+    public static Keyword getKeyword(
+            String token,
+            Integer line,
+            Integer column
+    ) throws LexicalAnalysisException {
         log.debug("Parsing token as keyword {}: ({}:{}).", token, line, column);
         return switch (token) {
             case VAR_KEYWORD_TOKEN -> new VarKeyword(token, line, column);
@@ -95,9 +118,11 @@ public class Keyword extends Token {
             default -> {
                 var message = format(
                         "Error in lexical analysis at line - %d, column - %d. Unacceptable Keyword: %s.",
-                        line, column, token
+                        line,
+                        column,
+                        token
                 );
-                throw new LexicalAnalysisExceprion(message);
+                throw new LexicalAnalysisException(message);
             }
         };
     }

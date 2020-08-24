@@ -1,6 +1,6 @@
 package tokens;
 
-import exception.LexicalAnalysisExceprion;
+import exception.LexicalAnalysisException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Arrays;
@@ -36,10 +36,16 @@ public class Separator extends Token {
 
     private static final HashSet<String> persistentSeparatorTokens = new HashSet<>(
             Arrays.asList(
-                    OPENING_PARENTHESIS_SEPARATOR_TOKEN, CLOSING_PARENTHESIS_SEPARATOR_TOKEN,
-                    OPENING_BRACKET_SEPARATOR_TOKEN, CLOSING_BRACKET_SEPARATOR_TOKEN,
-                    OPENING_CURLY_BRACKET_SEPARATOR_TOKEN, CLOSING_CURLY_BRACKET_SEPARATOR_TOKEN,
-                    SEMICOLON_SEPARATOR_TOKEN, COMMA_SEPARATOR_TOKEN, PERIOD_SEPARATOR_TOKEN, NEW_LINE_SEPARATOR_TOKEN
+                    OPENING_PARENTHESIS_SEPARATOR_TOKEN,
+                    CLOSING_PARENTHESIS_SEPARATOR_TOKEN,
+                    OPENING_BRACKET_SEPARATOR_TOKEN,
+                    CLOSING_BRACKET_SEPARATOR_TOKEN,
+                    OPENING_CURLY_BRACKET_SEPARATOR_TOKEN,
+                    CLOSING_CURLY_BRACKET_SEPARATOR_TOKEN,
+                    SEMICOLON_SEPARATOR_TOKEN,
+                    COMMA_SEPARATOR_TOKEN,
+                    PERIOD_SEPARATOR_TOKEN,
+                    NEW_LINE_SEPARATOR_TOKEN
             )
     );
 
@@ -63,15 +69,43 @@ public class Separator extends Token {
      * @param column - Column number of the token's first character occurrence
      * @return Instance of one of Separator's Successors.
      */
-    public static Separator getSeparator(String token, Integer line, Integer column) throws LexicalAnalysisExceprion {
+    public static Separator getSeparator(
+            String token,
+            Integer line,
+            Integer column
+    ) throws LexicalAnalysisException {
         log.debug("Parsing token as separator {}: ({}:{}).", token, line, column);
         return switch (token) {
-            case OPENING_PARENTHESIS_SEPARATOR_TOKEN -> new OpeningParenthesisSeparator(token, line, column);
-            case CLOSING_PARENTHESIS_SEPARATOR_TOKEN -> new ClosingParenthesisSeparator(token, line, column);
-            case OPENING_BRACKET_SEPARATOR_TOKEN -> new OpeningBracketSeparator(token, line, column);
-            case CLOSING_BRACKET_SEPARATOR_TOKEN -> new ClosingBracketSeparator(token, line, column);
-            case OPENING_CURLY_BRACKET_SEPARATOR_TOKEN -> new OpeningCurlyBracketSeparator(token, line, column);
-            case CLOSING_CURLY_BRACKET_SEPARATOR_TOKEN -> new ClosingCurlyBracketSeparator(token, line, column);
+            case OPENING_PARENTHESIS_SEPARATOR_TOKEN -> new OpeningParenthesisSeparator(
+                    token,
+                    line,
+                    column
+            );
+            case CLOSING_PARENTHESIS_SEPARATOR_TOKEN -> new ClosingParenthesisSeparator(
+                    token,
+                    line,
+                    column
+            );
+            case OPENING_BRACKET_SEPARATOR_TOKEN -> new OpeningBracketSeparator(
+                    token,
+                    line,
+                    column
+            );
+            case CLOSING_BRACKET_SEPARATOR_TOKEN -> new ClosingBracketSeparator(
+                    token,
+                    line,
+                    column
+            );
+            case OPENING_CURLY_BRACKET_SEPARATOR_TOKEN -> new OpeningCurlyBracketSeparator(
+                    token,
+                    line,
+                    column
+            );
+            case CLOSING_CURLY_BRACKET_SEPARATOR_TOKEN -> new ClosingCurlyBracketSeparator(
+                    token,
+                    line,
+                    column
+            );
             case SEMICOLON_SEPARATOR_TOKEN -> new SemicolonSeparator(token, line, column);
             case COMMA_SEPARATOR_TOKEN -> new CommaSeparator(token, line, column);
             case PERIOD_SEPARATOR_TOKEN -> new PeriodSeparator(token, line, column);
@@ -81,9 +115,11 @@ public class Separator extends Token {
             default -> {
                 var message = format(
                         "Error in lexical analysis at line - %d, column - %d. Unacceptable Separator: %s.",
-                        line, column, token
+                        line,
+                        column,
+                        token
                 );
-                throw new LexicalAnalysisExceprion(message);
+                throw new LexicalAnalysisException(message);
             }
         };
     }

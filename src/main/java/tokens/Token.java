@@ -1,6 +1,11 @@
 package tokens;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import static java.lang.String.format;
 
 @Getter
 @Setter
@@ -23,14 +28,5 @@ public class Token {
         } else {
             return Identifier.getIdentifier(token, line, column);
         }
-    }
-
-    @Override
-    public String toString() {
-        return "tokens.Token{" +
-                "token='" + token.replace("\n", "\\n") + '\'' +
-                ", line=" + line +
-                ", column=" + column +
-                '}';
     }
 }

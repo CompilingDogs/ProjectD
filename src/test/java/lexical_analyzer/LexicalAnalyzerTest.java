@@ -1,38 +1,53 @@
 package lexical_analyzer;
 
+import com.google.gson.*;
 import org.junit.Test;
 import stages.LexicalAnalyzer;
-import tokens.Keyword;
-import tokens.Separator;
 import tokens.Token;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.stream.Collectors;
+import java.lang.reflect.Type;
 
 public class LexicalAnalyzerTest {
 
     private final LexicalAnalyzer lexicalAnalyzer = LexicalAnalyzer.getInstance();
 
+    private final String[] testingSourceCodes = new String[]{
+            "src/test/resources/case_8.pd"
+    };
+
     @Test
-    public void testCaseEight() throws IOException {
-        var sourceCode = new File("src/test/resources/case_8.pd");
+    public void getTestJSON() throws IOException {
+        for (String testingSourceCode : this.testingSourceCodes) {
+            this.createTestingResults(testingSourceCode);
+        }
+    }
+
+    public void createTestingResults(String fullPath) throws IOException {
+        var gson = new GsonBuilder().registerTypeHierarchyAdapter(Token.class, new TDeserializer())
+                                    .create();
+        var sourceCode = new File(fullPath);
+        var fname = sourceCode.getName().split("\\.")[0];
         var generatedTokens = lexicalAnalyzer.tokenize(sourceCode);
-        var correctTokens = Arrays.asList(
-                new Separator.NewLineSeparator("\n", 1, 1),
-                new Separator.NewLineSeparator("\n", 2, 1),
-                new Keyword.VarKeyword("var", 3, 1)
+
+        var fileOut = new FileOutputStream(
+                new File("src/test/resources/analyzer_results/" + fname + ".json")
         );
 
-        var fileOut = new FileOutputStream(new File("src/test/resources/analyzer_results/case_8.txt"));
-        String res = "[\n" +
-                generatedTokens.stream()
-                        .map(Token::toString)
-                        .collect(Collectors.joining(",\n")) +
-                "\n]";
+        String res = gson.toJson(generatedTokens);
         fileOut.write(res.getBytes());
     }
 
+    public static class TDeserializer implements JsonSerializer<Token> {
+        @Override
+        public JsonElement serialize(Token src, Type typeOfSrc, JsonSerializationContext context) {
+            Gson gson = new Gson();
+            JsonElement serialize = gson.toJsonTree(src);
+            JsonObject o = (JsonObject) serialize;
+            o.addProperty("class", src.getClass().getSimpleName());
+            return serialize;
+        }
+    }
 }

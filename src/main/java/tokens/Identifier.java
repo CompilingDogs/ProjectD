@@ -1,7 +1,6 @@
 package tokens;
 
-import exception.LexicalAnalysisExceprion;
-import lombok.ToString;
+import exception.LexicalAnalysisException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.regex.Pattern;
@@ -13,19 +12,25 @@ public class Identifier extends Token {
 
     private static final Pattern regexp = Pattern.compile("^([a-zA-Z_][a-zA-Z\\d_]*)$");
 
-    public static Identifier getIdentifier(String token, Integer line, Integer column) throws LexicalAnalysisExceprion {
+    public static Identifier getIdentifier(
+            String token,
+            Integer line,
+            Integer column
+    ) throws LexicalAnalysisException {
         log.debug("Parsing token as identifier {}: ({}:{}).", token, line, column);
         return new Identifier(token, line, column);
     }
 
-    private Identifier(String token, Integer line, Integer column) throws LexicalAnalysisExceprion {
+    private Identifier(String token, Integer line, Integer column) throws LexicalAnalysisException {
         super(token, line, column);
         if (!isAcceptableIdentifier(token)) {
             var message = format(
                     "Error in lexical analysis at line - %d, column - %d. Unacceptable Identifier: %s.",
-                    line, column, token
+                    line,
+                    column,
+                    token
             );
-            throw new LexicalAnalysisExceprion(message);
+            throw new LexicalAnalysisException(message);
         }
     }
 

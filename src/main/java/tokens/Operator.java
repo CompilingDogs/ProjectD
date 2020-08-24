@@ -1,6 +1,6 @@
 package tokens;
 
-import exception.LexicalAnalysisExceprion;
+import exception.LexicalAnalysisException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Arrays;
@@ -58,7 +58,11 @@ public class Operator extends Token {
      * @param column - Column number of the token's first character occurrence
      * @return Instance of one of Operator's Successors.
      */
-    public static Operator getOperator(String token, Integer line, Integer column) throws LexicalAnalysisExceprion {
+    public static Operator getOperator(
+            String token,
+            Integer line,
+            Integer column
+    ) throws LexicalAnalysisException {
         log.debug("Parsing token as operator {}: ({}:{}).", token, line, column);
         return switch (token) {
             case ASSIGNMENT_OPERATOR_TOKEN -> new AssignmentOperator(token, line, column);
@@ -68,23 +72,57 @@ public class Operator extends Token {
             case LOGIC_XOR_OPERATOR_TOKEN -> new LogicXorOperator(token, line, column);
             case LOGIC_IS_OPERATOR_TOKEN -> new LogicIsOperator(token, line, column);
             case COMPARISON_LESS_OPERATOR_TOKEN -> new ComparisonLessOperator(token, line, column);
-            case COMPARISON_LESS_EQUAL_OPERATOR_TOKEN -> new ComparisonLessEqualOperator(token, line, column);
-            case COMPARISON_GREATER_OPERATOR_TOKEN -> new ComparisonGreaterOperator(token, line, column);
-            case COMPARISON_GREATER_EQUAL_OPERATOR_TOKEN -> new ComparisonGreaterEqualOperator(token, line, column);
-            case COMPARISON_EQUAL_OPERATOR_TOKEN -> new ComparisonEqualOperator(token, line, column);
-            case COMPARISON_NOT_EQUAL_OPERATOR_TOKEN -> new ComparisonNotEqualOperator(token, line, column);
+            case COMPARISON_LESS_EQUAL_OPERATOR_TOKEN -> new ComparisonLessEqualOperator(
+                    token,
+                    line,
+                    column
+            );
+            case COMPARISON_GREATER_OPERATOR_TOKEN -> new ComparisonGreaterOperator(
+                    token,
+                    line,
+                    column
+            );
+            case COMPARISON_GREATER_EQUAL_OPERATOR_TOKEN -> new ComparisonGreaterEqualOperator(
+                    token,
+                    line,
+                    column
+            );
+            case COMPARISON_EQUAL_OPERATOR_TOKEN -> new ComparisonEqualOperator(
+                    token,
+                    line,
+                    column
+            );
+            case COMPARISON_NOT_EQUAL_OPERATOR_TOKEN -> new ComparisonNotEqualOperator(
+                    token,
+                    line,
+                    column
+            );
             case ARITHMETIC_PLUS_OPERATOR_TOKEN -> new ArithmeticPlusOperator(token, line, column);
-            case ARITHMETIC_MINUS_OPERATOR_TOKEN -> new ArithmeticMinusOperator(token, line, column);
-            case ARITHMETIC_MULTIPLICATION_OPERATOR_TOKEN -> new ArithmeticMultiplicationOperator(token, line, column);
-            case ARITHMETIC_DIVISION_OPERATOR_TOKEN -> new ArithmeticDivisionOperator(token, line, column);
+            case ARITHMETIC_MINUS_OPERATOR_TOKEN -> new ArithmeticMinusOperator(
+                    token,
+                    line,
+                    column
+            );
+            case ARITHMETIC_MULTIPLICATION_OPERATOR_TOKEN -> new ArithmeticMultiplicationOperator(
+                    token,
+                    line,
+                    column
+            );
+            case ARITHMETIC_DIVISION_OPERATOR_TOKEN -> new ArithmeticDivisionOperator(
+                    token,
+                    line,
+                    column
+            );
             case ARROW_OPERATOR_TOKEN -> new ArrowOperator(token, line, column);
             case RANGE_OPERATOR_TOKEN -> new RangeOperator(token, line, column);
             default -> {
                 var message = format(
                         "Error in lexical analysis at line - %d, column - %d. Unacceptable Operator: %s.",
-                        line, column, token
+                        line,
+                        column,
+                        token
                 );
-                throw new LexicalAnalysisExceprion(message);
+                throw new LexicalAnalysisException(message);
             }
         };
     }
