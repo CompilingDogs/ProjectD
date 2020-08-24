@@ -5,13 +5,15 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.regex.Pattern;
+
 import static java.lang.String.format;
 
 @Slf4j
-@ToString
 public class Literal extends Token {
 
     public static final String EMPTY_LITERAL_TOKEN = "empty";
+    private static final Pattern pattern = Pattern.compile("-?\\d+(\\.\\d+)?");
 
     public Literal(String token, Integer line, Integer column) {
         super(token, line, column);
@@ -28,12 +30,23 @@ public class Literal extends Token {
         return (beginningChar == '\"' && endingChar == '\"') || (beginningChar == '\'' && endingChar == '\'');
     }
 
+    private static Boolean isNumeric(String token) {
+        if (token == null) {
+            return false;
+        }
+        return pattern.matcher(token).matches();
+    }
+
     public static Boolean isIntegerLiteral(String token) {
-        return Integer.valueOf(Integer.parseInt(token)).toString().equals(token.trim());
+        return isNumeric(token) && Integer.valueOf(Integer.parseInt(token)).toString().equals(token.trim());
     }
 
     public static Boolean isRealLiteral(String token) {
-        return Double.valueOf(Double.parseDouble(token)).toString().equals(token.trim());
+        return isNumeric(token) && Double.valueOf(Double.parseDouble(token)).toString().equals(token.trim());
+    }
+
+    public static Boolean isLiteral(String token) {
+        return isRealLiteral(token) || isIntegerLiteral(token) || isStringLiteral(token) || isEmptyLiteral(token);
     }
 
     /**
@@ -45,6 +58,7 @@ public class Literal extends Token {
      * @return Instance of one of Literal's Successors.
      */
     public static Literal getLiteral(String token, Integer line, Integer column) throws LexicalAnalysisExceprion {
+        log.debug("Parsing token as literal {}: ({}:{}).", token, line, column);
         if (isEmptyLiteral(token)) {
             return new EmptyLiteral(token, line, column);
         } else if (isStringLiteral(token)) {
@@ -58,13 +72,11 @@ public class Literal extends Token {
                     "Error in lexical analysis at line - %d, column - %d. Unacceptable literal: %s.",
                     line, column, token
             );
-            log.warn(message);
             throw new LexicalAnalysisExceprion(message);
         }
     }
 
     @Getter
-    @ToString
     public static class IntegerLiteral extends Literal {
         private final Integer value;
 
@@ -75,7 +87,6 @@ public class Literal extends Token {
     }
 
     @Getter
-    @ToString
     public static class RealLiteral extends Literal {
         private final Double value;
 
@@ -86,7 +97,6 @@ public class Literal extends Token {
     }
 
     @Getter
-    @ToString
     public static class StringLiteral extends Literal {
         private final String value;
 
@@ -101,7 +111,6 @@ public class Literal extends Token {
     }
 
     @Getter
-    @ToString
     public static class EmptyLiteral extends Literal {
         public EmptyLiteral(String token, Integer line, Integer column) {
             super(token, line, column);

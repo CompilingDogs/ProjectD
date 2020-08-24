@@ -1,7 +1,6 @@
 package tokens;
 
 import exception.LexicalAnalysisExceprion;
-import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Arrays;
@@ -10,7 +9,6 @@ import java.util.HashSet;
 import static java.lang.String.format;
 
 @Slf4j
-@ToString
 public class Separator extends Token {
 
     public static final String OPENING_PARENTHESIS_SEPARATOR_TOKEN = "(";
@@ -36,12 +34,25 @@ public class Separator extends Token {
             )
     );
 
+    private static final HashSet<String> persistentSeparatorTokens = new HashSet<>(
+            Arrays.asList(
+                    OPENING_PARENTHESIS_SEPARATOR_TOKEN, CLOSING_PARENTHESIS_SEPARATOR_TOKEN,
+                    OPENING_BRACKET_SEPARATOR_TOKEN, CLOSING_BRACKET_SEPARATOR_TOKEN,
+                    OPENING_CURLY_BRACKET_SEPARATOR_TOKEN, CLOSING_CURLY_BRACKET_SEPARATOR_TOKEN,
+                    SEMICOLON_SEPARATOR_TOKEN, COMMA_SEPARATOR_TOKEN, PERIOD_SEPARATOR_TOKEN, NEW_LINE_SEPARATOR_TOKEN
+            )
+    );
+
     public Separator(String token, Integer line, Integer column) {
         super(token, line, column);
     }
 
     public static Boolean isSeparator(String token) {
         return separatorTokens.contains(token);
+    }
+
+    public static Boolean isPersistentSeparator(String token) {
+        return persistentSeparatorTokens.contains(token);
     }
 
     /**
@@ -53,6 +64,7 @@ public class Separator extends Token {
      * @return Instance of one of Separator's Successors.
      */
     public static Separator getSeparator(String token, Integer line, Integer column) throws LexicalAnalysisExceprion {
+        log.debug("Parsing token as separator {}: ({}:{}).", token, line, column);
         return switch (token) {
             case OPENING_PARENTHESIS_SEPARATOR_TOKEN -> new OpeningParenthesisSeparator(token, line, column);
             case CLOSING_PARENTHESIS_SEPARATOR_TOKEN -> new ClosingParenthesisSeparator(token, line, column);
@@ -71,90 +83,77 @@ public class Separator extends Token {
                         "Error in lexical analysis at line - %d, column - %d. Unacceptable Separator: %s.",
                         line, column, token
                 );
-                log.warn(message);
                 throw new LexicalAnalysisExceprion(message);
             }
         };
     }
 
-    @ToString
     public static class OpeningParenthesisSeparator extends Separator {
         public OpeningParenthesisSeparator(String token, Integer line, Integer column) {
             super(token, line, column);
         }
     }
 
-    @ToString
     public static class ClosingParenthesisSeparator extends Separator {
         public ClosingParenthesisSeparator(String token, Integer line, Integer column) {
             super(token, line, column);
         }
     }
 
-    @ToString
     public static class OpeningBracketSeparator extends Separator {
         public OpeningBracketSeparator(String token, Integer line, Integer column) {
             super(token, line, column);
         }
     }
 
-    @ToString
     public static class ClosingBracketSeparator extends Separator {
         public ClosingBracketSeparator(String token, Integer line, Integer column) {
             super(token, line, column);
         }
     }
 
-    @ToString
     public static class OpeningCurlyBracketSeparator extends Separator {
         public OpeningCurlyBracketSeparator(String token, Integer line, Integer column) {
             super(token, line, column);
         }
     }
 
-    @ToString
     public static class ClosingCurlyBracketSeparator extends Separator {
         public ClosingCurlyBracketSeparator(String token, Integer line, Integer column) {
             super(token, line, column);
         }
     }
 
-    @ToString
     public static class SemicolonSeparator extends Separator {
         public SemicolonSeparator(String token, Integer line, Integer column) {
             super(token, line, column);
         }
     }
 
-    @ToString
     public static class CommaSeparator extends Separator {
         public CommaSeparator(String token, Integer line, Integer column) {
             super(token, line, column);
         }
     }
 
-    @ToString
     public static class PeriodSeparator extends Separator {
         public PeriodSeparator(String token, Integer line, Integer column) {
             super(token, line, column);
         }
     }
 
-    @ToString
     public static class WhiteSpaceSeparator extends Separator {
         public WhiteSpaceSeparator(String token, Integer line, Integer column) {
             super(token, line, column);
         }
     }
 
-    @ToString
     public static class TabSpaceSeparator extends Separator {
         public TabSpaceSeparator(String token, Integer line, Integer column) {
             super(token, line, column);
         }
     }
 
-    @ToString
     public static class NewLineSeparator extends Separator {
         public NewLineSeparator(String token, Integer line, Integer column) {
             super(token, line, column);
