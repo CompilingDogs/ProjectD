@@ -1,0 +1,9 @@
+// Input playground
+var integerNum := readInt, realNum := readReal,
+		str := readString;
+
+var array;
+array := [readInt, readReal, [readString, readString], {}];
+
+var tuple;
+tuple := {integerNum:=readString, realNum:=readInt};
