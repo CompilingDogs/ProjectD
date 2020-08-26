@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="lexical_analyzer.LexicalAnalyzerTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2020-08-24T18:46:00" hostname="miserable-xiaomi2018" time="0.064">
+<testsuite name="lexical_analyzer.LexicalAnalyzerTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2020-08-25T18:39:24" hostname="Solis.local" time="0.089">
   <properties/>
-  <testcase name="testCaseEight" classname="lexical_analyzer.LexicalAnalyzerTest" time="0.064"/>
-  <system-out><![CDATA[2020-08-24 21:46:00,851 INFO s.LexicalAnalyzer [Test worker]: Initializing Lexical Analyzer for Parsing /home/miserable/Documents/Study/Study/Fall 2020/Compiler Construction/ProjectD/src/test/resources/case_8.pd. 
-2020-08-24 21:46:00,860 INFO s.LexicalAnalyzer [Test worker]: Lexical Analyzer initialized correctly. Starting parsing phase. 
-2020-08-24 21:46:00,898 INFO s.LexicalAnalyzer [Test worker]: Parsing finished successfully. Time taken to parse sourcecode: 36.979414 ms. 
+  <testcase name="getTestJSON" classname="lexical_analyzer.LexicalAnalyzerTest" time="0.089"/>
+  <system-out><![CDATA[2020-08-25 21:39:24,662 INFO s.LexicalAnalyzer [Test worker]: Initializing Lexical Analyzer for Parsing /Users/marina/Innopolis/studying/third_year/CC/ProjectD/src/test/resources/case_2.pd. 
+2020-08-25 21:39:24,668 INFO s.LexicalAnalyzer [Test worker]: Lexical Analyzer initialized correctly. Starting parsing phase. 
+2020-08-25 21:39:24,695 INFO s.LexicalAnalyzer [Test worker]: Parsing finished successfully. Time taken to parse sourcecode: 26.85459 ms. 
 ]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

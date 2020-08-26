@@ -1,0 +1,13 @@
+// Bubble sort
+var bubbleFunct := func(array, arrayLength) is
+	var i, buff;
+	for i in 1..arrayLength
+	loop
+      if (array[i] > array[i+1]) then
+         buff := array[i];
+				 array[i] := array[i+1];
+				 array[i+1] := buff;
+      end
+	end
+	return array;
+end
