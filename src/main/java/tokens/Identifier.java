@@ -25,10 +25,8 @@ public class Identifier extends Token {
         super(token, line, column);
         if (!isAcceptableIdentifier(token)) {
             var message = format(
-                    "Error in lexical analysis at line - %d, column - %d. Unacceptable Identifier: %s.",
-                    line,
-                    column,
-                    token
+                    "Error in lexical analysis at line - %d, column - %d. Unacceptable literal: %s.",
+                    line, column, token
             );
             throw new LexicalAnalysisException(message);
         }

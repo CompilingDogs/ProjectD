@@ -1,5 +1,5 @@
-
 // Merge Sort Procedure
+
 var mergeSort := func(A, left /* aaa */, right/*Right Oper*/) is //asdasd
     if (right - left <= 1) then
         return A;
