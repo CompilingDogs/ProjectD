@@ -105,7 +105,7 @@
     "token": "array",
     "line": 5,
     "column": 5,
-    "class": "ArrayKeyword"
+    "class": "Identifier"
   },
   {
     "token": ";",
@@ -123,7 +123,7 @@
     "token": "array",
     "line": 6,
     "column": 1,
-    "class": "ArrayKeyword"
+    "class": "Identifier"
   },
   {
     "token": ":\u003d",
@@ -243,7 +243,7 @@
     "token": "tuple",
     "line": 8,
     "column": 5,
-    "class": "TupleKeyword"
+    "class": "Identifier"
   },
   {
     "token": ";",
@@ -261,7 +261,7 @@
     "token": "tuple",
     "line": 9,
     "column": 1,
-    "class": "TupleKeyword"
+    "class": "Identifier"
   },
   {
     "token": ":\u003d",

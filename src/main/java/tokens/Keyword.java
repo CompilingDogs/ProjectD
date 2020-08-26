@@ -31,8 +31,6 @@ public class Keyword extends Token {
     public static final String STRING_KEYWORD_TOKEN = "string";
     public static final String EMPTY_KEYWORD_TOKEN = "empty";
     public static final String FUNC_KEYWORD_TOKEN = "func";
-    public static final String ARRAY_KEYWORD_TOKEN = "array";
-    public static final String TUPLE_KEYWORD_TOKEN = "tuple";
     public static final String READ_INT_KEYWORD_TOKEN = "readInt";
     public static final String READ_REAL_KEYWORD_TOKEN = "readReal";
     public static final String READ_STRING_KEYWORD_TOKEN = "readString";
@@ -59,8 +57,6 @@ public class Keyword extends Token {
                     STRING_KEYWORD_TOKEN,
                     EMPTY_KEYWORD_TOKEN,
                     FUNC_KEYWORD_TOKEN,
-                    ARRAY_KEYWORD_TOKEN,
-                    TUPLE_KEYWORD_TOKEN,
                     READ_INT_KEYWORD_TOKEN,
                     READ_REAL_KEYWORD_TOKEN,
                     READ_STRING_KEYWORD_TOKEN
@@ -110,14 +106,12 @@ public class Keyword extends Token {
             case STRING_KEYWORD_TOKEN -> new StringKeyword(token, line, column);
             case EMPTY_KEYWORD_TOKEN -> new EmptyKeyword(token, line, column);
             case FUNC_KEYWORD_TOKEN -> new FuncKeyword(token, line, column);
-            case ARRAY_KEYWORD_TOKEN -> new ArrayKeyword(token, line, column);
-            case TUPLE_KEYWORD_TOKEN -> new TupleKeyword(token, line, column);
             case READ_INT_KEYWORD_TOKEN -> new ReadIntKeyword(token, line, column);
             case READ_REAL_KEYWORD_TOKEN -> new ReadRealKeyword(token, line, column);
             case READ_STRING_KEYWORD_TOKEN -> new ReadStringKeyword(token, line, column);
             default -> {
                 var message = format(
-                        "Error in lexical analysis at line - %d, column - %d. Unacceptable Keyword: %s.",
+                        "Error in lexical analysis at line - %d, column - %d. Unacceptable Keyword: \"%s\".",
                         line,
                         column,
                         token
@@ -243,18 +237,6 @@ public class Keyword extends Token {
 
     public static class FuncKeyword extends Keyword {
         public FuncKeyword(String token, Integer line, Integer column) {
-            super(token, line, column);
-        }
-    }
-
-    public static class ArrayKeyword extends Keyword {
-        public ArrayKeyword(String token, Integer line, Integer column) {
-            super(token, line, column);
-        }
-    }
-
-    public static class TupleKeyword extends Keyword {
-        public TupleKeyword(String token, Integer line, Integer column) {
             super(token, line, column);
         }
     }

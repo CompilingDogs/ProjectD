@@ -5,8 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import static java.lang.String.format;
-
 @Getter
 @Setter
 @NoArgsConstructor

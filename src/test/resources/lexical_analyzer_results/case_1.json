@@ -739,20 +739,20 @@
   {
     "token": "print",
     "line": 21,
-    "column": 17,
+    "column": 9,
     "class": "PrintKeyword"
   },
   {
     "value": "\\n",
     "token": "\"\\n\"",
     "line": 21,
-    "column": 23,
+    "column": 15,
     "class": "StringLiteral"
   },
   {
     "token": ";",
     "line": 21,
-    "column": 27,
+    "column": 19,
     "class": "SemicolonSeparator"
   },
   {
@@ -764,57 +764,70 @@
   {
     "token": "print",
     "line": 22,
-    "column": 17,
+    "column": 9,
     "class": "PrintKeyword"
   },
   {
     "token": "-",
     "line": 22,
-    "column": 23,
+    "column": 15,
     "class": "ArithmeticMinusOperator"
   },
   {
     "token": "b",
     "line": 22,
-    "column": 24,
+    "column": 16,
     "class": "Identifier"
   },
   {
     "token": "/",
     "line": 22,
-    "column": 26,
+    "column": 18,
     "class": "ArithmeticDivisionOperator"
   },
   {
     "token": "(",
     "line": 22,
-    "column": 28,
+    "column": 20,
     "class": "OpeningParenthesisSeparator"
   },
   {
     "value": 2,
     "token": "2",
     "line": 22,
-    "column": 30,
+    "column": 22,
     "class": "IntegerLiteral"
   },
   {
     "token": "*",
     "line": 22,
-    "column": 32,
+    "column": 24,
     "class": "ArithmeticMultiplicationOperator"
   },
   {
     "token": "a",
     "line": 22,
-    "column": 34,
+    "column": 26,
     "class": "Identifier"
   },
   {
     "token": ")",
     "line": 22,
-    "column": 36,
+    "column": 28,
     "class": "ClosingParenthesisSeparator"
+  },
+  {
+    "token": ",",
+    "line": 22,
+    "column": 29,
+    "class": "CommaSeparator"
+  },
+  {
+    "value": " - i",
+    "token": "\" - i\"",
+    "line": 22,
+    "column": 31,
+    "class": "StringLiteral"
   },
   {
     "token": ",",
@@ -823,28 +836,15 @@
     "class": "CommaSeparator"
   },
   {
-    "value": " - i",
-    "token": "\" - i\"",
-    "line": 22,
-    "column": 39,
-    "class": "StringLiteral"
-  },
-  {
-    "token": ",",
-    "line": 22,
-    "column": 45,
-    "class": "CommaSeparator"
-  },
-  {
     "token": "sqrtValue",
     "line": 22,
-    "column": 47,
+    "column": 39,
     "class": "Identifier"
   },
   {
     "token": ";",
     "line": 22,
-    "column": 56,
+    "column": 48,
     "class": "SemicolonSeparator"
   },
   {
@@ -856,7 +856,7 @@
   {
     "token": "end",
     "line": 23,
-    "column": 10,
+    "column": 6,
     "class": "EndKeyword"
   },
   {

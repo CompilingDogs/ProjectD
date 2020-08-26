@@ -1,3 +1,5 @@
+
+
 // Merge Sort Procedure
 
 var mergeSort := func(A, left /* aaa */, right/*Right Oper*/) is //asdasd
@@ -52,4 +54,4 @@ print mergeSort(arr, 1, 101);
 print "Привет, world!()()*(";
 print mergeSort(arr, 1, 101);
 print "Привет, \" \" ' \' \n \\world!()()*(";
-print 'Привет, \" \" ' \' \n \\world!()()*(';
+print 'Привет, \" \" ' world!()()*('; // Error: no operator '!' exists

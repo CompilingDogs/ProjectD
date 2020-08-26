@@ -15,6 +15,7 @@ import java.util.List;
 
 import static java.lang.Character.isDigit;
 import static java.lang.Character.isLetter;
+import static java.lang.String.format;
 import static java.util.Objects.isNull;
 import static stages.LexicalAnalyzer.State.*;
 import static tokens.Operator.*;
@@ -52,15 +53,14 @@ public class LexicalAnalyzer {
                     PERIOD_SEPARATOR_TOKEN,
                     WHITE_SPACE_SEPARATOR_TOKEN,
                     TAB_SPACE_SEPARATOR_TOKEN,
-                    NEW_LINE_SEPARATOR_TOKEN
+                    NEW_LINE_SEPARATOR_TOKEN,
+                    WINDOWS_NEW_LINE_SEPARATOR_TOKEN
             )
     );
 
     private static LexicalAnalyzer instance;
 
-    private LexicalAnalyzer() {
-
-    }
+    private LexicalAnalyzer() {}
 
     public static LexicalAnalyzer getInstance() {
         if (isNull(instance)) {
@@ -123,6 +123,14 @@ public class LexicalAnalyzer {
                     if (newState == READ_ALPHA || newState == READ_OP || isPersistentSeparator(
                             String.valueOf(currChar))) {
                         buffer.append(currChar);
+                    } else if (newState == EMPTY) {
+                        var message = format(
+                                "Error in lexical analysis at line - %d, column - %d. Unrecognized Character: \"%s\".",
+                                this.line,
+                                this.column,
+                                currChar
+                        );
+                        throw new LexicalAnalysisException(message);
                     }
                 }
                 this.setNewPosition(currChar);
@@ -138,6 +146,7 @@ public class LexicalAnalyzer {
         return tokens;
     }
 
+
     private boolean isStringLiteral(Character currChar) {
         return currChar == '\"' || currChar == '\'';
     }
@@ -151,7 +160,7 @@ public class LexicalAnalyzer {
     }
 
     private void initialize(File inputFile) throws FileNotFoundException {
-        this.tokens = new ArrayList<Token>();
+        this.tokens = new ArrayList<>();
         this.reader = new FileReader(inputFile);
         this.buffer = new StringBuilder();
         this.currState = EMPTY;
@@ -160,13 +169,24 @@ public class LexicalAnalyzer {
     }
 
     private void readStringLiteral(Character startingQuote) throws IOException {
+        int startingLine = this.line;
+        int startingColumn = this.column;
         this.commitBufferedToken();
         this.setNewPosition(startingQuote);
         this.buffer.append(startingQuote);
 
         char curr;
         char prev = ' ';
-        while ((curr = (char) this.reader.read()) != startingQuote || (prev == '\\')) {
+        while (((curr = (char) this.reader.read()) != startingQuote) || (prev == '\\')) {
+            if (curr == '\n' || !this.reader.ready()) {
+                var message = format(
+                        "Error in lexical analysis at line - %d, column - %d. Unacceptable literal: \"%s\".",
+                        startingLine,
+                        startingColumn,
+                        buffer.toString()
+                );
+                throw new LexicalAnalysisException(message);
+            }
             this.buffer.append(curr);
             this.setNewPosition(curr);
             prev = curr;
@@ -192,8 +212,8 @@ public class LexicalAnalyzer {
     }
 
     private void skipOneLineComment() throws IOException {
-        while ((char) this.reader.read() != '\n') {
-        }
+        //noinspection StatementWithEmptyBody
+        while ((char) this.reader.read() != '\n') { }
         this.setNewPosition('\n');
         this.cleanBuffer();
     }
@@ -236,7 +256,7 @@ public class LexicalAnalyzer {
         EMPTY, READ_SEP, READ_ALPHA, READ_OP;
 
         public static State getState(Character currChar) {
-            if (isLetter(currChar) || isDigit(currChar)) {
+            if (isLetter(currChar) || isDigit(currChar) || currChar == '_') {
                 return READ_ALPHA;
             } else if (isSeparatorTokenChar(currChar)) {
                 return READ_SEP;

@@ -23,14 +23,23 @@ public class Separator extends Token {
     public static final String WHITE_SPACE_SEPARATOR_TOKEN = " ";
     public static final String TAB_SPACE_SEPARATOR_TOKEN = "\t";
     public static final String NEW_LINE_SEPARATOR_TOKEN = "\n";
+    public static final String WINDOWS_NEW_LINE_SEPARATOR_TOKEN = "\r";
 
     private static final HashSet<String> separatorTokens = new HashSet<>(
             Arrays.asList(
-                    OPENING_PARENTHESIS_SEPARATOR_TOKEN, CLOSING_PARENTHESIS_SEPARATOR_TOKEN,
-                    OPENING_BRACKET_SEPARATOR_TOKEN, CLOSING_BRACKET_SEPARATOR_TOKEN,
-                    OPENING_CURLY_BRACKET_SEPARATOR_TOKEN, CLOSING_CURLY_BRACKET_SEPARATOR_TOKEN,
-                    SEMICOLON_SEPARATOR_TOKEN, COMMA_SEPARATOR_TOKEN, PERIOD_SEPARATOR_TOKEN,
-                    WHITE_SPACE_SEPARATOR_TOKEN, TAB_SPACE_SEPARATOR_TOKEN, NEW_LINE_SEPARATOR_TOKEN
+                    OPENING_PARENTHESIS_SEPARATOR_TOKEN,
+                    CLOSING_PARENTHESIS_SEPARATOR_TOKEN,
+                    OPENING_BRACKET_SEPARATOR_TOKEN,
+                    CLOSING_BRACKET_SEPARATOR_TOKEN,
+                    OPENING_CURLY_BRACKET_SEPARATOR_TOKEN,
+                    CLOSING_CURLY_BRACKET_SEPARATOR_TOKEN,
+                    SEMICOLON_SEPARATOR_TOKEN,
+                    COMMA_SEPARATOR_TOKEN,
+                    PERIOD_SEPARATOR_TOKEN,
+                    WHITE_SPACE_SEPARATOR_TOKEN,
+                    TAB_SPACE_SEPARATOR_TOKEN,
+                    NEW_LINE_SEPARATOR_TOKEN,
+                    WINDOWS_NEW_LINE_SEPARATOR_TOKEN
             )
     );
 
@@ -112,9 +121,14 @@ public class Separator extends Token {
             case WHITE_SPACE_SEPARATOR_TOKEN -> new WhiteSpaceSeparator(token, line, column);
             case TAB_SPACE_SEPARATOR_TOKEN -> new TabSpaceSeparator(token, line, column);
             case NEW_LINE_SEPARATOR_TOKEN -> new NewLineSeparator(token, line, column);
+            case WINDOWS_NEW_LINE_SEPARATOR_TOKEN -> new WindowsNewLineSeparator(
+                    token,
+                    line,
+                    column
+            );
             default -> {
                 var message = format(
-                        "Error in lexical analysis at line - %d, column - %d. Unacceptable Separator: %s.",
+                        "Error in lexical analysis at line - %d, column - %d. Unacceptable Separator: \"%s\".",
                         line,
                         column,
                         token
@@ -192,6 +206,12 @@ public class Separator extends Token {
 
     public static class NewLineSeparator extends Separator {
         public NewLineSeparator(String token, Integer line, Integer column) {
+            super(token, line, column);
+        }
+    }
+
+    public static class WindowsNewLineSeparator extends Separator {
+        public WindowsNewLineSeparator(String token, Integer line, Integer column) {
             super(token, line, column);
         }
     }

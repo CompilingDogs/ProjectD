@@ -77,8 +77,10 @@ public class Literal extends Token {
             return new RealLiteral(token, line, column);
         } else {
             var message = format(
-                    "Error in lexical analysis at line - %d, column - %d. Unacceptable literal: %s.",
-                    line, column, token
+                    "Error in lexical analysis at line - %d, column - %d. Unacceptable literal: \"%s\".",
+                    line,
+                    column,
+                    token
             );
             throw new LexicalAnalysisException(message);
         }

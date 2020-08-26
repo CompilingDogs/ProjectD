@@ -33,7 +33,7 @@
     "token": "array",
     "line": 2,
     "column": 25,
-    "class": "ArrayKeyword"
+    "class": "Identifier"
   },
   {
     "token": ",",
@@ -178,7 +178,7 @@
     "token": "array",
     "line": 6,
     "column": 11,
-    "class": "ArrayKeyword"
+    "class": "Identifier"
   },
   {
     "token": "[",
@@ -208,7 +208,7 @@
     "token": "array",
     "line": 6,
     "column": 22,
-    "class": "ArrayKeyword"
+    "class": "Identifier"
   },
   {
     "token": "[",
@@ -275,7 +275,7 @@
     "token": "array",
     "line": 7,
     "column": 18,
-    "class": "ArrayKeyword"
+    "class": "Identifier"
   },
   {
     "token": "[",
@@ -311,7 +311,7 @@
     "token": "array",
     "line": 8,
     "column": 18,
-    "class": "ArrayKeyword"
+    "class": "Identifier"
   },
   {
     "token": "[",
@@ -341,7 +341,7 @@
     "token": "array",
     "line": 8,
     "column": 30,
-    "class": "ArrayKeyword"
+    "class": "Identifier"
   },
   {
     "token": "[",
@@ -390,7 +390,7 @@
     "token": "array",
     "line": 9,
     "column": 18,
-    "class": "ArrayKeyword"
+    "class": "Identifier"
   },
   {
     "token": "[",
@@ -481,7 +481,7 @@
     "token": "array",
     "line": 12,
     "column": 12,
-    "class": "ArrayKeyword"
+    "class": "Identifier"
   },
   {
     "token": ";",

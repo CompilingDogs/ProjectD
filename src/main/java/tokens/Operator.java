@@ -117,7 +117,7 @@ public class Operator extends Token {
             case RANGE_OPERATOR_TOKEN -> new RangeOperator(token, line, column);
             default -> {
                 var message = format(
-                        "Error in lexical analysis at line - %d, column - %d. Unacceptable Operator: %s.",
+                        "Error in lexical analysis at line - %d, column - %d. Unacceptable Operator: \"%s\".",
                         line,
                         column,
                         token

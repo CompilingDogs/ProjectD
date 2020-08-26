@@ -47,12 +47,12 @@ public class LexicalAnalyzerTest {
         var gson = new GsonBuilder().registerTypeHierarchyAdapter(Token.class, new TDeserializer())
                                     .create();
         var sourceCode = new File(fullPath);
-        var fname = sourceCode.getName().split("\\.")[0];
+        var fileName = sourceCode.getName().split("\\.")[0];
 
         try {
             var generatedTokens = lexicalAnalyzer.tokenize(sourceCode);
             var fileOut = new FileOutputStream(
-                    new File("src/test/resources/analyzer_results/" + fname + ".json")
+                    new File("src/test/resources/lexical_analyzer_results/" + fileName + ".json")
             );
 
             String res = gson.toJson(generatedTokens);
