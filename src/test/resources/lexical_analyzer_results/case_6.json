@@ -1,0 +1,689 @@
+[
+  {
+    "token": "btNode",
+    "line": 2,
+    "column": 1,
+    "class": "Identifier"
+  },
+  {
+    "token": "\u003d",
+    "line": 2,
+    "column": 8,
+    "class": "ComparisonEqualOperator"
+  },
+  {
+    "token": "func",
+    "line": 2,
+    "column": 10,
+    "class": "FuncKeyword"
+  },
+  {
+    "token": "(",
+    "line": 2,
+    "column": 14,
+    "class": "OpeningParenthesisSeparator"
+  },
+  {
+    "token": "left",
+    "line": 2,
+    "column": 15,
+    "class": "Identifier"
+  },
+  {
+    "token": ",",
+    "line": 2,
+    "column": 19,
+    "class": "CommaSeparator"
+  },
+  {
+    "token": "right",
+    "line": 2,
+    "column": 21,
+    "class": "Identifier"
+  },
+  {
+    "token": ")",
+    "line": 2,
+    "column": 26,
+    "class": "ClosingParenthesisSeparator"
+  },
+  {
+    "token": "is",
+    "line": 2,
+    "column": 28,
+    "class": "LogicIsOperator"
+  },
+  {
+    "token": "\n",
+    "line": 3,
+    "column": 0,
+    "class": "NewLineSeparator"
+  },
+  {
+    "token": "return",
+    "line": 3,
+    "column": 5,
+    "class": "ReturnKeyword"
+  },
+  {
+    "token": "{",
+    "line": 3,
+    "column": 12,
+    "class": "OpeningCurlyBracketSeparator"
+  },
+  {
+    "token": "\n",
+    "line": 4,
+    "column": 0,
+    "class": "NewLineSeparator"
+  },
+  {
+    "token": "left",
+    "line": 4,
+    "column": 9,
+    "class": "Identifier"
+  },
+  {
+    "token": ":\u003d",
+    "line": 4,
+    "column": 14,
+    "class": "AssignmentOperator"
+  },
+  {
+    "token": "left",
+    "line": 4,
+    "column": 17,
+    "class": "Identifier"
+  },
+  {
+    "token": ",",
+    "line": 4,
+    "column": 21,
+    "class": "CommaSeparator"
+  },
+  {
+    "token": "\n",
+    "line": 5,
+    "column": 0,
+    "class": "NewLineSeparator"
+  },
+  {
+    "token": "right",
+    "line": 5,
+    "column": 9,
+    "class": "Identifier"
+  },
+  {
+    "token": ":\u003d",
+    "line": 5,
+    "column": 15,
+    "class": "AssignmentOperator"
+  },
+  {
+    "token": "right",
+    "line": 5,
+    "column": 18,
+    "class": "Identifier"
+  },
+  {
+    "token": "\n",
+    "line": 6,
+    "column": 0,
+    "class": "NewLineSeparator"
+  },
+  {
+    "token": "}",
+    "line": 6,
+    "column": 5,
+    "class": "ClosingCurlyBracketSeparator"
+  },
+  {
+    "token": "\n",
+    "line": 7,
+    "column": 0,
+    "class": "NewLineSeparator"
+  },
+  {
+    "token": "end",
+    "line": 7,
+    "column": 1,
+    "class": "EndKeyword"
+  },
+  {
+    "token": "\n",
+    "line": 8,
+    "column": 0,
+    "class": "NewLineSeparator"
+  },
+  {
+    "token": "\n",
+    "line": 9,
+    "column": 0,
+    "class": "NewLineSeparator"
+  },
+  {
+    "token": "testTree",
+    "line": 10,
+    "column": 1,
+    "class": "Identifier"
+  },
+  {
+    "token": "\u003d",
+    "line": 10,
+    "column": 10,
+    "class": "ComparisonEqualOperator"
+  },
+  {
+    "token": "btNode",
+    "line": 10,
+    "column": 12,
+    "class": "Identifier"
+  },
+  {
+    "token": "(",
+    "line": 10,
+    "column": 18,
+    "class": "OpeningParenthesisSeparator"
+  },
+  {
+    "token": "\n",
+    "line": 11,
+    "column": 0,
+    "class": "NewLineSeparator"
+  },
+  {
+    "token": "btNode",
+    "line": 11,
+    "column": 5,
+    "class": "Identifier"
+  },
+  {
+    "token": "(",
+    "line": 11,
+    "column": 11,
+    "class": "OpeningParenthesisSeparator"
+  },
+  {
+    "token": "\n",
+    "line": 12,
+    "column": 0,
+    "class": "NewLineSeparator"
+  },
+  {
+    "value": "first",
+    "token": "\u0027first\u0027",
+    "line": 12,
+    "column": 9,
+    "class": "StringLiteral"
+  },
+  {
+    "token": ",",
+    "line": 12,
+    "column": 16,
+    "class": "CommaSeparator"
+  },
+  {
+    "token": "\n",
+    "line": 13,
+    "column": 0,
+    "class": "NewLineSeparator"
+  },
+  {
+    "value": "second",
+    "token": "\u0027second\u0027",
+    "line": 13,
+    "column": 9,
+    "class": "StringLiteral"
+  },
+  {
+    "token": "\n",
+    "line": 14,
+    "column": 0,
+    "class": "NewLineSeparator"
+  },
+  {
+    "token": ")",
+    "line": 14,
+    "column": 5,
+    "class": "ClosingParenthesisSeparator"
+  },
+  {
+    "token": ",",
+    "line": 14,
+    "column": 6,
+    "class": "CommaSeparator"
+  },
+  {
+    "token": "\n",
+    "line": 15,
+    "column": 0,
+    "class": "NewLineSeparator"
+  },
+  {
+    "value": "third",
+    "token": "\u0027third\u0027",
+    "line": 15,
+    "column": 5,
+    "class": "StringLiteral"
+  },
+  {
+    "token": "\n",
+    "line": 16,
+    "column": 0,
+    "class": "NewLineSeparator"
+  },
+  {
+    "token": ")",
+    "line": 16,
+    "column": 1,
+    "class": "ClosingParenthesisSeparator"
+  },
+  {
+    "token": "\n",
+    "line": 17,
+    "column": 0,
+    "class": "NewLineSeparator"
+  },
+  {
+    "token": "\n",
+    "line": 18,
+    "column": 0,
+    "class": "NewLineSeparator"
+  },
+  {
+    "token": "btTraverse",
+    "line": 19,
+    "column": 1,
+    "class": "Identifier"
+  },
+  {
+    "token": "\u003d",
+    "line": 19,
+    "column": 12,
+    "class": "ComparisonEqualOperator"
+  },
+  {
+    "token": "func",
+    "line": 19,
+    "column": 14,
+    "class": "FuncKeyword"
+  },
+  {
+    "token": "(",
+    "line": 19,
+    "column": 18,
+    "class": "OpeningParenthesisSeparator"
+  },
+  {
+    "token": "tree",
+    "line": 19,
+    "column": 19,
+    "class": "Identifier"
+  },
+  {
+    "token": ",",
+    "line": 19,
+    "column": 23,
+    "class": "CommaSeparator"
+  },
+  {
+    "token": "acceptor",
+    "line": 19,
+    "column": 25,
+    "class": "Identifier"
+  },
+  {
+    "token": ")",
+    "line": 19,
+    "column": 33,
+    "class": "ClosingParenthesisSeparator"
+  },
+  {
+    "token": "is",
+    "line": 19,
+    "column": 35,
+    "class": "LogicIsOperator"
+  },
+  {
+    "token": "\n",
+    "line": 20,
+    "column": 0,
+    "class": "NewLineSeparator"
+  },
+  {
+    "token": "for",
+    "line": 20,
+    "column": 5,
+    "class": "ForKeyword"
+  },
+  {
+    "token": "node",
+    "line": 20,
+    "column": 9,
+    "class": "Identifier"
+  },
+  {
+    "token": "in",
+    "line": 20,
+    "column": 14,
+    "class": "InKeyword"
+  },
+  {
+    "token": "tree",
+    "line": 20,
+    "column": 17,
+    "class": "Identifier"
+  },
+  {
+    "token": "loop",
+    "line": 20,
+    "column": 22,
+    "class": "LoopKeyword"
+  },
+  {
+    "token": "\n",
+    "line": 21,
+    "column": 0,
+    "class": "NewLineSeparator"
+  },
+  {
+    "token": "if",
+    "line": 21,
+    "column": 9,
+    "class": "IfKeyword"
+  },
+  {
+    "token": "node",
+    "line": 21,
+    "column": 12,
+    "class": "Identifier"
+  },
+  {
+    "token": "is",
+    "line": 21,
+    "column": 17,
+    "class": "LogicIsOperator"
+  },
+  {
+    "token": "{",
+    "line": 21,
+    "column": 20,
+    "class": "OpeningCurlyBracketSeparator"
+  },
+  {
+    "token": "}",
+    "line": 21,
+    "column": 21,
+    "class": "ClosingCurlyBracketSeparator"
+  },
+  {
+    "token": "then",
+    "line": 21,
+    "column": 23,
+    "class": "ThenKeyword"
+  },
+  {
+    "token": "\n",
+    "line": 22,
+    "column": 0,
+    "class": "NewLineSeparator"
+  },
+  {
+    "token": "btTraverse",
+    "line": 22,
+    "column": 13,
+    "class": "Identifier"
+  },
+  {
+    "token": "(",
+    "line": 22,
+    "column": 23,
+    "class": "OpeningParenthesisSeparator"
+  },
+  {
+    "token": "node",
+    "line": 22,
+    "column": 24,
+    "class": "Identifier"
+  },
+  {
+    "token": ",",
+    "line": 22,
+    "column": 28,
+    "class": "CommaSeparator"
+  },
+  {
+    "token": "acceptor",
+    "line": 22,
+    "column": 30,
+    "class": "Identifier"
+  },
+  {
+    "token": ")",
+    "line": 22,
+    "column": 38,
+    "class": "ClosingParenthesisSeparator"
+  },
+  {
+    "token": "\n",
+    "line": 23,
+    "column": 0,
+    "class": "NewLineSeparator"
+  },
+  {
+    "token": "else",
+    "line": 23,
+    "column": 9,
+    "class": "ElseKeyword"
+  },
+  {
+    "token": "\n",
+    "line": 24,
+    "column": 0,
+    "class": "NewLineSeparator"
+  },
+  {
+    "token": "acceptor",
+    "line": 24,
+    "column": 13,
+    "class": "Identifier"
+  },
+  {
+    "token": "(",
+    "line": 24,
+    "column": 21,
+    "class": "OpeningParenthesisSeparator"
+  },
+  {
+    "token": "node",
+    "line": 24,
+    "column": 22,
+    "class": "Identifier"
+  },
+  {
+    "token": ")",
+    "line": 24,
+    "column": 26,
+    "class": "ClosingParenthesisSeparator"
+  },
+  {
+    "token": "\n",
+    "line": 25,
+    "column": 0,
+    "class": "NewLineSeparator"
+  },
+  {
+    "token": "end",
+    "line": 25,
+    "column": 9,
+    "class": "EndKeyword"
+  },
+  {
+    "token": "\n",
+    "line": 26,
+    "column": 0,
+    "class": "NewLineSeparator"
+  },
+  {
+    "token": "end",
+    "line": 26,
+    "column": 5,
+    "class": "EndKeyword"
+  },
+  {
+    "token": "\n",
+    "line": 27,
+    "column": 0,
+    "class": "NewLineSeparator"
+  },
+  {
+    "token": "end",
+    "line": 27,
+    "column": 1,
+    "class": "EndKeyword"
+  },
+  {
+    "token": "\n",
+    "line": 28,
+    "column": 0,
+    "class": "NewLineSeparator"
+  },
+  {
+    "token": "\n",
+    "line": 29,
+    "column": 0,
+    "class": "NewLineSeparator"
+  },
+  {
+    "token": "testBinaryTree",
+    "line": 30,
+    "column": 1,
+    "class": "Identifier"
+  },
+  {
+    "token": "\u003d",
+    "line": 30,
+    "column": 16,
+    "class": "ComparisonEqualOperator"
+  },
+  {
+    "token": "func",
+    "line": 30,
+    "column": 18,
+    "class": "FuncKeyword"
+  },
+  {
+    "token": "(",
+    "line": 30,
+    "column": 22,
+    "class": "OpeningParenthesisSeparator"
+  },
+  {
+    "token": "tree",
+    "line": 30,
+    "column": 23,
+    "class": "Identifier"
+  },
+  {
+    "token": ")",
+    "line": 30,
+    "column": 27,
+    "class": "ClosingParenthesisSeparator"
+  },
+  {
+    "token": "is",
+    "line": 30,
+    "column": 29,
+    "class": "LogicIsOperator"
+  },
+  {
+    "token": "\n",
+    "line": 31,
+    "column": 0,
+    "class": "NewLineSeparator"
+  },
+  {
+    "token": "btTraverse",
+    "line": 31,
+    "column": 5,
+    "class": "Identifier"
+  },
+  {
+    "token": "(",
+    "line": 31,
+    "column": 15,
+    "class": "OpeningParenthesisSeparator"
+  },
+  {
+    "token": "tree",
+    "line": 31,
+    "column": 16,
+    "class": "Identifier"
+  },
+  {
+    "token": ",",
+    "line": 31,
+    "column": 20,
+    "class": "CommaSeparator"
+  },
+  {
+    "token": "func",
+    "line": 31,
+    "column": 22,
+    "class": "FuncKeyword"
+  },
+  {
+    "token": "(",
+    "line": 31,
+    "column": 26,
+    "class": "OpeningParenthesisSeparator"
+  },
+  {
+    "token": "node",
+    "line": 31,
+    "column": 27,
+    "class": "Identifier"
+  },
+  {
+    "token": ")",
+    "line": 31,
+    "column": 31,
+    "class": "ClosingParenthesisSeparator"
+  },
+  {
+    "token": "\u003d\u003e",
+    "line": 31,
+    "column": 33,
+    "class": "ArrowOperator"
+  },
+  {
+    "token": "print",
+    "line": 31,
+    "column": 36,
+    "class": "PrintKeyword"
+  },
+  {
+    "token": "node",
+    "line": 31,
+    "column": 42,
+    "class": "Identifier"
+  },
+  {
+    "token": ")",
+    "line": 31,
+    "column": 46,
+    "class": "ClosingParenthesisSeparator"
+  },
+  {
+    "token": "\n",
+    "line": 32,
+    "column": 0,
+    "class": "NewLineSeparator"
+  },
+  {
+    "token": "end",
+    "line": 32,
+    "column": 1,
+    "class": "EndKeyword"
+  }
+]

@@ -1,0 +1,9 @@
+//small function with invalid operator
+
+var calculate := func(a)
+	is
+		var tuple1 := {perimetr:=4*a};
+		var tuple2 := tuple1 + {square:=a^2}; //Error: we have no degree operator
+	end;
+
+var square := calculate(4);

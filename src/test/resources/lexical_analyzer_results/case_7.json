@@ -1,0 +1,422 @@
+[
+  {
+    "token": "\n",
+    "line": 3,
+    "column": 0,
+    "class": "NewLineSeparator"
+  },
+  {
+    "token": "var",
+    "line": 3,
+    "column": 1,
+    "class": "VarKeyword"
+  },
+  {
+    "token": "t",
+    "line": 3,
+    "column": 5,
+    "class": "Identifier"
+  },
+  {
+    "token": ":\u003d",
+    "line": 3,
+    "column": 7,
+    "class": "AssignmentOperator"
+  },
+  {
+    "token": "{",
+    "line": 3,
+    "column": 10,
+    "class": "OpeningCurlyBracketSeparator"
+  },
+  {
+    "token": "a",
+    "line": 3,
+    "column": 11,
+    "class": "Identifier"
+  },
+  {
+    "token": ":\u003d",
+    "line": 3,
+    "column": 12,
+    "class": "AssignmentOperator"
+  },
+  {
+    "value": 1,
+    "token": "1",
+    "line": 3,
+    "column": 14,
+    "class": "IntegerLiteral"
+  },
+  {
+    "token": ",",
+    "line": 3,
+    "column": 15,
+    "class": "CommaSeparator"
+  },
+  {
+    "token": "b",
+    "line": 3,
+    "column": 17,
+    "class": "Identifier"
+  },
+  {
+    "token": ":\u003d",
+    "line": 3,
+    "column": 18,
+    "class": "AssignmentOperator"
+  },
+  {
+    "value": 2,
+    "token": "2",
+    "line": 3,
+    "column": 20,
+    "class": "IntegerLiteral"
+  },
+  {
+    "token": ",",
+    "line": 3,
+    "column": 21,
+    "class": "CommaSeparator"
+  },
+  {
+    "value": 7,
+    "token": "7",
+    "line": 3,
+    "column": 23,
+    "class": "IntegerLiteral"
+  },
+  {
+    "token": "}",
+    "line": 3,
+    "column": 24,
+    "class": "ClosingCurlyBracketSeparator"
+  },
+  {
+    "token": ";",
+    "line": 3,
+    "column": 25,
+    "class": "SemicolonSeparator"
+  },
+  {
+    "token": "\n",
+    "line": 4,
+    "column": 0,
+    "class": "NewLineSeparator"
+  },
+  {
+    "token": "\n",
+    "line": 5,
+    "column": 0,
+    "class": "NewLineSeparator"
+  },
+  {
+    "token": "t",
+    "line": 5,
+    "column": 1,
+    "class": "Identifier"
+  },
+  {
+    "token": ":\u003d",
+    "line": 5,
+    "column": 3,
+    "class": "AssignmentOperator"
+  },
+  {
+    "token": "t",
+    "line": 5,
+    "column": 6,
+    "class": "Identifier"
+  },
+  {
+    "token": "+",
+    "line": 5,
+    "column": 8,
+    "class": "ArithmeticPlusOperator"
+  },
+  {
+    "token": "{",
+    "line": 5,
+    "column": 10,
+    "class": "OpeningCurlyBracketSeparator"
+  },
+  {
+    "token": "d",
+    "line": 5,
+    "column": 11,
+    "class": "Identifier"
+  },
+  {
+    "token": ":\u003d",
+    "line": 5,
+    "column": 12,
+    "class": "AssignmentOperator"
+  },
+  {
+    "value": "mew",
+    "token": "\u0027mew\u0027",
+    "line": 5,
+    "column": 14,
+    "class": "StringLiteral"
+  },
+  {
+    "token": "}",
+    "line": 5,
+    "column": 19,
+    "class": "ClosingCurlyBracketSeparator"
+  },
+  {
+    "token": ";",
+    "line": 5,
+    "column": 20,
+    "class": "SemicolonSeparator"
+  },
+  {
+    "token": "print",
+    "line": 6,
+    "column": 1,
+    "class": "PrintKeyword"
+  },
+  {
+    "token": "t",
+    "line": 6,
+    "column": 7,
+    "class": "Identifier"
+  },
+  {
+    "token": ";",
+    "line": 6,
+    "column": 8,
+    "class": "SemicolonSeparator"
+  },
+  {
+    "token": "\n",
+    "line": 7,
+    "column": 0,
+    "class": "NewLineSeparator"
+  },
+  {
+    "token": "\n",
+    "line": 8,
+    "column": 0,
+    "class": "NewLineSeparator"
+  },
+  {
+    "token": "var",
+    "line": 8,
+    "column": 1,
+    "class": "VarKeyword"
+  },
+  {
+    "token": "x",
+    "line": 8,
+    "column": 5,
+    "class": "Identifier"
+  },
+  {
+    "token": ":\u003d",
+    "line": 8,
+    "column": 7,
+    "class": "AssignmentOperator"
+  },
+  {
+    "token": "t",
+    "line": 8,
+    "column": 10,
+    "class": "Identifier"
+  },
+  {
+    "token": ".",
+    "line": 8,
+    "column": 11,
+    "class": "PeriodSeparator"
+  },
+  {
+    "token": "b",
+    "line": 8,
+    "column": 12,
+    "class": "Identifier"
+  },
+  {
+    "token": ";",
+    "line": 8,
+    "column": 13,
+    "class": "SemicolonSeparator"
+  },
+  {
+    "token": "var",
+    "line": 9,
+    "column": 1,
+    "class": "VarKeyword"
+  },
+  {
+    "token": "y",
+    "line": 9,
+    "column": 5,
+    "class": "Identifier"
+  },
+  {
+    "token": ":\u003d",
+    "line": 9,
+    "column": 7,
+    "class": "AssignmentOperator"
+  },
+  {
+    "token": "t",
+    "line": 9,
+    "column": 10,
+    "class": "Identifier"
+  },
+  {
+    "token": ".",
+    "line": 9,
+    "column": 11,
+    "class": "PeriodSeparator"
+  },
+  {
+    "value": 3,
+    "token": "3",
+    "line": 9,
+    "column": 12,
+    "class": "IntegerLiteral"
+  },
+  {
+    "token": ";",
+    "line": 9,
+    "column": 13,
+    "class": "SemicolonSeparator"
+  },
+  {
+    "token": "var",
+    "line": 10,
+    "column": 1,
+    "class": "VarKeyword"
+  },
+  {
+    "token": "z",
+    "line": 10,
+    "column": 5,
+    "class": "Identifier"
+  },
+  {
+    "token": ":\u003d",
+    "line": 10,
+    "column": 7,
+    "class": "AssignmentOperator"
+  },
+  {
+    "token": "t",
+    "line": 10,
+    "column": 10,
+    "class": "Identifier"
+  },
+  {
+    "token": ".",
+    "line": 10,
+    "column": 11,
+    "class": "PeriodSeparator"
+  },
+  {
+    "value": 4,
+    "token": "4",
+    "line": 10,
+    "column": 12,
+    "class": "IntegerLiteral"
+  },
+  {
+    "token": ";",
+    "line": 10,
+    "column": 13,
+    "class": "SemicolonSeparator"
+  },
+  {
+    "token": "print",
+    "line": 11,
+    "column": 1,
+    "class": "PrintKeyword"
+  },
+  {
+    "token": "x",
+    "line": 11,
+    "column": 7,
+    "class": "Identifier"
+  },
+  {
+    "token": ",",
+    "line": 11,
+    "column": 8,
+    "class": "CommaSeparator"
+  },
+  {
+    "token": "y",
+    "line": 11,
+    "column": 10,
+    "class": "Identifier"
+  },
+  {
+    "token": ",",
+    "line": 11,
+    "column": 11,
+    "class": "CommaSeparator"
+  },
+  {
+    "token": "z",
+    "line": 11,
+    "column": 13,
+    "class": "Identifier"
+  },
+  {
+    "token": ";",
+    "line": 11,
+    "column": 14,
+    "class": "SemicolonSeparator"
+  },
+  {
+    "token": "\n",
+    "line": 12,
+    "column": 0,
+    "class": "NewLineSeparator"
+  },
+  {
+    "token": "print",
+    "line": 12,
+    "column": 1,
+    "class": "PrintKeyword"
+  },
+  {
+    "token": "x",
+    "line": 12,
+    "column": 7,
+    "class": "Identifier"
+  },
+  {
+    "token": ",",
+    "line": 12,
+    "column": 8,
+    "class": "CommaSeparator"
+  },
+  {
+    "token": "y",
+    "line": 12,
+    "column": 10,
+    "class": "Identifier"
+  },
+  {
+    "token": ",",
+    "line": 12,
+    "column": 11,
+    "class": "CommaSeparator"
+  },
+  {
+    "token": "z",
+    "line": 12,
+    "column": 13,
+    "class": "Identifier"
+  },
+  {
+    "token": ";",
+    "line": 12,
+    "column": 14,
+    "class": "SemicolonSeparator"
+  }
+]

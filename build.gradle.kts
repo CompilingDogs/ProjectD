@@ -13,6 +13,7 @@ repositories {
 
 dependencies {
     implementation(kotlin("stdlib"))
-    testCompile("junit", "junit", "4.12")
-    compile("org.apache.logging.log4j", "log4j-slf4j-impl", "2.13.3")
+    testImplementation("junit", "junit", "4.12")
+    testImplementation("com.google.code.gson", "gson", "2.8.6")
+    implementation("org.apache.logging.log4j", "log4j-slf4j-impl", "2.13.3")
 }

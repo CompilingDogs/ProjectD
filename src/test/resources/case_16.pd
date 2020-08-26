@@ -1,0 +1,3 @@
+//invalid string declaration
+
+var stringValue := 'bla-bla-bla" // Error, not a valid Literal

@@ -1,0 +1,4 @@
+// Invalid assignment
+
+var integerValue := 0001 // Error, neither Identifier nor Literal
+

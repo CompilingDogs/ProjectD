@@ -1,8 +1,6 @@
 package tokens;
 
-import exception.LexicalAnalysisExceprion;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import exception.LexicalAnalysisException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Arrays;
@@ -11,8 +9,6 @@ import java.util.HashSet;
 import static java.lang.String.format;
 
 @Slf4j
-@ToString
-@NoArgsConstructor
 public class Keyword extends Token {
 
     public static final String VAR_KEYWORD_TOKEN = "var";
@@ -35,16 +31,35 @@ public class Keyword extends Token {
     public static final String STRING_KEYWORD_TOKEN = "string";
     public static final String EMPTY_KEYWORD_TOKEN = "empty";
     public static final String FUNC_KEYWORD_TOKEN = "func";
-    public static final String ARRAY_KEYWORD_TOKEN = "array";
-    public static final String TUPLE_KEYWORD_TOKEN = "tuple";
+    public static final String READ_INT_KEYWORD_TOKEN = "readInt";
+    public static final String READ_REAL_KEYWORD_TOKEN = "readReal";
+    public static final String READ_STRING_KEYWORD_TOKEN = "readString";
 
     private static final HashSet<String> keywordTokens = new HashSet<>(
             Arrays.asList(
-                    VAR_KEYWORD_TOKEN, TRUE_KEYWORD_TOKEN, FALSE_KEYWORD_TOKEN, IS_KEYWORD_TOKEN, END_KEYWORD_TOKEN,
-                    IF_KEYWORD_TOKEN, THEN_KEYWORD_TOKEN, ELSE_KEYWORD_TOKEN, FOR_KEYWORD_TOKEN, WHILE_KEYWORD_TOKEN,
-                    IN_KEYWORD_TOKEN, LOOP_KEYWORD_TOKEN, PRINT_KEYWORD_TOKEN, RETURN_KEYWORD_TOKEN, INT_KEYWORD_TOKEN,
-                    REAL_KEYWORD_TOKEN, BOOL_KEYWORD_TOKEN, STRING_KEYWORD_TOKEN, EMPTY_KEYWORD_TOKEN, FUNC_KEYWORD_TOKEN,
-                    ARRAY_KEYWORD_TOKEN, TUPLE_KEYWORD_TOKEN
+                    VAR_KEYWORD_TOKEN,
+                    TRUE_KEYWORD_TOKEN,
+                    FALSE_KEYWORD_TOKEN,
+                    IS_KEYWORD_TOKEN,
+                    END_KEYWORD_TOKEN,
+                    IF_KEYWORD_TOKEN,
+                    THEN_KEYWORD_TOKEN,
+                    ELSE_KEYWORD_TOKEN,
+                    FOR_KEYWORD_TOKEN,
+                    WHILE_KEYWORD_TOKEN,
+                    IN_KEYWORD_TOKEN,
+                    LOOP_KEYWORD_TOKEN,
+                    PRINT_KEYWORD_TOKEN,
+                    RETURN_KEYWORD_TOKEN,
+                    INT_KEYWORD_TOKEN,
+                    REAL_KEYWORD_TOKEN,
+                    BOOL_KEYWORD_TOKEN,
+                    STRING_KEYWORD_TOKEN,
+                    EMPTY_KEYWORD_TOKEN,
+                    FUNC_KEYWORD_TOKEN,
+                    READ_INT_KEYWORD_TOKEN,
+                    READ_REAL_KEYWORD_TOKEN,
+                    READ_STRING_KEYWORD_TOKEN
             )
     );
 
@@ -64,7 +79,12 @@ public class Keyword extends Token {
      * @param column - Column number of the token's first character occurrence
      * @return Instance of one of Keyword's Successors.
      */
-    public static Keyword getKeyword(String token, Integer line, Integer column) throws LexicalAnalysisExceprion {
+    public static Keyword getKeyword(
+            String token,
+            Integer line,
+            Integer column
+    ) throws LexicalAnalysisException {
+        log.debug("Parsing token as keyword {}: ({}:{}).", token, line, column);
         return switch (token) {
             case VAR_KEYWORD_TOKEN -> new VarKeyword(token, line, column);
             case TRUE_KEYWORD_TOKEN -> new TrueKeyword(token, line, column);
@@ -86,169 +106,155 @@ public class Keyword extends Token {
             case STRING_KEYWORD_TOKEN -> new StringKeyword(token, line, column);
             case EMPTY_KEYWORD_TOKEN -> new EmptyKeyword(token, line, column);
             case FUNC_KEYWORD_TOKEN -> new FuncKeyword(token, line, column);
-            case ARRAY_KEYWORD_TOKEN -> new ArrayKeyword(token, line, column);
-            case TUPLE_KEYWORD_TOKEN -> new TupleKeyword(token, line, column);
+            case READ_INT_KEYWORD_TOKEN -> new ReadIntKeyword(token, line, column);
+            case READ_REAL_KEYWORD_TOKEN -> new ReadRealKeyword(token, line, column);
+            case READ_STRING_KEYWORD_TOKEN -> new ReadStringKeyword(token, line, column);
             default -> {
                 var message = format(
-                        "Error in lexical analysis at line - %d, column - %d. Unacceptable Keyword: %s.",
-                        line, column, token
+                        "Error in lexical analysis at line - %d, column - %d. Unacceptable Keyword: \"%s\".",
+                        line,
+                        column,
+                        token
                 );
-                log.warn(message);
-                throw new LexicalAnalysisExceprion(message);
+                throw new LexicalAnalysisException(message);
             }
         };
     }
 
-    @ToString
     public static class VarKeyword extends Keyword {
         public VarKeyword(String token, Integer line, Integer column) {
             super(token, line, column);
         }
     }
 
-    @ToString
     public static class TrueKeyword extends Keyword {
         public TrueKeyword(String token, Integer line, Integer column) {
             super(token, line, column);
         }
     }
 
-    @ToString
     public static class FalseKeyword extends Keyword {
         public FalseKeyword(String token, Integer line, Integer column) {
             super(token, line, column);
         }
     }
 
-    @ToString
     public static class IsKeyword extends Keyword {
         public IsKeyword(String token, Integer line, Integer column) {
             super(token, line, column);
         }
     }
 
-    @ToString
     public static class EndKeyword extends Keyword {
         public EndKeyword(String token, Integer line, Integer column) {
             super(token, line, column);
         }
     }
 
-    @ToString
     public static class IfKeyword extends Keyword {
         public IfKeyword(String token, Integer line, Integer column) {
             super(token, line, column);
         }
     }
 
-    @ToString
     public static class ThenKeyword extends Keyword {
         public ThenKeyword(String token, Integer line, Integer column) {
             super(token, line, column);
         }
     }
 
-    @ToString
     public static class ElseKeyword extends Keyword {
         public ElseKeyword(String token, Integer line, Integer column) {
             super(token, line, column);
         }
     }
 
-    @ToString
     public static class ForKeyword extends Keyword {
         public ForKeyword(String token, Integer line, Integer column) {
             super(token, line, column);
         }
     }
 
-    @ToString
     public static class WhileKeyword extends Keyword {
         public WhileKeyword(String token, Integer line, Integer column) {
             super(token, line, column);
         }
     }
 
-    @ToString
     public static class InKeyword extends Keyword {
         public InKeyword(String token, Integer line, Integer column) {
             super(token, line, column);
         }
     }
 
-    @ToString
     public static class LoopKeyword extends Keyword {
         public LoopKeyword(String token, Integer line, Integer column) {
             super(token, line, column);
         }
     }
 
-    @ToString
     public static class PrintKeyword extends Keyword {
         public PrintKeyword(String token, Integer line, Integer column) {
             super(token, line, column);
         }
     }
 
-    @ToString
     public static class ReturnKeyword extends Keyword {
         public ReturnKeyword(String token, Integer line, Integer column) {
             super(token, line, column);
         }
     }
 
-    @ToString
     public static class IntKeyword extends Keyword {
         public IntKeyword(String token, Integer line, Integer column) {
             super(token, line, column);
         }
     }
 
-    @ToString
     public static class RealKeyword extends Keyword {
         public RealKeyword(String token, Integer line, Integer column) {
             super(token, line, column);
         }
     }
 
-    @ToString
     public static class BoolKeyword extends Keyword {
         public BoolKeyword(String token, Integer line, Integer column) {
             super(token, line, column);
         }
     }
 
-    @ToString
     public static class StringKeyword extends Keyword {
         public StringKeyword(String token, Integer line, Integer column) {
             super(token, line, column);
         }
     }
 
-    @ToString
     public static class EmptyKeyword extends Keyword {
         public EmptyKeyword(String token, Integer line, Integer column) {
             super(token, line, column);
         }
     }
 
-    @ToString
     public static class FuncKeyword extends Keyword {
         public FuncKeyword(String token, Integer line, Integer column) {
             super(token, line, column);
         }
     }
 
-    @ToString
-    public static class ArrayKeyword extends Keyword {
-        public ArrayKeyword(String token, Integer line, Integer column) {
+    public static class ReadIntKeyword extends Keyword {
+        public ReadIntKeyword(String token, Integer line, Integer column) {
             super(token, line, column);
         }
     }
 
-    @ToString
-    public static class TupleKeyword extends Keyword {
-        public TupleKeyword(String token, Integer line, Integer column) {
+    public static class ReadRealKeyword extends Keyword {
+        public ReadRealKeyword(String token, Integer line, Integer column) {
+            super(token, line, column);
+        }
+    }
+
+    public static class ReadStringKeyword extends Keyword {
+        public ReadStringKeyword(String token, Integer line, Integer column) {
             super(token, line, column);
         }
     }
