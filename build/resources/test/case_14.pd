@@ -1,3 +1,0 @@
-// Invalid return statement
-
-if (5 > 3) then return x, 4 //return only one expression

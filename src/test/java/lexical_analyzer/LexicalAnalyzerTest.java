@@ -18,6 +18,7 @@ public class LexicalAnalyzerTest {
     private final LexicalAnalyzer lexicalAnalyzer = LexicalAnalyzer.getInstance();
 
     private final String[] testingSourceCodes = new String[]{
+<<<<<<< HEAD
             "src/test/resources/case_7.pd",
             "src/test/resources/case_8.pd",
             "src/test/resources/case_9.pd",
@@ -28,6 +29,9 @@ public class LexicalAnalyzerTest {
             "src/test/resources/case_14.pd",
             "src/test/resources/case_15.pd",
             "src/test/resources/case_16.pd"
+=======
+            "src/test/resources/case_2.pd"
+>>>>>>> test/PD-Lexical_Analysis
     };
 
     @Test
