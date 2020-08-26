@@ -1,0 +1,8 @@
+// Array playground
+
+var arr = [];
+arr[10] := 25; arr[100] := func(x)=>x+1; arr[1000] := {a:=1, b:=2.7};
+if arr is [] then
+    print arr;
+end;
+print arr[2];

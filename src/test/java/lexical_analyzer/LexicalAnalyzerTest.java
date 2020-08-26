@@ -1,6 +1,8 @@
 package lexical_analyzer;
 
 import com.google.gson.*;
+import exception.LexicalAnalysisException;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import stages.LexicalAnalyzer;
 import tokens.Token;
@@ -10,12 +12,22 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Type;
 
+@Slf4j
 public class LexicalAnalyzerTest {
 
     private final LexicalAnalyzer lexicalAnalyzer = LexicalAnalyzer.getInstance();
 
     private final String[] testingSourceCodes = new String[]{
-            "src/test/resources/case_8.pd"
+            "src/test/resources/case_7.pd",
+            "src/test/resources/case_8.pd",
+            "src/test/resources/case_9.pd",
+            "src/test/resources/case_10.pd",
+            "src/test/resources/case_11.pd",
+            "src/test/resources/case_12.pd",
+            "src/test/resources/case_13.pd",
+            "src/test/resources/case_14.pd",
+            "src/test/resources/case_15.pd",
+            "src/test/resources/case_16.pd"
     };
 
     @Test
@@ -30,14 +42,21 @@ public class LexicalAnalyzerTest {
                                     .create();
         var sourceCode = new File(fullPath);
         var fname = sourceCode.getName().split("\\.")[0];
-        var generatedTokens = lexicalAnalyzer.tokenize(sourceCode);
 
-        var fileOut = new FileOutputStream(
-                new File("src/test/resources/analyzer_results/" + fname + ".json")
-        );
+        try {
+            var generatedTokens = lexicalAnalyzer.tokenize(sourceCode);
+            var fileOut = new FileOutputStream(
+                    new File("src/test/resources/analyzer_results/" + fname + ".json")
+            );
 
-        String res = gson.toJson(generatedTokens);
-        fileOut.write(res.getBytes());
+            String res = gson.toJson(generatedTokens);
+            fileOut.write(res.getBytes());
+        } catch (LexicalAnalysisException e){
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
+
+
     }
 
     public static class TDeserializer implements JsonSerializer<Token> {

@@ -1,5 +1,5 @@
-
 // Merge Sort Procedure
+
 var mergeSort := func(A, left /* aaa */, right/*Right Oper*/) is //asdasd
     if (right - left <= 1) then
         return A;
@@ -51,4 +51,5 @@ end
 print mergeSort(arr, 1, 101);
 print "Привет, world!()()*(";
 print mergeSort(arr, 1, 101);
-print "Привет, \" \" ' \' \\world!()()*(";
+print "Привет, \" \" ' \' \n \\world!()()*(";
+print 'Привет, \" \" ' \' \n \\world!()()*(';
