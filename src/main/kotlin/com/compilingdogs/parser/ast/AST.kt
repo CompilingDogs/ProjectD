@@ -1,6 +1,6 @@
 package com.compilingdogs.parser.ast
 
-import com.compilingdogs.lexer.Token
+import tokens.Token
 
 /*
 * This package contains the EBNF framework to express your grammar in the DSL form for further automatic parsing.
