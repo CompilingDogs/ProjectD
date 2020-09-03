@@ -1,0 +1,57 @@
+
+
+// Merge Sort Procedure
+
+var mergeSort := func(A, left /* aaa */, right/*Right Oper*/) is //asdasd
+    if (right - left <= 1) then
+        return A;
+    end
+
+    var mid := left + (right - left) / 2;
+    var B := mergeSort(A, left, mid);
+    var C := mergeSort(A, mid, right);
+    return merge(B, C);
+end
+/*
+    asdasdasd
+*/
+var merge := func(A, B) is
+    var n := len(A);
+    var m := len(B);
+    var res := [];
+    var i := 0, j := 0;
+
+    while (i < n and j < m) loop
+        if (A[i] <= B[j]) then
+            res[i + j] := A[i];
+            i := i + 1;
+        else
+            res[i + j] := B[i];
+            j := j + 1;
+        end
+    end
+
+    while (i < n) loop
+        res[i + j] := A[i];
+        i := i + 1;
+    end
+
+    while (j < m) loop
+        res[i + j] := B[j];
+        j := j + 1;
+    end
+
+    return res;
+end
+
+var arr := [];
+
+for i in 1 ..100 loop
+    arr[i] := readInt;
+end
+
+print mergeSort(arr, 1, 101);
+print "Привет, world!()()*(";
+print mergeSort(arr, 1, 101);
+print "Привет, \" \" ' \' \n \\world!()()*(";
+print 'Привет, \" \" ' world!()()*('; // Error: no operator '!' exists

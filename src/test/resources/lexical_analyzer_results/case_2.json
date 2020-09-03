@@ -1,0 +1,640 @@
+[
+  {
+    "token": "var",
+    "line": 2,
+    "column": 1,
+    "class": "VarKeyword"
+  },
+  {
+    "token": "str",
+    "line": 2,
+    "column": 5,
+    "class": "Identifier"
+  },
+  {
+    "token": ":\u003d",
+    "line": 2,
+    "column": 9,
+    "class": "AssignmentOperator"
+  },
+  {
+    "value": "awsd123.,?!\u003c\u003e-\u003d+*/_[]{}()",
+    "token": "\"awsd123.,?!\u003c\u003e-\u003d+*/_[]{}()\"",
+    "line": 2,
+    "column": 12,
+    "class": "StringLiteral"
+  },
+  {
+    "token": ";",
+    "line": 2,
+    "column": 39,
+    "class": "SemicolonSeparator"
+  },
+  {
+    "token": "\n",
+    "line": 3,
+    "column": 0,
+    "class": "NewLineSeparator"
+  },
+  {
+    "token": "print",
+    "line": 3,
+    "column": 1,
+    "class": "PrintKeyword"
+  },
+  {
+    "token": "str",
+    "line": 3,
+    "column": 7,
+    "class": "Identifier"
+  },
+  {
+    "token": ";",
+    "line": 3,
+    "column": 10,
+    "class": "SemicolonSeparator"
+  },
+  {
+    "token": "\n",
+    "line": 4,
+    "column": 0,
+    "class": "NewLineSeparator"
+  },
+  {
+    "token": "\n",
+    "line": 5,
+    "column": 0,
+    "class": "NewLineSeparator"
+  },
+  {
+    "token": "str",
+    "line": 5,
+    "column": 1,
+    "class": "Identifier"
+  },
+  {
+    "token": ":\u003d",
+    "line": 5,
+    "column": 5,
+    "class": "AssignmentOperator"
+  },
+  {
+    "token": "readInt",
+    "line": 5,
+    "column": 8,
+    "class": "ReadIntKeyword"
+  },
+  {
+    "token": ";",
+    "line": 5,
+    "column": 15,
+    "class": "SemicolonSeparator"
+  },
+  {
+    "token": "\n",
+    "line": 6,
+    "column": 0,
+    "class": "NewLineSeparator"
+  },
+  {
+    "token": "if",
+    "line": 6,
+    "column": 1,
+    "class": "IfKeyword"
+  },
+  {
+    "token": "(",
+    "line": 6,
+    "column": 4,
+    "class": "OpeningParenthesisSeparator"
+  },
+  {
+    "token": "str",
+    "line": 6,
+    "column": 5,
+    "class": "Identifier"
+  },
+  {
+    "token": "is",
+    "line": 6,
+    "column": 9,
+    "class": "LogicIsOperator"
+  },
+  {
+    "token": "string",
+    "line": 6,
+    "column": 12,
+    "class": "StringKeyword"
+  },
+  {
+    "token": ")",
+    "line": 6,
+    "column": 18,
+    "class": "ClosingParenthesisSeparator"
+  },
+  {
+    "token": "then",
+    "line": 6,
+    "column": 20,
+    "class": "ThenKeyword"
+  },
+  {
+    "token": "\n",
+    "line": 7,
+    "column": 0,
+    "class": "NewLineSeparator"
+  },
+  {
+    "token": "print",
+    "line": 7,
+    "column": 5,
+    "class": "PrintKeyword"
+  },
+  {
+    "value": "str is String",
+    "token": "\"str is String\"",
+    "line": 7,
+    "column": 11,
+    "class": "StringLiteral"
+  },
+  {
+    "token": ";",
+    "line": 7,
+    "column": 26,
+    "class": "SemicolonSeparator"
+  },
+  {
+    "token": "\n",
+    "line": 8,
+    "column": 0,
+    "class": "NewLineSeparator"
+  },
+  {
+    "token": "else",
+    "line": 8,
+    "column": 1,
+    "class": "ElseKeyword"
+  },
+  {
+    "token": "\n",
+    "line": 9,
+    "column": 0,
+    "class": "NewLineSeparator"
+  },
+  {
+    "token": "print",
+    "line": 9,
+    "column": 5,
+    "class": "PrintKeyword"
+  },
+  {
+    "value": "str is not String",
+    "token": "\"str is not String\"",
+    "line": 9,
+    "column": 11,
+    "class": "StringLiteral"
+  },
+  {
+    "token": ";",
+    "line": 9,
+    "column": 30,
+    "class": "SemicolonSeparator"
+  },
+  {
+    "token": "\n",
+    "line": 10,
+    "column": 0,
+    "class": "NewLineSeparator"
+  },
+  {
+    "token": "end",
+    "line": 10,
+    "column": 1,
+    "class": "EndKeyword"
+  },
+  {
+    "token": "\n",
+    "line": 11,
+    "column": 0,
+    "class": "NewLineSeparator"
+  },
+  {
+    "token": "\n",
+    "line": 12,
+    "column": 0,
+    "class": "NewLineSeparator"
+  },
+  {
+    "token": "var",
+    "line": 12,
+    "column": 1,
+    "class": "VarKeyword"
+  },
+  {
+    "token": "name",
+    "line": 12,
+    "column": 5,
+    "class": "Identifier"
+  },
+  {
+    "token": ":\u003d",
+    "line": 12,
+    "column": 10,
+    "class": "AssignmentOperator"
+  },
+  {
+    "value": "John",
+    "token": "\"John\"",
+    "line": 12,
+    "column": 13,
+    "class": "StringLiteral"
+  },
+  {
+    "token": ",",
+    "line": 12,
+    "column": 19,
+    "class": "CommaSeparator"
+  },
+  {
+    "token": "\n",
+    "line": 13,
+    "column": 0,
+    "class": "NewLineSeparator"
+  },
+  {
+    "token": "surname",
+    "line": 13,
+    "column": 9,
+    "class": "Identifier"
+  },
+  {
+    "token": ":\u003d",
+    "line": 13,
+    "column": 17,
+    "class": "AssignmentOperator"
+  },
+  {
+    "value": "Smith",
+    "token": "\u0027Smith\u0027",
+    "line": 13,
+    "column": 20,
+    "class": "StringLiteral"
+  },
+  {
+    "token": ";",
+    "line": 13,
+    "column": 27,
+    "class": "SemicolonSeparator"
+  },
+  {
+    "token": "\n",
+    "line": 14,
+    "column": 0,
+    "class": "NewLineSeparator"
+  },
+  {
+    "token": "\n",
+    "line": 15,
+    "column": 0,
+    "class": "NewLineSeparator"
+  },
+  {
+    "token": "str",
+    "line": 15,
+    "column": 1,
+    "class": "Identifier"
+  },
+  {
+    "token": ":\u003d",
+    "line": 15,
+    "column": 5,
+    "class": "AssignmentOperator"
+  },
+  {
+    "token": "name",
+    "line": 15,
+    "column": 8,
+    "class": "Identifier"
+  },
+  {
+    "token": "+",
+    "line": 15,
+    "column": 13,
+    "class": "ArithmeticPlusOperator"
+  },
+  {
+    "token": "surname",
+    "line": 15,
+    "column": 15,
+    "class": "Identifier"
+  },
+  {
+    "token": ";",
+    "line": 15,
+    "column": 22,
+    "class": "SemicolonSeparator"
+  },
+  {
+    "token": "\n",
+    "line": 16,
+    "column": 0,
+    "class": "NewLineSeparator"
+  },
+  {
+    "token": "print",
+    "line": 16,
+    "column": 1,
+    "class": "PrintKeyword"
+  },
+  {
+    "token": "str",
+    "line": 16,
+    "column": 7,
+    "class": "Identifier"
+  },
+  {
+    "token": ";",
+    "line": 16,
+    "column": 10,
+    "class": "SemicolonSeparator"
+  },
+  {
+    "token": "\n",
+    "line": 17,
+    "column": 0,
+    "class": "NewLineSeparator"
+  },
+  {
+    "token": "\n",
+    "line": 18,
+    "column": 0,
+    "class": "NewLineSeparator"
+  },
+  {
+    "token": "var",
+    "line": 18,
+    "column": 1,
+    "class": "VarKeyword"
+  },
+  {
+    "token": "str1",
+    "line": 18,
+    "column": 5,
+    "class": "Identifier"
+  },
+  {
+    "token": ",",
+    "line": 18,
+    "column": 9,
+    "class": "CommaSeparator"
+  },
+  {
+    "token": "str2",
+    "line": 18,
+    "column": 11,
+    "class": "Identifier"
+  },
+  {
+    "token": ";",
+    "line": 18,
+    "column": 15,
+    "class": "SemicolonSeparator"
+  },
+  {
+    "token": "\n",
+    "line": 19,
+    "column": 0,
+    "class": "NewLineSeparator"
+  },
+  {
+    "token": "str1",
+    "line": 19,
+    "column": 1,
+    "class": "Identifier"
+  },
+  {
+    "token": ":\u003d",
+    "line": 19,
+    "column": 6,
+    "class": "AssignmentOperator"
+  },
+  {
+    "value": "123",
+    "token": "\u0027123\u0027",
+    "line": 19,
+    "column": 9,
+    "class": "StringLiteral"
+  },
+  {
+    "token": ";",
+    "line": 19,
+    "column": 14,
+    "class": "SemicolonSeparator"
+  },
+  {
+    "token": "\n",
+    "line": 20,
+    "column": 0,
+    "class": "NewLineSeparator"
+  },
+  {
+    "token": "str2",
+    "line": 20,
+    "column": 1,
+    "class": "Identifier"
+  },
+  {
+    "token": ":\u003d",
+    "line": 20,
+    "column": 6,
+    "class": "AssignmentOperator"
+  },
+  {
+    "value": "123",
+    "token": "\u0027123\u0027",
+    "line": 20,
+    "column": 9,
+    "class": "StringLiteral"
+  },
+  {
+    "token": ";",
+    "line": 20,
+    "column": 14,
+    "class": "SemicolonSeparator"
+  },
+  {
+    "token": "\n",
+    "line": 21,
+    "column": 0,
+    "class": "NewLineSeparator"
+  },
+  {
+    "token": "\n",
+    "line": 22,
+    "column": 0,
+    "class": "NewLineSeparator"
+  },
+  {
+    "token": "if",
+    "line": 22,
+    "column": 1,
+    "class": "IfKeyword"
+  },
+  {
+    "token": "not",
+    "line": 22,
+    "column": 4,
+    "class": "LogicNotOperator"
+  },
+  {
+    "token": "(",
+    "line": 22,
+    "column": 7,
+    "class": "OpeningParenthesisSeparator"
+  },
+  {
+    "token": "str1",
+    "line": 22,
+    "column": 8,
+    "class": "Identifier"
+  },
+  {
+    "token": "/\u003d",
+    "line": 22,
+    "column": 13,
+    "class": "ComparisonNotEqualOperator"
+  },
+  {
+    "token": "str2",
+    "line": 22,
+    "column": 16,
+    "class": "Identifier"
+  },
+  {
+    "token": ")",
+    "line": 22,
+    "column": 20,
+    "class": "ClosingParenthesisSeparator"
+  },
+  {
+    "token": "then",
+    "line": 22,
+    "column": 22,
+    "class": "ThenKeyword"
+  },
+  {
+    "token": "\n",
+    "line": 23,
+    "column": 0,
+    "class": "NewLineSeparator"
+  },
+  {
+    "token": "var",
+    "line": 23,
+    "column": 5,
+    "class": "VarKeyword"
+  },
+  {
+    "token": "array",
+    "line": 23,
+    "column": 9,
+    "class": "Identifier"
+  },
+  {
+    "token": ":\u003d",
+    "line": 23,
+    "column": 15,
+    "class": "AssignmentOperator"
+  },
+  {
+    "token": "[",
+    "line": 23,
+    "column": 18,
+    "class": "OpeningBracketSeparator"
+  },
+  {
+    "token": "str1",
+    "line": 23,
+    "column": 19,
+    "class": "Identifier"
+  },
+  {
+    "token": ",",
+    "line": 23,
+    "column": 23,
+    "class": "CommaSeparator"
+  },
+  {
+    "token": "str2",
+    "line": 23,
+    "column": 25,
+    "class": "Identifier"
+  },
+  {
+    "token": "]",
+    "line": 23,
+    "column": 29,
+    "class": "ClosingBracketSeparator"
+  },
+  {
+    "token": ";",
+    "line": 23,
+    "column": 30,
+    "class": "SemicolonSeparator"
+  },
+  {
+    "token": "\n",
+    "line": 24,
+    "column": 0,
+    "class": "NewLineSeparator"
+  },
+  {
+    "token": "print",
+    "line": 24,
+    "column": 5,
+    "class": "PrintKeyword"
+  },
+  {
+    "token": "array",
+    "line": 24,
+    "column": 11,
+    "class": "Identifier"
+  },
+  {
+    "token": "[",
+    "line": 24,
+    "column": 16,
+    "class": "OpeningBracketSeparator"
+  },
+  {
+    "value": 1,
+    "token": "1",
+    "line": 24,
+    "column": 17,
+    "class": "IntegerLiteral"
+  },
+  {
+    "token": "]",
+    "line": 24,
+    "column": 18,
+    "class": "ClosingBracketSeparator"
+  },
+  {
+    "token": ";",
+    "line": 24,
+    "column": 19,
+    "class": "SemicolonSeparator"
+  },
+  {
+    "token": "\n",
+    "line": 25,
+    "column": 0,
+    "class": "NewLineSeparator"
+  },
+  {
+    "token": "end",
+    "line": 25,
+    "column": 1,
+    "class": "EndKeyword"
+  }
+]
