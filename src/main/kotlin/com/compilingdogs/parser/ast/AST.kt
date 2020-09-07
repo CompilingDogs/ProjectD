@@ -1,7 +1,5 @@
 package com.compilingdogs.parser.ast
 
-import tokens.Token
-
 /*
 * This package contains the EBNF framework to express your grammar in the DSL form for further automatic parsing.
 *
@@ -20,18 +18,41 @@ inline fun <reified T : ASTNode> initialize(init: T.() -> Unit): T {
 
 
 // The base class for all AST nodes
-abstract class ASTNode (
-        var attachedTo: Class<ASTNode>? = null
+abstract class ASTNode(
+    // Specifies the data structure that this node is attached to.
+    // While parsing, the particular values will be accumulated here.
+    var attachedTo: Class<FASTNode>? = null,
+    var createCallbacks: MutableList<(FASTNode?, ASTNode) -> Unit> = mutableListOf(),
+    var successCallbacks: MutableList<(FASTNode?, ASTNode) -> Unit> = mutableListOf(),
 ) {
-    abstract fun clone(): ASTNode
-    abstract fun match(): ASTNode?
+    abstract fun match(parentNode: FASTNode?): FASTNode?
+
     // TODO: check if this works
-    inline fun <reified T : ASTNode> mapTo() { attachedTo = T::class.java as Class<ASTNode> }
+    inline fun <reified T : FASTNode> mapTo() {
+        attachedTo = T::class.java as Class<FASTNode>
+    }
 }
 
 // DSL function to create an empty node. Can be used as a placeholder for not implemented AST nodes.
 fun node(init: ASTNode.() -> Unit): ASTNode = initialize(init)
 
+
+// --------------------------------------------------------------------------------------------------------
+
+infix fun <T : FASTNode?> ASTNode.onCreate(callback: (fastNode: T, astNode: ASTNode) -> Unit): ASTNode {
+    createCallbacks.add(callback as (FASTNode?, ASTNode) -> Unit)
+    return this
+}
+
+infix fun <T : FASTNode?> ASTNode.onSuccess(callback: (fastNode: T, astNode: ASTNode) -> Unit): ASTNode {
+    successCallbacks.add(callback as (FASTNode?, ASTNode) -> Unit)
+    return this
+}
+
+//infix fun <T : FASTNode> ASTNode.appendTo(container: MutableList<ASTNode>): ASTNode {
+//    successCallbacks.add { fastNode, astNode -> container.add(node) }
+//    return this
+//}
 
 
 

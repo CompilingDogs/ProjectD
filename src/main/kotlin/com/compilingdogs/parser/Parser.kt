@@ -1,10 +1,17 @@
 package com.compilingdogs.parser
 
-import com.compilingdogs.lexer.Token
 import com.compilingdogs.parser.ast.*
+import tokens.Token
 
 
-class ArrayNode : ConcatenationNode()
+class ArrayLiteral(
+    var members: MutableList<FASTNode>
+) : FASTNode() {
+
+    override fun clone(): FASTNode {
+        return ArrayLiteral(members.copyOf())
+    }
+}
 
 
 // Delimiters
@@ -23,7 +30,7 @@ val stringLiteral = node {}
 val booleanLiteral = node {}
 val emptyLiteral = node {}
 
-val arrayLiteral = node {}
+//val arrayLiteral = node {}
 
 val tupleElement = node {}
 val tupleLiteral = node {}
@@ -31,7 +38,6 @@ val tupleLiteral = node {}
 
 // Expressions
 val expression = node {}
-
 
 
 val literal = any {
@@ -44,16 +50,20 @@ val literal = any {
     +emptyLiteral
 }
 
-val array = concat {
-    mapTo<ArrayNode>()
+val arrayLiteral = concat {
+    mapTo<ArrayLiteral>()
 
     +openBracket
     +maybe {
         concat {
-            +expression
+            +(expression onSuccess { fastNode: ArrayLiteral, astNode ->
+                fastNode.members.add(astNode)
+            })
             +repeat {
                 +comma
-                +expression
+                +(expression onSuccess { fastNode: ArrayLiteral, astNode ->
+                    fastNode.members.add(astNode)
+                })
             }
         }
     }
@@ -66,6 +76,6 @@ fun parse(tokens: List<Token>) {
 //        if (token is IfKeyword) {
 //        }
 //    }
-
-
 }
+
+

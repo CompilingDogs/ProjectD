@@ -1,6 +1,6 @@
 plugins {
     java
-    kotlin("jvm") version "1.3.72"
+    kotlin("jvm") version "1.4.0"
     id("io.freefair.lombok") version "5.1.1"
 }
 
