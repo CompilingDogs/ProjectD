@@ -1,18 +1,17 @@
 package tokens;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class Token {
     private String token;
     private Integer line;
     private Integer column;
+
+    public Token(String token, Integer line, Integer column) {
+        this.token = token;
+        this.line = line;
+        this.column = column;
+    }
+
+    public Token() {}
 
     public static Token tokenize(String token, Integer line, Integer column) {
         if (Separator.isSeparator(token)) {
@@ -27,4 +26,16 @@ public class Token {
             return Identifier.getIdentifier(token, line, column);
         }
     }
+
+    public String getToken() {return this.token;}
+
+    public void setToken(String token) {this.token = token; }
+
+    public Integer getLine() {return this.line;}
+
+    public void setLine(Integer line) {this.line = line; }
+
+    public Integer getColumn() {return this.column;}
+
+    public void setColumn(Integer column) {this.column = column; }
 }

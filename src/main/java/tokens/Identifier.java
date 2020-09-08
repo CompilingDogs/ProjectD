@@ -1,16 +1,16 @@
 package tokens;
 
 import exception.LexicalAnalysisException;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 
 import java.util.regex.Pattern;
 
 import static java.lang.String.format;
 
-@Slf4j
 public class Identifier extends Token {
 
     private static final Pattern regexp = Pattern.compile("^([a-zA-Z_][a-zA-Z\\d_]*)$");
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(Identifier.class);
 
     public static Identifier getIdentifier(
             String token,

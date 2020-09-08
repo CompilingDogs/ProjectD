@@ -1,18 +1,17 @@
 package tokens;
 
 import exception.LexicalAnalysisException;
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 
 import java.util.regex.Pattern;
 
 import static java.lang.String.format;
 
-@Slf4j
 public class Literal extends Token {
 
     public static final String EMPTY_LITERAL_TOKEN = "empty";
     private static final Pattern pattern = Pattern.compile("-?\\d+(\\.\\d+)?");
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(Literal.class);
 
     public Literal(String token, Integer line, Integer column) {
         super(token, line, column);
@@ -86,7 +85,6 @@ public class Literal extends Token {
         }
     }
 
-    @Getter
     public static class IntegerLiteral extends Literal {
         private final Integer value;
 
@@ -94,9 +92,10 @@ public class Literal extends Token {
             super(token, line, column);
             this.value = Integer.parseInt(token);
         }
+
+        public Integer getValue() {return this.value;}
     }
 
-    @Getter
     public static class RealLiteral extends Literal {
         private final Double value;
 
@@ -104,9 +103,10 @@ public class Literal extends Token {
             super(token, line, column);
             this.value = Double.parseDouble(token);
         }
+
+        public Double getValue() {return this.value;}
     }
 
-    @Getter
     public static class StringLiteral extends Literal {
         private final String value;
 
@@ -118,9 +118,10 @@ public class Literal extends Token {
         private String parseString(String tokenString) {
             return tokenString.substring(1, tokenString.length() - 1);
         }
+
+        public String getValue() {return this.value;}
     }
 
-    @Getter
     public static class EmptyLiteral extends Literal {
         public EmptyLiteral(String token, Integer line, Integer column) {
             super(token, line, column);
