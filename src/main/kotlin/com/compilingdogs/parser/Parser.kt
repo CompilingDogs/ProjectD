@@ -29,21 +29,19 @@ val emptyLiteral = TokenNode(Literal.EmptyLiteral::class.java)
 //val tupleElement = node {}
 //val tupleLiteral = node {}
 
-
-// Expressions
-val expression: AlternationNode = any {
-    +literal
-}
-
-
 val literal: AlternationNode = any {
     +integerLiteral
     +realLiteral
     +stringLiteral
     +booleanLiteral
-    +arrayLiteral
+//    +arrayLiteral
 //    +tupleLiteral
     +emptyLiteral
+}
+
+// Expressions
+val expression: AlternationNode = any {
+    +literal
 }
 
 val arrayLiteral: ConcatenationNode = concat {
@@ -70,6 +68,8 @@ val testRoot = arrayLiteral
 
 
 fun main() {
+    literal.apply { +arrayLiteral }
+
     runTest()
 }
 
@@ -82,6 +82,7 @@ fun runTest() {
 }
 
 fun parse(tokens: List<Token>) {
+    print(tokens)
     val node = testRoot.match(tokens, null)
     print(node)
 }

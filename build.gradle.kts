@@ -1,6 +1,5 @@
 plugins {
     java
-    id("io.freefair.lombok") version "5.1.1"
     kotlin("jvm") version "1.4.0"
     kotlin("kapt") version "1.4.0"
 }
@@ -14,9 +13,9 @@ repositories {
 }
 
 dependencies {
-    implementation(kotlin("stdlib"))
-    testImplementation("junit", "junit", "4.12")
-    testImplementation("com.google.code.gson", "gson", "2.8.6")
+    implementation(kotlin("stdlib", "1.4.0"))
+    implementation("junit", "junit", "4.12")
+    implementation("com.google.code.gson", "gson", "2.8.6")
     implementation("org.apache.logging.log4j", "log4j-slf4j-impl", "2.13.3")
 
     val arrowVersion = "0.10.4"

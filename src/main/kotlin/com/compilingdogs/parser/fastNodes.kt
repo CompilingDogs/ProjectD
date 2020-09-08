@@ -5,7 +5,7 @@ import tokens.Token
 
 
 class ArrayLiteral(
-    var members: MutableList<FASTNode>
+    var members: MutableList<FASTNode> = mutableListOf()
 ) : FASTNode() {
 
     override fun clone(): FASTNode {
