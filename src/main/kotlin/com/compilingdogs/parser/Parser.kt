@@ -1,68 +1,64 @@
 package com.compilingdogs.parser
 
 import com.compilingdogs.parser.ast.*
+import stages.LexicalAnalyzer
+import tokens.Keyword
+import tokens.Literal
+import tokens.Separator
 import tokens.Token
-
-
-class ArrayLiteral(
-    var members: MutableList<FASTNode>
-) : FASTNode() {
-
-    override fun clone(): FASTNode {
-        return ArrayLiteral(members.copyOf())
-    }
-}
+import java.io.File
 
 
 // Delimiters
-val openBrace = node {}
-val closeBrace = node {}
-val openBracket = node {}
-val closeBracket = node {}
-val comma = node {}
+val openBrace = TokenNode(Separator.OpeningCurlyBracketSeparator::class.java)
+val closeBrace = TokenNode(Separator.ClosingCurlyBracketSeparator::class.java)
+val openBracket = TokenNode(Separator.OpeningBracketSeparator::class.java)
+val closeBracket = TokenNode(Separator.ClosingBracketSeparator::class.java)
+val comma = TokenNode(Separator.CommaSeparator::class.java)
 
 // Literals
 // TODO: replace these with meaningful definitions
 //val integerLiteral = TokenNode<IntegerLiteralToken>
-val integerLiteral = node {}
-val realLiteral = node {}
-val stringLiteral = node {}
-val booleanLiteral = node {}
-val emptyLiteral = node {}
+val integerLiteral = TokenNode(Literal.IntegerLiteral::class.java)
+val realLiteral = TokenNode(Literal.RealLiteral::class.java)
+val stringLiteral = TokenNode(Literal.StringLiteral::class.java)
+val booleanLiteral = TokenNode(Keyword.BoolKeyword::class.java)
+val emptyLiteral = TokenNode(Literal.EmptyLiteral::class.java)
 
-//val arrayLiteral = node {}
 
-val tupleElement = node {}
-val tupleLiteral = node {}
+//val tupleElement = node {}
+//val tupleLiteral = node {}
 
 
 // Expressions
-val expression = node {}
+val expression: AlternationNode = any {
+    +literal
+}
 
 
-val literal = any {
+val literal: AlternationNode = any {
     +integerLiteral
     +realLiteral
     +stringLiteral
     +booleanLiteral
     +arrayLiteral
-    +tupleLiteral
+//    +tupleLiteral
     +emptyLiteral
 }
 
-val arrayLiteral = concat {
+val arrayLiteral: ConcatenationNode = concat {
     mapTo<ArrayLiteral>()
 
     +openBracket
     +maybe {
         concat {
-            +(expression onSuccess { fastNode: ArrayLiteral, astNode ->
-                fastNode.members.add(astNode)
+            +(expression onSuccess { fastNode: ArrayLiteral, nextFastNode ->
+                fastNode.members.add(nextFastNode)
             })
             +repeat {
                 +comma
-                +(expression onSuccess { fastNode: ArrayLiteral, astNode ->
-                    fastNode.members.add(astNode)
+                +(expression onSuccess { fastNode: ArrayLiteral, nextFastNode ->
+                    fastNode.members.add(nextFastNode)
                 })
             }
         }
@@ -70,12 +66,24 @@ val arrayLiteral = concat {
     +closeBracket
 }
 
+val testRoot = arrayLiteral
+
+
+fun main() {
+    runTest()
+}
+
+
+fun runTest() {
+    val path = "src/test/resources/maxim_test_1.pd"
+    val lexer = LexicalAnalyzer.getInstance()
+    val tokens = lexer.tokenize(File(path))
+    parse(tokens)
+}
 
 fun parse(tokens: List<Token>) {
-//    tokens.forEach { token ->
-//        if (token is IfKeyword) {
-//        }
-//    }
+    val node = testRoot.match(tokens, null)
+    print(node)
 }
 
 

@@ -1,5 +1,7 @@
 package com.compilingdogs.parser.ast
 
+import tokens.Token
+
 /*
 * This package contains the EBNF framework to express your grammar in the DSL form for further automatic parsing.
 *
@@ -22,10 +24,10 @@ abstract class ASTNode(
     // Specifies the data structure that this node is attached to.
     // While parsing, the particular values will be accumulated here.
     var attachedTo: Class<FASTNode>? = null,
-    var createCallbacks: MutableList<(FASTNode?, ASTNode) -> Unit> = mutableListOf(),
-    var successCallbacks: MutableList<(FASTNode?, ASTNode) -> Unit> = mutableListOf(),
+    var createCallbacks: MutableList<(FASTNode?, ASTNode?) -> Unit> = mutableListOf(),
+    var successCallbacks: MutableList<(FASTNode?, FASTNode) -> Unit> = mutableListOf(),
 ) {
-    abstract fun match(parentNode: FASTNode?): FASTNode?
+    abstract fun match(tokens: List<Token>, parentNode: FASTNode?): Pair<Int, FASTNode>?
 
     // TODO: check if this works
     inline fun <reified T : FASTNode> mapTo() {
@@ -39,13 +41,13 @@ fun node(init: ASTNode.() -> Unit): ASTNode = initialize(init)
 
 // --------------------------------------------------------------------------------------------------------
 
-infix fun <T : FASTNode?> ASTNode.onCreate(callback: (fastNode: T, astNode: ASTNode) -> Unit): ASTNode {
-    createCallbacks.add(callback as (FASTNode?, ASTNode) -> Unit)
+infix fun <T : FASTNode?> ASTNode.onCreate(callback: (fastNode: T, astNode: FASTNode) -> Unit): ASTNode {
+    createCallbacks.add(callback as (FASTNode?, ASTNode?) -> Unit)
     return this
 }
 
-infix fun <T : FASTNode?> ASTNode.onSuccess(callback: (fastNode: T, astNode: ASTNode) -> Unit): ASTNode {
-    successCallbacks.add(callback as (FASTNode?, ASTNode) -> Unit)
+infix fun <T : FASTNode?> ASTNode.onSuccess(callback: (fastNode: T, nextFastNode: FASTNode) -> Unit): ASTNode {
+    successCallbacks.add(callback as (FASTNode?, FASTNode) -> Unit)
     return this
 }
 
