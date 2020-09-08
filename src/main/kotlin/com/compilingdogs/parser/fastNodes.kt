@@ -27,3 +27,31 @@ class FASTToken<T : Token>(
     }
 }
 
+class FASTExpression(
+    val leftRelation: FASTRelation,
+//    val rightRelation: FASTRelation?,
+//    val relation: FASTLogicalOperator
+) : FASTNode() {
+    override fun clone(): FASTNode {
+        TODO("Not yet implemented")
+    }
+}
+
+class FASTRelation(
+    val leftRelation: FASTFactor,
+    val rightRelation: FASTFactor?,
+    val relation: FASTComparisonOperator
+) : FASTNode() {
+    override fun clone(): FASTNode {
+        TODO("Not yet implemented")
+    }
+}
+
+class FASTFactor(
+
+) : FASTNode() {
+    override fun clone(): FASTNode {
+        TODO("Not yet implemented")
+    }
+}
+

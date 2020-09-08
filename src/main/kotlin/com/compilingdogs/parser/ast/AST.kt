@@ -24,10 +24,12 @@ abstract class ASTNode(
     // Specifies the data structure that this node is attached to.
     // While parsing, the particular values will be accumulated here.
     var attachedTo: Class<FASTNode>? = null,
-    var createCallbacks: MutableList<(FASTNode?, ASTNode?) -> Unit> = mutableListOf(),
-    var successCallbacks: MutableList<(FASTNode?, FASTNode) -> Unit> = mutableListOf(),
+    var createCallback: ((FASTNode?) -> Unit)? = null,
+    var successCallback: ((FASTNode?, FASTNode) -> Unit)? = null,
 ) {
     abstract fun match(tokens: List<Token>, parentNode: FASTNode?): Pair<Int, FASTNode>?
+
+    abstract fun clone(): ASTNode
 
     // TODO: check if this works
     inline fun <reified T : FASTNode> mapTo() {
@@ -41,20 +43,17 @@ fun node(init: ASTNode.() -> Unit): ASTNode = initialize(init)
 
 // --------------------------------------------------------------------------------------------------------
 
-infix fun <T : FASTNode?> ASTNode.onCreate(callback: (fastNode: T, astNode: FASTNode) -> Unit): ASTNode {
-    createCallbacks.add(callback as (FASTNode?, ASTNode?) -> Unit)
-    return this
+infix fun <T : FASTNode?> ASTNode.onCreate(callback: (fastNode: T) -> Unit): ASTNode {
+    val newNode = clone()
+    newNode.createCallback = callback as (FASTNode?) -> Unit
+    return newNode
 }
 
 infix fun <T : FASTNode?> ASTNode.onSuccess(callback: (fastNode: T, nextFastNode: FASTNode) -> Unit): ASTNode {
-    successCallbacks.add(callback as (FASTNode?, FASTNode) -> Unit)
-    return this
+    val newNode = clone()
+    newNode.successCallback = callback as (FASTNode?, FASTNode) -> Unit
+    return newNode
 }
-
-//infix fun <T : FASTNode> ASTNode.appendTo(container: MutableList<ASTNode>): ASTNode {
-//    successCallbacks.add { fastNode, astNode -> container.add(node) }
-//    return this
-//}
 
 
 

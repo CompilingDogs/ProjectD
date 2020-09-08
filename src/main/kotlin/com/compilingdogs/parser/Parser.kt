@@ -51,11 +51,13 @@ val arrayLiteral: ConcatenationNode = concat {
     +maybe {
         concat {
             +(expression onSuccess { fastNode: ArrayLiteral, nextFastNode ->
+                println("Adding $nextFastNode to $fastNode")
                 fastNode.members.add(nextFastNode)
             })
             +repeat {
                 +comma
                 +(expression onSuccess { fastNode: ArrayLiteral, nextFastNode ->
+                    println("Adding $nextFastNode to $fastNode")
                     fastNode.members.add(nextFastNode)
                 })
             }
@@ -68,7 +70,10 @@ val testRoot = arrayLiteral
 
 
 fun main() {
-    literal.apply { +arrayLiteral }
+    literal.apply {
+        +arrayLiteral
+        println(variants)
+    }
 
     runTest()
 }
@@ -82,9 +87,11 @@ fun runTest() {
 }
 
 fun parse(tokens: List<Token>) {
-    print(tokens)
+    println(tokens)
     val node = testRoot.match(tokens, null)
-    print(node)
+    println("Node: $node")
+    println("Node type: ${node!!::class.qualifiedName}")
 }
+
 
 

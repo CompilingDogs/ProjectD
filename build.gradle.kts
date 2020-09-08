@@ -18,8 +18,8 @@ dependencies {
     implementation("com.google.code.gson", "gson", "2.8.6")
     implementation("org.apache.logging.log4j", "log4j-slf4j-impl", "2.13.3")
 
-    val arrowVersion = "0.10.4"
-    implementation("io.arrow-kt:arrow-core:$arrowVersion")
-    implementation("io.arrow-kt:arrow-syntax:$arrowVersion")
-    kapt("io.arrow-kt:arrow-meta:$arrowVersion")
+//    val arrowVersion = "0.10.4"
+//    implementation("io.arrow-kt:arrow-core:$arrowVersion")
+//    implementation("io.arrow-kt:arrow-syntax:$arrowVersion")
+//    kapt("io.arrow-kt:arrow-meta:$arrowVersion")
 }

@@ -11,10 +11,20 @@ class TokenNode<T>(
 ) : ASTNode() where T : Token {
 
     override fun match(tokens: List<Token>, parentNode: FASTNode?): Pair<Int, FASTNode>? {
+        println("Trying to match token node of type ${nodeType.simpleName}")
+
         return if (tokens.isNotEmpty() && tokens[0].javaClass == nodeType)
             Pair(1, FASTToken(tokens[0] as T))
         else
             null
+    }
+
+    override fun clone(): ASTNode {
+        return TokenNode(nodeType)
+    }
+
+    override fun toString(): String {
+        return "TokenNode(${nodeType.simpleName})"
     }
 }
 
