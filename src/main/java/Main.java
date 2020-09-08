@@ -1,7 +1,8 @@
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 
-@Slf4j
 public class Main {
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(Main.class);
+
     public static void main(String[] args) {
 
     }

@@ -1,7 +1,7 @@
 package stages;
 
 import exception.LexicalAnalysisException;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 import tokens.Token;
 
 import java.io.File;
@@ -21,7 +21,6 @@ import static stages.LexicalAnalyzer.State.*;
 import static tokens.Operator.*;
 import static tokens.Separator.*;
 
-@Slf4j
 public class LexicalAnalyzer {
     public static final String COLON_ASSIGNMENT_OPERATOR_TOKEN = ":";
     private static final HashSet<String> bracketTokenChars = new HashSet<>(
@@ -57,6 +56,7 @@ public class LexicalAnalyzer {
                     WINDOWS_NEW_LINE_SEPARATOR_TOKEN
             )
     );
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(LexicalAnalyzer.class);
 
     private static LexicalAnalyzer instance;
 

@@ -1,14 +1,13 @@
 package tokens;
 
 import exception.LexicalAnalysisException;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 
 import java.util.Arrays;
 import java.util.HashSet;
 
 import static java.lang.String.format;
 
-@Slf4j
 public class Keyword extends Token {
 
     public static final String VAR_KEYWORD_TOKEN = "var";
@@ -62,6 +61,7 @@ public class Keyword extends Token {
                     READ_STRING_KEYWORD_TOKEN
             )
     );
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(Keyword.class);
 
     public Keyword(String token, Integer line, Integer column) {
         super(token, line, column);

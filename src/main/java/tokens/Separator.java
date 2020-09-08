@@ -1,14 +1,13 @@
 package tokens;
 
 import exception.LexicalAnalysisException;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 
 import java.util.Arrays;
 import java.util.HashSet;
 
 import static java.lang.String.format;
 
-@Slf4j
 public class Separator extends Token {
 
     public static final String OPENING_PARENTHESIS_SEPARATOR_TOKEN = "(";
@@ -57,6 +56,7 @@ public class Separator extends Token {
                     NEW_LINE_SEPARATOR_TOKEN
             )
     );
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(Separator.class);
 
     public Separator(String token, Integer line, Integer column) {
         super(token, line, column);

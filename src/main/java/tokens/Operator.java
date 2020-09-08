@@ -1,14 +1,14 @@
 package tokens;
 
 import exception.LexicalAnalysisException;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 
 import java.util.Arrays;
 import java.util.HashSet;
 
 import static java.lang.String.format;
 
-@Slf4j
+
 public class Operator extends Token {
     public static final String ASSIGNMENT_OPERATOR_TOKEN = ":=";
     public static final String LOGIC_NOT_OPERATOR_TOKEN = "not";
@@ -41,6 +41,7 @@ public class Operator extends Token {
                     ARROW_OPERATOR_TOKEN, RANGE_OPERATOR_TOKEN
             )
     );
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(Operator.class);
 
     public Operator(String token, Integer line, Integer column) {
         super(token, line, column);
