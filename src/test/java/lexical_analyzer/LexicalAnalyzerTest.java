@@ -2,8 +2,8 @@ package lexical_analyzer;
 
 import com.google.gson.*;
 import exception.LexicalAnalysisException;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
+import org.slf4j.Logger;
 import stages.LexicalAnalyzer;
 import tokens.Token;
 
@@ -12,9 +12,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Type;
 
-@Slf4j
 public class LexicalAnalyzerTest {
 
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(LexicalAnalyzerTest.class);
     private final LexicalAnalyzer lexicalAnalyzer = LexicalAnalyzer.getInstance();
 
     private final String[] testingSourceCodes = new String[]{
