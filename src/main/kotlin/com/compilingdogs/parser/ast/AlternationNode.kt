@@ -15,7 +15,6 @@ class AlternationNode(
         val fastNode = attachedTo?.newInstance() ?: parentNode?.clone()
         ?: throw IllegalStateException("No FASTNode provided, and ASTNode is not mapped to any FASTNode")
 
-        var counter = 0
         for (child in variants) {
 //            println("Matching alternation child in $name ${counter++}")
 

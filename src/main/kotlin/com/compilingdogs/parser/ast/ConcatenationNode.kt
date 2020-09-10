@@ -19,7 +19,6 @@ open class ConcatenationNode(
         // Offset in the token list
         var offset = 0
 
-        var counter = 0
         for (child in children) {
 //            println("Matching concatenation child in $name ${counter++}")
 

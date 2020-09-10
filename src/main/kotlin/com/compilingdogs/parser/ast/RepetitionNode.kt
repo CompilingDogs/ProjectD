@@ -22,7 +22,6 @@ class RepetitionNode(
         // Offset in the token list
         var offset = 0
 
-        var counter = 0
         while (true) {
 //            println("Matching repetition child in $name ${counter++}")
 

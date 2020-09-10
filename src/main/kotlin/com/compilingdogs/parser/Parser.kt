@@ -78,12 +78,11 @@ val stringLiteral = TokenNode(Literal.StringLiteral::class.java)
 val booleanLiteral = TokenNode(Keyword.BoolKeyword::class.java)
 val emptyLiteral = TokenNode(Literal.EmptyLiteral::class.java)
 
+
 /**
  * AST Declaration
  */
-
-
-val literal: AlternationNode = any {
+val literal = any {
     +integerLiteral
     +realLiteral
     +stringLiteral
@@ -96,11 +95,11 @@ val literal: AlternationNode = any {
 }
 
 
-val reference: AlternationNode = any {
+val reference = any {
     +identifier
 }
 
-val typeIndicator: AlternationNode = any {
+val typeIndicator = any {
     +int
     +real
     +bool
@@ -117,7 +116,7 @@ val typeIndicator: AlternationNode = any {
     +func
 }
 
-val primary: AlternationNode = any {
+val primary = any {
     +literal
     +readInt
     +readReal
