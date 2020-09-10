@@ -10,7 +10,7 @@ class TokenNode<T>(
     val nodeType: Class<T>
 ) : ASTNode() where T : Token {
 
-    override fun match(tokens: List<Token>, parentNode: FASTNode?): Pair<Int, FASTNode>? {
+    override fun match(tokens: List<Token>, parentNode: FASTNode?, depth: Int): Pair<Int, FASTNode>? {
 //        println("Trying to match token node of type ${nodeType.simpleName}")
 
         return if (tokens.isNotEmpty() && tokens[0].javaClass == nodeType)

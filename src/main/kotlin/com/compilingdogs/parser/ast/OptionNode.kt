@@ -1,5 +1,6 @@
 package com.compilingdogs.parser.ast
 
+import com.compilingdogs.parser.indent
 import tokens.Token
 import java.lang.IllegalStateException
 
@@ -8,8 +9,8 @@ class OptionalNode(
     var node: ASTNode
 ) : ASTNode() {
 
-    override fun match(tokens: List<Token>, parentNode: FASTNode?): Pair<Int, FASTNode>? {
-        println("Matching OptionalNode $name")
+    override fun match(tokens: List<Token>, parentNode: FASTNode?, depth: Int): Pair<Int, FASTNode>? {
+        println("${indent(depth)}Matching OptionalNode $name")
 
         // If this node contains its own mapped FASTNode, use it.
         // If not, propagate parent FASTNode instead.
@@ -19,7 +20,7 @@ class OptionalNode(
         // Do creation stuff
         node.createCallback?.invoke(fastNode)
 
-        val res = node.match(tokens, fastNode)
+        val res = node.match(tokens, fastNode, depth + 1)
 
         if (res == null)
             return null

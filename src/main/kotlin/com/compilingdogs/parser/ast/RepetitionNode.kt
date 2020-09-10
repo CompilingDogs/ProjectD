@@ -1,5 +1,6 @@
 package com.compilingdogs.parser.ast
 
+import com.compilingdogs.parser.indent
 import tokens.Token
 import java.lang.IllegalStateException
 
@@ -11,8 +12,8 @@ class RepetitionNode(
 
     operator fun ASTNode.unaryPlus() = children.add(this)
 
-    override fun match(tokens: List<Token>, parentNode: FASTNode?): Pair<Int, FASTNode>? {
-        println("Matching RepetitionNode $name")
+    override fun match(tokens: List<Token>, parentNode: FASTNode?, depth: Int): Pair<Int, FASTNode>? {
+        println("${indent(depth)}Matching RepetitionNode $name")
 
         // If this node contains its own mapped FASTNode, use it.
         // If not, propagate parent FASTNode instead.
@@ -32,7 +33,7 @@ class RepetitionNode(
                 child.createCallback?.invoke(ft)
 
                 // Try to match the AST node
-                val m = child.match(tokens.subList(offset, tokens.size), ft)
+                val m = child.match(tokens.subList(offset, tokens.size), ft, depth + 1)
 
                 // If child did not match, abort
                 if (m == null)

@@ -29,7 +29,7 @@ abstract class ASTNode(
     var createCallback: ((FASTNode?) -> Unit)? = null,
     var successCallback: ((FASTNode?, FASTNode) -> Unit)? = null,
 ) {
-    abstract fun match(tokens: List<Token>, parentNode: FASTNode?): Pair<Int, FASTNode>?
+    abstract fun match(tokens: List<Token>, parentNode: FASTNode?, depth: Int): Pair<Int, FASTNode>?
 
     abstract fun clone(): ASTNode
 

@@ -474,7 +474,7 @@ fun runTest() {
 
 fun parse(tokens: List<Token>) {
     println(tokens)
-    val node = testRoot.match(tokens, null)
+    val node = testRoot.match(tokens, null, 0)
     println("Node: $node")
     println("Node: ${node?.second}")
     println("Node type: ${node!!::class.qualifiedName}")

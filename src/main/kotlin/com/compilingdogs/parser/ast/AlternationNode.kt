@@ -1,5 +1,6 @@
 package com.compilingdogs.parser.ast
 
+import com.compilingdogs.parser.indent
 import tokens.Token
 import java.lang.IllegalStateException
 
@@ -10,8 +11,8 @@ class AlternationNode(
 
     operator fun ASTNode.unaryPlus() = variants.add(this)
 
-    override fun match(tokens: List<Token>, parentNode: FASTNode?): Pair<Int, FASTNode>? {
-        println("Matching AlternationNode $name")
+    override fun match(tokens: List<Token>, parentNode: FASTNode?, depth: Int): Pair<Int, FASTNode>? {
+        println("${indent(depth)}Matching AlternationNode $name")
 
         // If this node contains its own mapped FASTNode, use it.
         // If not, propagate parent FASTNode instead.
@@ -27,7 +28,7 @@ class AlternationNode(
             child.createCallback?.invoke(fn)
 
             // Try to match the AST nodes
-            val m = child.match(tokens, fn)
+            val m = child.match(tokens, fn, depth + 1)
 
             // If child did not match, continue
             if (m == null)

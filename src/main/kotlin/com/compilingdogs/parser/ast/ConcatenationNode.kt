@@ -1,5 +1,6 @@
 package com.compilingdogs.parser.ast
 
+import com.compilingdogs.parser.indent
 import tokens.Token
 import java.lang.IllegalStateException
 
@@ -10,8 +11,8 @@ open class ConcatenationNode(
     operator fun ASTNode.unaryPlus() = children.add(this)
 
 
-    override fun match(tokens: List<Token>, parentNode: FASTNode?): Pair<Int, FASTNode>? {
-        println("Matching ConcatenationNode $name")
+    override fun match(tokens: List<Token>, parentNode: FASTNode?, depth: Int): Pair<Int, FASTNode>? {
+        println("${indent(depth)}Matching ConcatenationNode $name")
 
         // If this node contains its own mapped FASTNode, use it.
         // If not, propagate parent FASTNode instead.
@@ -28,7 +29,7 @@ open class ConcatenationNode(
             child.createCallback?.invoke(fastNode)
 
             // Try to match the AST node
-            val m = child.match(tokens.subList(offset, tokens.size), fastNode)
+            val m = child.match(tokens.subList(offset, tokens.size), fastNode, depth + 1)
 
             // If child did not match, abort
             if (m == null)
