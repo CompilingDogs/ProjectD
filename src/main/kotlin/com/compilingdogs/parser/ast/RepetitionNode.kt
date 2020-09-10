@@ -24,7 +24,7 @@ class RepetitionNode(
 
         var counter = 0
         while (true) {
-            println("Matching repetition child ${counter++}")
+            println("Matching repetition child in $name ${counter++}")
 
             val ft = fastNode.clone()
 
@@ -54,8 +54,8 @@ class RepetitionNode(
     }
 
     override fun toString(): String {
-        return "RepetitionNode"
+        return "RepetitionNode($name)"
     }
 }
 
-fun repeat(init: RepetitionNode.() -> Unit): RepetitionNode = initialize(init)
+fun repeat(name: String = "", init: RepetitionNode.() -> Unit): RepetitionNode = initialize(init, name)

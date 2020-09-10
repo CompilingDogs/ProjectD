@@ -29,7 +29,7 @@ val emptyLiteral = TokenNode(Literal.EmptyLiteral::class.java)
 //val tupleElement = node {}
 //val tupleLiteral = node {}
 
-val literal: AlternationNode = any {
+val literal: AlternationNode = any("litaral") {
     +integerLiteral
     +realLiteral
     +stringLiteral
@@ -40,26 +40,26 @@ val literal: AlternationNode = any {
 }
 
 // Expressions
-val expression: AlternationNode = any {
+val expression: AlternationNode = any("expression") {
     +literal
 }
 
-val arrayLiteral: ConcatenationNode = concat {
-    mapTo<ArrayLiteral>()
+val arrayLiteral: ConcatenationNode = concat("arrayLiteral") {
+    mapTo<FASTArrayLiteral>()
 
     +openBracket
-    +maybe {
-        concat {
-            +(expression onSuccess { fastNode: ArrayLiteral, nextFastNode ->
+    +maybe("arrayLiteralMaybe") {
+        concat("arrayLiteralMaybeConcat") {
+            +(expression onSuccess { fastNode: FASTArrayLiteral, nextFastNode ->
                 println("Adding $nextFastNode to $fastNode")
                 fastNode.members.add(nextFastNode)
-            })
-            +repeat {
+            }).apply { name = "arrayLiteralMaybeConcatExpression" }
+            +repeat("arrayLiteralMaybeConcatRepeat") {
                 +comma
-                +(expression onSuccess { fastNode: ArrayLiteral, nextFastNode ->
+                +(expression onSuccess { fastNode: FASTArrayLiteral, nextFastNode ->
                     println("Adding $nextFastNode to $fastNode")
                     fastNode.members.add(nextFastNode)
-                })
+                }).apply { name = "arrayLiteralMaybeConcatRepeatExpression" }
             }
         }
     }
@@ -90,6 +90,7 @@ fun parse(tokens: List<Token>) {
     println(tokens)
     val node = testRoot.match(tokens, null)
     println("Node: $node")
+    println("Node: ${node?.second}")
     println("Node type: ${node!!::class.qualifiedName}")
 }
 

@@ -10,8 +10,6 @@ class AlternationNode(
 
     operator fun ASTNode.unaryPlus() = variants.add(this)
     override fun match(tokens: List<Token>, parentNode: FASTNode?): Pair<Int, FASTNode>? {
-        println("Trying to match alternation node")
-
         // If this node contains its own mapped FASTNode, use it.
         // If not, propagate parent FASTNode instead.
         val fastNode = attachedTo?.newInstance() ?: parentNode?.clone()
@@ -19,7 +17,7 @@ class AlternationNode(
 
         var counter = 0
         for (child in variants) {
-            println("Matching alternation child ${counter++}")
+            println("Matching alternation child in $name ${counter++}")
 
             val fn = fastNode.clone()
 
@@ -36,7 +34,7 @@ class AlternationNode(
             // If match was successful, fire appropriate callbacks
             child.successCallback?.invoke(fn, m.second)
 
-            return Pair(m.first, fn)
+            return Pair(m.first, m.second)
         }
 
         return null
@@ -47,9 +45,9 @@ class AlternationNode(
     }
 
     override fun toString(): String {
-        return "AlternationNode"
+        return "AlternationNode($name)"
     }
 }
 
 // DSL function to create an empty node. Have no idea why anyone would need this.
-fun any(init: AlternationNode.() -> Unit): AlternationNode = initialize(init)
+fun any(name: String = "", init: AlternationNode.() -> Unit): AlternationNode = initialize(init, name)

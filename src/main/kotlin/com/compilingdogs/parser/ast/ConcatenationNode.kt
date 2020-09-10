@@ -11,8 +11,6 @@ open class ConcatenationNode(
 
 
     override fun match(tokens: List<Token>, parentNode: FASTNode?): Pair<Int, FASTNode>? {
-        println("Trying to match concatenation node")
-
         // If this node contains its own mapped FASTNode, use it.
         // If not, propagate parent FASTNode instead.
         val fastNode = attachedTo?.newInstance() ?: parentNode?.clone()
@@ -23,7 +21,7 @@ open class ConcatenationNode(
 
         var counter = 0
         for (child in children) {
-            println("Matching concatenation child ${counter++}")
+            println("Matching concatenation child in $name ${counter++}")
 
             // Do creation stuff
             child.createCallback?.invoke(fastNode)
@@ -37,8 +35,11 @@ open class ConcatenationNode(
 
             offset += m.first
 
-            // If match was successful, fire appropriate callbacks
-            child.successCallback?.invoke(fastNode, m.second)
+            if (child.successCallback != null) {
+                println("gonna call callback with param ${m.second}")
+                // If match was successful, fire appropriate callbacks
+                child.successCallback?.invoke(fastNode, m.second)
+            }
         }
 
         return Pair(offset, fastNode)
@@ -49,9 +50,9 @@ open class ConcatenationNode(
     }
 
     override fun toString(): String {
-        return "ConcatenationNode"
+        return "ConcatenationNode($name)"
     }
 }
 
 
-fun concat(init: ConcatenationNode.() -> Unit): ConcatenationNode = initialize(init)
+fun concat(name: String = "", init: ConcatenationNode.() -> Unit): ConcatenationNode = initialize(init, name)

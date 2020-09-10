@@ -5,11 +5,11 @@ import java.lang.IllegalStateException
 
 
 class OptionalNode(
-        var node: ASTNode
+    var node: ASTNode
 ) : ASTNode() {
 
     override fun match(tokens: List<Token>, parentNode: FASTNode?): Pair<Int, FASTNode>? {
-        println("Trying to match option node")
+        println("Matching optional node in $name")
 
         // If this node contains its own mapped FASTNode, use it.
         // If not, propagate parent FASTNode instead.
@@ -27,7 +27,8 @@ class OptionalNode(
         // If match was successful, fire appropriate callbacks
         node.successCallback?.invoke(fastNode, res.second)
 
-        return Pair(res.first, fastNode)
+        return Pair(res.first, res.second)
+//        return Pair(res.first, fastNode)
 
     }
 
@@ -36,8 +37,9 @@ class OptionalNode(
     }
 
     override fun toString(): String {
-        return "OptionNode"
+        return "OptionNode($name)"
     }
 }
 
-fun maybe(init: () -> ASTNode): OptionalNode = OptionalNode(init())
+fun maybe(name: String = "", init: () -> ASTNode): OptionalNode = OptionalNode(init()).apply { this.name = name }
+

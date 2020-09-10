@@ -11,9 +11,10 @@ import tokens.Token
 
 
 // Function used to generate different kinds of nodes in DSL. See particular usages of this function below.
-inline fun <reified T : ASTNode> initialize(init: T.() -> Unit): T {
+inline fun <reified T : ASTNode> initialize(init: T.() -> Unit, name: String = ""): T {
     // TODO: find another way for this (if possible)
     val node = T::class.java.newInstance()
+    node.name = name
     node.init()
     return node
 }
@@ -21,6 +22,7 @@ inline fun <reified T : ASTNode> initialize(init: T.() -> Unit): T {
 
 // The base class for all AST nodes
 abstract class ASTNode(
+    var name: String = "",
     // Specifies the data structure that this node is attached to.
     // While parsing, the particular values will be accumulated here.
     var attachedTo: Class<FASTNode>? = null,
@@ -38,7 +40,7 @@ abstract class ASTNode(
 }
 
 // DSL function to create an empty node. Can be used as a placeholder for not implemented AST nodes.
-fun node(init: ASTNode.() -> Unit): ASTNode = initialize(init)
+fun node(name: String = "", init: ASTNode.() -> Unit): ASTNode = initialize(init, name)
 
 
 // --------------------------------------------------------------------------------------------------------
