@@ -49,9 +49,7 @@ class RepetitionNode(
         }
     }
 
-    override fun clone(): ASTNode {
-        return RepetitionNode(children.toMutableList())
-    }
+    override fun clone(): ASTNode = RepetitionNode(children.toMutableList()).also { it.name = name }
 
     override fun get(name: String): ASTNode? = children.firstOrNull { it.name == name }
 

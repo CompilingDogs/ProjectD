@@ -43,9 +43,7 @@ class AlternationNode(
         return null
     }
 
-    override fun clone(): ASTNode {
-        return AlternationNode(variants.toMutableList())
-    }
+    override fun clone(): ASTNode = AlternationNode(variants.toMutableList()).also { it.name = name }
 
     override fun get(name: String): ASTNode? = variants.firstOrNull { it.name == name }
 

@@ -47,9 +47,7 @@ open class ConcatenationNode(
         return Pair(offset, fastNode)
     }
 
-    override fun clone(): ASTNode {
-        return ConcatenationNode(children.toMutableList())
-    }
+    override fun clone(): ASTNode = ConcatenationNode(children.toMutableList()).also { it.name = name }
 
     override fun get(name: String): ASTNode? = children.firstOrNull { it.name == name }
 

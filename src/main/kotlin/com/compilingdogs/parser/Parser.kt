@@ -404,12 +404,12 @@ val arrayLiteral: ConcatenationNode = concat("arrayLiteral") {
     mapTo<FASTArrayLiteral>()
 
     +openBracket
-    +maybe {
-        concat {
+    +maybe("maybeArrayElements") {
+        concat("concatArrayElements") {
             +(expression onSuccess { fastNode: FASTArrayLiteral, nextFastNode ->
                 fastNode.members.add(nextFastNode)
             })
-            +repeat {
+            +repeat("followingArrayElements") {
                 +comma
                 +(expression onSuccess { fastNode: FASTArrayLiteral, nextFastNode ->
                     fastNode.members.add(nextFastNode)

@@ -31,9 +31,7 @@ class OptionalNode(
         return Pair(res.first, res.second)
     }
 
-    override fun clone(): ASTNode {
-        return OptionalNode(node.clone())
-    }
+    override fun clone(): ASTNode = OptionalNode(node.clone()).also { it.name = name }
 
     override fun get(name: String): ASTNode? = if (node.name == name) node else null
 
