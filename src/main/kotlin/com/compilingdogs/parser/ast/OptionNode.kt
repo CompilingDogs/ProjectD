@@ -1,5 +1,6 @@
 package com.compilingdogs.parser.ast
 
+import com.compilingdogs.parser.FASTEmptyOptionalNode
 import com.compilingdogs.parser.indent
 import tokens.Token
 import java.lang.IllegalStateException
@@ -23,7 +24,7 @@ class OptionalNode(
         val res = node.match(tokens, fastNode, depth + 1)
 
         if (res == null)
-            return null
+            return Pair(0, FASTEmptyOptionalNode())
 
         // If match was successful, fire appropriate callbacks
         node.successCallback?.invoke(fastNode, res.second)

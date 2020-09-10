@@ -157,14 +157,14 @@ val primary = any("primary") {
 
 val unary: AlternationNode = any("unary") {
     +reference
-    +concat {
+    +concat("typeCheckOperator") {
         +reference
         +isOp
         +typeIndicator
     }
-    +concat {
-        +maybe {
-            any {
+    +concat("primary") {
+        +maybe("primaryMaybe") {
+            any("primaryMaybeSign") {
                 +plus
                 +minus
                 +not
@@ -407,11 +407,13 @@ val arrayLiteral: ConcatenationNode = concat("arrayLiteral") {
     +maybe("maybeArrayElements") {
         concat("concatArrayElements") {
             +(expression onSuccess { fastNode: FASTArrayLiteral, nextFastNode ->
+                println("Adding $nextFastNode to $fastNode")
                 fastNode.members.add(nextFastNode)
             })
             +repeat("followingArrayElements") {
                 +comma
                 +(expression onSuccess { fastNode: FASTArrayLiteral, nextFastNode ->
+                    println("Adding $nextFastNode to $fastNode")
                     fastNode.members.add(nextFastNode)
                 })
             }

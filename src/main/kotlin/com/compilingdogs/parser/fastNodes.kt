@@ -9,6 +9,10 @@ class FASTToken<T : Token>(
     override fun clone(): FASTNode {
         return FASTToken(token)
     }
+
+    override fun toString(): String {
+        return "FASTToken($token)"
+    }
 }
 
 //class FASTVarDefinition(
@@ -77,6 +81,16 @@ class FASTArrayLiteral(
 
     override fun clone(): FASTNode {
         return FASTArrayLiteral(members.toMutableList())
+    }
+
+    override fun toString(): String {
+        return "FASTArrayLiteral($members)"
+    }
+}
+
+class FASTEmptyOptionalNode() : FASTNode() {
+    override fun clone(): FASTNode {
+        TODO("Not yet implemented")
     }
 }
 
