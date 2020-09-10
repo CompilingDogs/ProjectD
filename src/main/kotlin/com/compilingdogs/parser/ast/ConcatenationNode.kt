@@ -11,6 +11,8 @@ open class ConcatenationNode(
 
 
     override fun match(tokens: List<Token>, parentNode: FASTNode?): Pair<Int, FASTNode>? {
+        println("Matching ConcatenationNode $name")
+
         // If this node contains its own mapped FASTNode, use it.
         // If not, propagate parent FASTNode instead.
         val fastNode = attachedTo?.newInstance() ?: parentNode?.clone()

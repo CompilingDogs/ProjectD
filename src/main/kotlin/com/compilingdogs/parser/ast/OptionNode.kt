@@ -9,7 +9,7 @@ class OptionalNode(
 ) : ASTNode() {
 
     override fun match(tokens: List<Token>, parentNode: FASTNode?): Pair<Int, FASTNode>? {
-//        println("Matching optional node in $name")
+        println("Matching OptionalNode $name")
 
         // If this node contains its own mapped FASTNode, use it.
         // If not, propagate parent FASTNode instead.

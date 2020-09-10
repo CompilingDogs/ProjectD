@@ -9,7 +9,10 @@ class AlternationNode(
 ) : ASTNode() {
 
     operator fun ASTNode.unaryPlus() = variants.add(this)
+
     override fun match(tokens: List<Token>, parentNode: FASTNode?): Pair<Int, FASTNode>? {
+        println("Matching AlternationNode $name")
+
         // If this node contains its own mapped FASTNode, use it.
         // If not, propagate parent FASTNode instead.
         val fastNode = attachedTo?.newInstance() ?: parentNode?.clone()
