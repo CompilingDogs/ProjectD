@@ -9,7 +9,7 @@ class OptionalNode(
 ) : ASTNode() {
 
     override fun match(tokens: List<Token>, parentNode: FASTNode?): Pair<Int, FASTNode>? {
-        println("Matching optional node in $name")
+//        println("Matching optional node in $name")
 
         // If this node contains its own mapped FASTNode, use it.
         // If not, propagate parent FASTNode instead.
@@ -28,13 +28,13 @@ class OptionalNode(
         node.successCallback?.invoke(fastNode, res.second)
 
         return Pair(res.first, res.second)
-//        return Pair(res.first, fastNode)
-
     }
 
     override fun clone(): ASTNode {
         return OptionalNode(node.clone())
     }
+
+    override fun get(name: String): ASTNode? = if (node.name == name) node else null
 
     override fun toString(): String {
         return "OptionNode($name)"

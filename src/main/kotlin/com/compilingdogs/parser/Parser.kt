@@ -37,7 +37,7 @@ val whileKeyword = TokenNode(Keyword.WhileKeyword::class.java)
 /**
  * Operators
  */
-val assignment = TokenNode(Operator.AssignmentOperator::class.java)
+val assignmentOperator = TokenNode(Operator.AssignmentOperator::class.java)
 val or = TokenNode(Operator.LogicOrOperator::class.java)
 val and = TokenNode(Operator.LogicAndOperator::class.java)
 val xor = TokenNode(Operator.LogicXorOperator::class.java)
@@ -81,170 +81,23 @@ val emptyLiteral = TokenNode(Literal.EmptyLiteral::class.java)
 /**
  * AST Declaration
  */
+
+
 val literal: AlternationNode = any {
     +integerLiteral
     +realLiteral
     +stringLiteral
     +booleanLiteral
-//    +arrayLiteral
-//    +tupleLiteral
     +emptyLiteral
+//    +arrayLiteral    // this is added separately to break circular dependency cycle
+//    +tupleLiteral    // this is added separately to break circular dependency cycle
+//    +functionLiteral // this is added separately to break circular dependency cycle
+
 }
 
-val ifControlStructure: ConcatenationNode = concat {
-    +ifKeyword
-    +expression
-    +thenKeyword
-    +body
-    +maybe {
-        concat {
-            +elseKeyword
-            +body
-        }
-    }
-    +end
-}
 
-val tupleElement: ConcatenationNode = concat {
-    +maybe {
-        concat {
-            +identifier
-            +assignment
-        }
-    }
-    +expression
-}
-
-val tupleLiteral: ConcatenationNode = concat {
-    +openBrace
-    +maybe {
-        concat {
-            +tupleElement
-            +repeat {
-                +comma
-                +tupleElement
-            }
-        }
-    }
-    +closeBrace
-}
-
-val forControlStructure: ConcatenationNode = concat {
-    +forKeyword
-    +any {
-        +concat {
-            +maybe {
-                concat {
-                    +identifier
-                    +inKeyword
-                }
-            }
-            +expression
-            +range
-            +expression
-        }
-        +concat {
-            +identifier
-            +inKeyword
-            +expression
-        }
-    }
-    +loopKeyword
-    +body
-    +end
-}
-
-val whileControlStructure: ConcatenationNode = concat {
-    +whileKeyword
-    +expression
-    +loopKeyword
-    +body
-    +end
-}
-
-val loopControlStructure: AlternationNode = any {
-    +forControlStructure
-    +whileControlStructure
-}
-
-val controlStructure: AlternationNode = any {
-    +ifControlStructure
-    +loopControlStructure
-}
-
-val printStatement: ConcatenationNode = concat {
-    +print
-    +expression
-    +repeat {
-        +comma
-        +expression
-    }
-}
-
-val returnStatement: ConcatenationNode = concat {
-    +returnKeyword
-    +maybe {
-        expression
-    }
-}
-
-val body: AlternationNode = any {
-    +program
-}
-
-val funcBody: AlternationNode = any {
-    +concat {
-        +isOp
-        +body
-        +end
-    }
-    +concat {
-        +arrow
-        +expression
-    }
-}
-
-val functionLiteral: ConcatenationNode = concat {
-    +func
-    +maybe {
-        concat {
-            +openParenthesis
-            +identifier
-            +repeat {
-                +comma
-                +identifier
-            }
-            +closeBracket
-        }
-
-    }
-    +funcBody
-}
-
-val primary: AlternationNode = any {
-    +literal
-    +readInt
-    +readReal
-    +readString
-    +functionLiteral
-    +concat {
-        +reference
-        +openParenthesis
-        +maybe {
-            concat {
-                +expression
-                +repeat {
-                    +comma
-                    +expression
-                }
-            }
-        }
-        +concat {
-            +openParenthesis
-            +expression
-            +closeParenthesis
-        }
-    }
+val reference: AlternationNode = any {
+    +identifier
 }
 
 val typeIndicator: AlternationNode = any {
@@ -264,21 +117,28 @@ val typeIndicator: AlternationNode = any {
     +func
 }
 
-val reference: AlternationNode = any {
-    +identifier
-}
-
-val referenceShit: AlternationNode = any {
-    +concat {
+val primary: AlternationNode = any {
+    +literal
+    +readInt
+    +readReal
+    +readString
+    +concat("functionCall") {
         +reference
-        +openBracket
-        +expression
-        +closeBracket
+        +openParenthesis
+        +maybe("maybe") {
+            concat("concat") {
+//                +expression // this is added separately to break circular dependency cycle
+                +repeat("repeat") {
+                    +comma
+//                    +expression // this is added separately to break circular dependency cycle
+                }
+            }
+        }
     }
-    +concat {
-        +reference
-        +period
-        +identifier
+    +concat("groupedExpression") {
+        +openParenthesis
+//        +expression // this is added separately to break circular dependency cycle
+        +closeParenthesis
     }
 }
 
@@ -326,6 +186,7 @@ val factor: ConcatenationNode = concat {
         }
     }
 }
+
 val relation: ConcatenationNode = concat {
     +factor
     +maybe {
@@ -360,7 +221,7 @@ val varDefinition: ConcatenationNode = concat {
     +identifier
     +maybe {
         concat {
-            +assignment
+            +assignmentOperator
             +expression
         }
     }
@@ -376,13 +237,29 @@ val declaration: ConcatenationNode = concat {
         }
     }
 }
-
 val assignmentStatement: ConcatenationNode = concat {
     +reference
-    +assignment
+    +assignmentOperator
     +expression
 }
-
+val controlStructure: AlternationNode = any {
+//    +ifControlStructure   // this is added separately to break circular dependency cycle
+//    +loopControlStructure // this is added separately to break circular dependency cycle
+}
+val printStatement: ConcatenationNode = concat {
+    +print
+    +expression
+    +repeat {
+        +comma
+        +expression
+    }
+}
+val returnStatement: ConcatenationNode = concat {
+    +returnKeyword
+    +maybe {
+        expression
+    }
+}
 val statement: AlternationNode = any {
     +declaration
     +assignmentStatement
@@ -390,7 +267,6 @@ val statement: AlternationNode = any {
     +printStatement
     +returnStatement
 }
-
 val program: ConcatenationNode = concat {
     +repeat {
         +concat {
@@ -402,19 +278,127 @@ val program: ConcatenationNode = concat {
         }
     }
 }
+val body: AlternationNode = any {
+    +program
+}
+
+val ifControlStructure: ConcatenationNode = concat {
+    +ifKeyword
+    +expression
+    +thenKeyword
+    +body
+    +maybe {
+        concat {
+            +elseKeyword
+            +body
+        }
+    }
+    +end
+}
+
+
+val forControlStructure: ConcatenationNode = concat {
+    +forKeyword
+    +any {
+        +concat {
+            +maybe {
+                concat {
+                    +identifier
+                    +inKeyword
+                }
+            }
+            +expression
+            +range
+            +expression
+        }
+        +concat {
+            +identifier
+            +inKeyword
+            +expression
+        }
+    }
+    +loopKeyword
+    +body
+    +end
+}
+
+val whileControlStructure: ConcatenationNode = concat {
+    +whileKeyword
+    +expression
+    +loopKeyword
+    +body
+    +end
+}
+
+
+val loopControlStructure: AlternationNode = any {
+    +forControlStructure
+    +whileControlStructure
+}
+
+
+val funcBody: AlternationNode = any {
+    +concat {
+        +isOp
+        +body
+        +end
+    }
+    +concat {
+        +arrow
+        +expression
+    }
+}
+
+val referenceShit: AlternationNode = any {
+    +concat {
+        +reference
+        +openBracket
+        +expression
+        +closeBracket
+    }
+    +concat {
+        +reference
+        +period
+        +identifier
+    }
+}
+
+
+val tupleElement: ConcatenationNode = concat {
+    +maybe {
+        concat {
+            +identifier
+            +assignmentOperator
+        }
+    }
+    +expression
+}
+val tupleLiteral: ConcatenationNode = concat {
+    +openBrace
+    +maybe {
+        concat {
+            +tupleElement
+            +repeat {
+                +comma
+                +tupleElement
+            }
+        }
+    }
+    +closeBrace
+}
 
 val arrayLiteral: ConcatenationNode = concat {
-    mapTo<ArrayLiteral>()
+    mapTo<FASTArrayLiteral>()
 
     +openBracket
     +maybe {
         concat {
-            +(expression onSuccess { fastNode: ArrayLiteral, nextFastNode ->
+            +(expression onSuccess { fastNode: FASTArrayLiteral, nextFastNode ->
                 fastNode.members.add(nextFastNode)
             })
             +repeat {
                 +comma
-                +(expression onSuccess { fastNode: ArrayLiteral, nextFastNode ->
+                +(expression onSuccess { fastNode: FASTArrayLiteral, nextFastNode ->
                     fastNode.members.add(nextFastNode)
                 })
             }
@@ -423,13 +407,41 @@ val arrayLiteral: ConcatenationNode = concat {
     +closeBracket
 }
 
+val functionLiteral: ConcatenationNode = concat {
+    +func
+    +maybe {
+        concat {
+            +openParenthesis
+            +identifier
+            +repeat {
+                +comma
+                +identifier
+            }
+            +closeBracket
+        }
+
+    }
+    +funcBody
+}
+
+
 val testRoot = arrayLiteral
 
 
 fun main() {
     literal.apply { +arrayLiteral }
     literal.apply { +tupleLiteral }
+    literal.apply { +functionLiteral }
+
     reference.apply { +referenceShit }
+
+    (primary["functionCall"]!!["maybe"]!!["concat"] as ConcatenationNode).apply { children.add(0, expression) }
+    (primary["functionCall"]!!["maybe"]!!["concat"]!!["repeat"] as RepetitionNode).apply { children.add(expression) }
+    (primary["groupedExpression"] as ConcatenationNode).apply { children.add(1, expression) }
+
+    controlStructure.apply { +ifControlStructure }
+    controlStructure.apply { +loopControlStructure }
+
 
     runTest()
 }

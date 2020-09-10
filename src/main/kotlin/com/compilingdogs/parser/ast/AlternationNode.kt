@@ -17,7 +17,7 @@ class AlternationNode(
 
         var counter = 0
         for (child in variants) {
-            println("Matching alternation child in $name ${counter++}")
+//            println("Matching alternation child in $name ${counter++}")
 
             val fn = fastNode.clone()
 
@@ -43,6 +43,8 @@ class AlternationNode(
     override fun clone(): ASTNode {
         return AlternationNode(variants.toMutableList())
     }
+
+    override fun get(name: String): ASTNode? = variants.firstOrNull { it.name == name }
 
     override fun toString(): String {
         return "AlternationNode($name)"

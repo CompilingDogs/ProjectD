@@ -21,7 +21,7 @@ open class ConcatenationNode(
 
         var counter = 0
         for (child in children) {
-            println("Matching concatenation child in $name ${counter++}")
+//            println("Matching concatenation child in $name ${counter++}")
 
             // Do creation stuff
             child.createCallback?.invoke(fastNode)
@@ -48,6 +48,8 @@ open class ConcatenationNode(
     override fun clone(): ASTNode {
         return ConcatenationNode(children.toMutableList())
     }
+
+    override fun get(name: String): ASTNode? = children.firstOrNull { it.name == name }
 
     override fun toString(): String {
         return "ConcatenationNode($name)"

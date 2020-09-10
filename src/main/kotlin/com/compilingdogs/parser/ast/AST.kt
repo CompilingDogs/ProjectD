@@ -33,6 +33,8 @@ abstract class ASTNode(
 
     abstract fun clone(): ASTNode
 
+    abstract operator fun get(name: String): ASTNode?
+
     // TODO: check if this works
     inline fun <reified T : FASTNode> mapTo() {
         attachedTo = T::class.java as Class<FASTNode>

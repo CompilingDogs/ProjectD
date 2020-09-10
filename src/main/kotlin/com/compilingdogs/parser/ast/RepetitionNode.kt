@@ -12,7 +12,7 @@ class RepetitionNode(
     operator fun ASTNode.unaryPlus() = children.add(this)
 
     override fun match(tokens: List<Token>, parentNode: FASTNode?): Pair<Int, FASTNode>? {
-        println("Trying to match repetition node")
+//        println("Trying to match repetition node")
 
         // If this node contains its own mapped FASTNode, use it.
         // If not, propagate parent FASTNode instead.
@@ -24,7 +24,7 @@ class RepetitionNode(
 
         var counter = 0
         while (true) {
-            println("Matching repetition child in $name ${counter++}")
+//            println("Matching repetition child in $name ${counter++}")
 
             val ft = fastNode.clone()
 
@@ -52,6 +52,8 @@ class RepetitionNode(
     override fun clone(): ASTNode {
         return RepetitionNode(children.toMutableList())
     }
+
+    override fun get(name: String): ASTNode? = children.firstOrNull { it.name == name }
 
     override fun toString(): String {
         return "RepetitionNode($name)"
