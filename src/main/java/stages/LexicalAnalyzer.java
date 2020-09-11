@@ -59,6 +59,12 @@ public class LexicalAnalyzer {
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(LexicalAnalyzer.class);
 
     private static LexicalAnalyzer instance;
+    private StringBuilder buffer;
+    private List<Token> tokens;
+    private int line;
+    private int column;
+    private State currState;
+    private FileReader reader;
 
     private LexicalAnalyzer() {}
 
@@ -80,13 +86,6 @@ public class LexicalAnalyzer {
     private static Boolean isSeparatorTokenChar(Character curChar) {
         return separatorTokenChars.contains(String.valueOf(curChar));
     }
-
-    private StringBuilder buffer;
-    private List<Token> tokens;
-    private int line;
-    private int column;
-    private State currState;
-    private FileReader reader;
 
     /**
      * Function, that scans given input file and returns list of tokens
@@ -120,8 +119,11 @@ public class LexicalAnalyzer {
                 } else {
                     this.commitBufferedToken();
                     currState = newState;
-                    if (newState == READ_ALPHA || newState == READ_OP || isPersistentSeparator(
-                            String.valueOf(currChar))) {
+                    if (
+                            newState == READ_ALPHA ||
+                                    newState == READ_OP ||
+                                    isPersistentSeparator(String.valueOf(currChar))
+                    ) {
                         buffer.append(currChar);
                     } else if (newState == EMPTY) {
                         var message = format(
@@ -258,10 +260,10 @@ public class LexicalAnalyzer {
         public static State getState(Character currChar) {
             if (isLetter(currChar) || isDigit(currChar) || currChar == '_') {
                 return READ_ALPHA;
+            } else if (isOperatorTokenChar(currChar) || currChar == '.') {
+                return READ_OP;
             } else if (isSeparatorTokenChar(currChar)) {
                 return READ_SEP;
-            } else if (isOperatorTokenChar(currChar)) {
-                return READ_OP;
             } else {
                 return EMPTY;
             }

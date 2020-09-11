@@ -11,7 +11,13 @@ public class Token {
         this.column = column;
     }
 
-    public Token() {}
+    public Token() {
+    }
+
+    @Override
+    public String toString() {
+        return "\"" + token + "\"";
+    }
 
     public static Token tokenize(String token, Integer line, Integer column) {
         if (Separator.isSeparator(token)) {
@@ -27,15 +33,27 @@ public class Token {
         }
     }
 
-    public String getToken() {return this.token;}
+    public String getToken() {
+        return this.token;
+    }
 
-    public void setToken(String token) {this.token = token; }
+    public void setToken(String token) {
+        this.token = token;
+    }
 
-    public Integer getLine() {return this.line;}
+    public Integer getLine() {
+        return this.line;
+    }
 
-    public void setLine(Integer line) {this.line = line; }
+    public void setLine(Integer line) {
+        this.line = line;
+    }
 
-    public Integer getColumn() {return this.column;}
+    public Integer getColumn() {
+        return this.column;
+    }
 
-    public void setColumn(Integer column) {this.column = column; }
+    public void setColumn(Integer column) {
+        this.column = column;
+    }
 }
