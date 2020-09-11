@@ -13,12 +13,14 @@ class RepetitionNode(
     operator fun ASTNode.unaryPlus() = children.add(this)
 
     override fun match(tokens: List<Token>, parentNode: FASTNode?, depth: Int): Pair<Int, FASTNode>? {
-        println("${indent(depth)}Matching RepetitionNode $name")
+        println("${indent(depth)}Matching RepetitionNode $name; parent is $parentNode")
 
         // If this node contains its own mapped FASTNode, use it.
         // If not, propagate parent FASTNode instead.
         var fastNode = attachedTo?.newInstance() ?: parentNode?.clone()
         ?: throw IllegalStateException("No FASTNode provided, and ASTNode is not mapped to any FASTNode")
+
+        println("${indent(depth)}Node after update: $fastNode")
 
         // Offset in the token list
         var offset = 0
