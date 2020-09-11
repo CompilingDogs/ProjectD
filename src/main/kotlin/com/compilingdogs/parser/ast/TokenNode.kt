@@ -14,7 +14,10 @@ class TokenNode<T>(
 //        println("Trying to match token node of type ${nodeType.simpleName}")
 
         return if (tokens.isNotEmpty() && tokens[0].javaClass == nodeType)
-            Pair(1, FASTToken(tokens[0] as T)).apply { println("Matched ${tokens[0]} to $second") }
+            Pair(1, FASTToken(tokens[0] as T)).apply {
+                if (logFASTTokens)
+                    println("Matched ${tokens[0]} to $second")
+            }
         else
             null
     }

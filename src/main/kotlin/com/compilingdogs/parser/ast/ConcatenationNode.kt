@@ -12,14 +12,16 @@ open class ConcatenationNode(
 
 
     override fun match(tokens: List<Token>, parentNode: FASTNode?, depth: Int): Pair<Int, FASTNode>? {
-        println("${indent(depth)}Matching ConcatenationNode $name; parent is $parentNode")
+        if (logNodeTraversal)
+            println("${indent(depth)}Matching ConcatenationNode $name; parent is $parentNode")
 
         // If this node contains its own mapped FASTNode, use it.
         // If not, propagate parent FASTNode instead.
         val fastNode = attachedTo?.newInstance() ?: parentNode?.clone()
         ?: throw IllegalStateException("No FASTNode provided, and ASTNode is not mapped to any FASTNode")
 
-        println("${indent(depth)}Node after update: $fastNode")
+        if (logFASTNodes)
+            println("${indent(depth)}Node after update: $fastNode")
 
         // Offset in the token list
         var offset = 0
@@ -40,7 +42,6 @@ open class ConcatenationNode(
             offset += m.first
 
             if (child.successCallback != null) {
-                println("gonna call callback with param ${m.second}")
                 // If match was successful, fire appropriate callbacks
                 child.successCallback?.invoke(fastNode, m.second)
             }

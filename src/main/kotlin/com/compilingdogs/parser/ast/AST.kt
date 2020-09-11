@@ -10,6 +10,11 @@ import tokens.Token
 */
 
 
+val logNodeTraversal = true
+val logFASTNodes = false
+val logFASTTokens = true
+
+
 // Function used to generate different kinds of nodes in DSL. See particular usages of this function below.
 inline fun <reified T : ASTNode> initialize(init: T.() -> Unit, name: String = ""): T {
     // TODO: find another way for this (if possible)
