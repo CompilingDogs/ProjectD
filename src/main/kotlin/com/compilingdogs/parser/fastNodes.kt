@@ -2,6 +2,7 @@ package com.compilingdogs.parser
 
 import com.compilingdogs.parser.ast.FASTNode
 import tokens.Token
+import java.util.concurrent.locks.Condition
 
 class FASTToken<T : Token>(
     val token: T
@@ -44,32 +45,32 @@ class FASTAssignmentStatement(
 
 abstract class FASTControlStatement : FASTStatement()
 
-class FASTPrintStatement (
-    var values : MutableList<FASTExpression> = mutableListOf()
+class FASTPrintStatement(
+    var values: MutableList<FASTExpression> = mutableListOf()
 ) : FASTStatement() {
     override fun clone(): FASTNode {
-        TODO("Not yet implemented")
+        return FASTPrintStatement(values.toMutableList())
     }
 }
 
-class FASTReturnStatement (
-    var value : FASTExpression?
+class FASTReturnStatement(
+    var value: FASTExpression?
 ) : FASTStatement() {
     override fun clone(): FASTNode {
-        TODO("Not yet implemented")
+        return FASTReturnStatement(value)
     }
 }
 
-class FASTVarDefinition (
+class FASTVarDefinition(
     var name: FASTIdentifier,
     var value: FASTExpression?
 ) : FASTNode() {
     override fun clone(): FASTNode {
-        TODO("Not yet implemented")
+        return FASTVarDefinition(name, value)
     }
 }
 
-class FASTReference (
+class FASTReference(
 
 ) : FASTNode() {
     override fun clone(): FASTNode {
@@ -77,12 +78,10 @@ class FASTReference (
     }
 }
 
-class FASTIdentifier (
+open class FASTIdentifier(
     var name: String
 ) : FASTNode() {
-    override fun clone(): FASTNode {
-        TODO("Not yet implemented")
-    }
+    override fun clone() = FASTIdentifier(name)
 }
 
 abstract class FASTExpression : FASTNode()
@@ -168,6 +167,12 @@ class FASTDivideOperator : FASTBinaryOperator() {
     }
 }
 
+class FASTIsOperator : FASTBinaryOperator() {
+    override fun clone(): FASTNode {
+        TODO("Not yet implemented")
+    }
+}
+
 
 class FASTPositiveOperator : FASTUnaryOperator() {
     override fun clone(): FASTNode {
@@ -190,51 +195,55 @@ class FASTNotOperator : FASTUnaryOperator() {
 
 abstract class FASTExpressionLeaf : FASTExpression()
 
-class FASTExpressionLiteralLeaf : FASTExpressionLeaf() {
-    override fun clone(): FASTNode {
-        TODO("Not yet implemented")
-    }
+class FASTExpressionLiteralLeaf(
+    var literal: FASTLiteral
+) : FASTExpressionLeaf() {
+    override fun clone() = FASTExpressionLiteralLeaf(literal)
 }
 
-class FASTExpressionReferenceLeaf : FASTExpressionLeaf() {
-    override fun clone(): FASTNode {
-        TODO("Not yet implemented")
-    }
+class FASTExpressionReferenceLeaf(
+    var reference: FASTReference
+) : FASTExpressionLeaf() {
+    override fun clone() = FASTExpressionReferenceLeaf(reference)
 }
 
 
-abstract class FASTBinaryOperator (
+abstract class FASTBinaryOperator(
     var left: FASTExpression,
     var right: FASTExpression
 ) : FASTNode() {
     constructor()
 }
 
-abstract class FASTUnaryOperator (
+abstract class FASTUnaryOperator(
     var value: FASTExpression
 ) : FASTNode() {
     constructor()
 }
 
+abstract class FASTTypeIndicator(name: String) : FASTIdentifier(name)
 
-class FASTTypeIndicator (
+class FASTTypeIndicatorInt() : FASTTypeIndicator("int")
+class FASTTypeIndicatorReal() : FASTTypeIndicator("real")
+class FASTTypeIndicatorBool() : FASTTypeIndicator("bool")
+class FASTTypeIndicatorString() : FASTTypeIndicator("string")
+class FASTTypeIndicatorEmpty() : FASTTypeIndicator("empty")
+class FASTTypeIndicatorArray() : FASTTypeIndicator("[]")
+class FASTTypeIndicatorTuple() : FASTTypeIndicator("{}")
+class FASTTypeIndicatorFunc() : FASTTypeIndicator("func")
 
-) : FASTNode() {
-    override fun clone(): FASTNode {
-        TODO("Not yet implemented")
-    }
-}
 
-class FASTFunctionLiteral (
-
+class FASTFunctionLiteral(
+    var args: MutableList<FASTIdentifier> = mutableListOf(),
+    var body: FASTFunctionBody
 ) : FASTLiteral() {
     override fun clone(): FASTNode {
         TODO("Not yet implemented")
     }
 }
 
-class FASTFunctionBody (
-    var statement: List<FASTStatement>
+class FASTFunctionBody(
+    var statements: List<FASTStatement>
 ) : FASTNode() {
     override fun clone(): FASTNode {
         TODO("Not yet implemented")
@@ -243,41 +252,39 @@ class FASTFunctionBody (
 
 abstract class FASTLiteral : FASTNode()
 
-class FASTIntegerLiteral (
-
+class FASTIntegerLiteral(
+    var value: Int
 ) : FASTLiteral() {
     override fun clone(): FASTNode {
         TODO("Not yet implemented")
     }
 }
 
-class FASTRealLiteral (
-
+class FASTRealLiteral(
+    var value: Float
 ) : FASTLiteral() {
     override fun clone(): FASTNode {
         TODO("Not yet implemented")
     }
 }
 
-class FASTStringLiteral (
-
+class FASTStringLiteral(
+    var value: String
 ) : FASTLiteral() {
     override fun clone(): FASTNode {
         TODO("Not yet implemented")
     }
 }
 
-class FASTBooleanLiteral (
-
+class FASTBooleanLiteral(
+    var value: Boolean
 ) : FASTLiteral() {
     override fun clone(): FASTNode {
         TODO("Not yet implemented")
     }
 }
 
-class FASTEmptyLiteral (
-
-) : FASTLiteral() {
+class FASTEmptyLiteral : FASTLiteral() {
     override fun clone(): FASTNode {
         TODO("Not yet implemented")
     }
@@ -296,24 +303,27 @@ class FASTArrayLiteral(
     }
 }
 
-class FASTTupleLiteral (
-
+class FASTTupleLiteral(
+    var members: MutableList<FASTTupleElement> = mutableListOf()
 ) : FASTLiteral() {
     override fun clone(): FASTNode {
         TODO("Not yet implemented")
     }
 }
 
-class FASTTupleElement (
-
+class FASTTupleElement(
+    var name: FASTIdentifier?,
+    var value: FASTExpression
 ) : FASTNode() {
     override fun clone(): FASTNode {
         TODO("Not yet implemented")
     }
 }
 
-class FASTIfStructure (
-
+class FASTIfStructure(
+    var condition: FASTExpression,
+    var body: FASTFunctionBody,
+    var elseBody: FASTFunctionBody?
 ) : FASTControlStatement() {
     override fun clone(): FASTNode {
         TODO("Not yet implemented")
@@ -322,16 +332,21 @@ class FASTIfStructure (
 
 abstract class FASTLoopStructure : FASTControlStatement()
 
-class FASTForLoop (
-
+class FASTForLoop(
+    var varName: FASTIdentifier?,
+    var rangeBegin: FASTExpression?,
+    var rangeEnd: FASTExpression?,
+    var iterable: FASTExpression?,
+    var body: FASTFunctionBody
 ) : FASTLoopStructure() {
     override fun clone(): FASTNode {
         TODO("Not yet implemented")
     }
 }
 
-class FASTWhileLoop (
-
+class FASTWhileLoop(
+    var cond: FASTExpression,
+    var body: FASTFunctionBody
 ) : FASTLoopStructure() {
     override fun clone(): FASTNode {
         TODO("Not yet implemented")
