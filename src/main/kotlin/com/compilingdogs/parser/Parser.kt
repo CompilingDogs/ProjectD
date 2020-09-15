@@ -363,21 +363,6 @@ val funcBody: AlternationNode = any("funcBody") {
     }
 }
 
-//val referenceShit: AlternationNode = any {
-//    +concat {
-//        +reference
-//        +openBracket
-//        +expression
-//        +closeBracket
-//    }
-//    +concat {
-//        +reference
-//        +period
-//        +identifier
-//    }
-//}
-
-
 val tupleElement: ConcatenationNode = concat("tupleElement") {
     +maybe {
         concat {
@@ -453,8 +438,6 @@ fun main() {
 
     (reference["operatorGet"] as ConcatenationNode).apply { children.add(2, expression) }
 
-//    reference.apply { +referenceShit }
-//    (referencePath["path"]).apply { + }
 
     (primary["functionCall"]!!["maybe"]!!["concat"] as ConcatenationNode).apply { children.add(0, expression) }
     (primary["functionCall"]!!["maybe"]!!["concat"]!!["repeat"] as RepetitionNode).apply { children.add(expression) }
