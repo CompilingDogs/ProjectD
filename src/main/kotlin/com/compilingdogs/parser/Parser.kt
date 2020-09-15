@@ -440,7 +440,7 @@ val functionLiteral: ConcatenationNode = concat("functionLiteral") {
 }
 
 
-val testRoot = arrayLiteral
+val testRoot = program
 
 
 fun main() {
@@ -474,10 +474,11 @@ fun runTest() {
     parse(tokens)
 }
 
-fun parse(tokens: List<Token>) {
+fun parse(tokens: List<Token>): Pair<Int, FASTNode>? {
     println(tokens)
     val node = testRoot.match(tokens, null, 0)
     println("Node: $node")
     println("Node: ${node?.second}")
     println("Node type: ${node!!::class.qualifiedName}")
+    return node
 }
