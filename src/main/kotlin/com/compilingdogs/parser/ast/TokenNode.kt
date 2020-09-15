@@ -5,6 +5,7 @@ import tokens.Token
 import kotlin.reflect.typeOf
 
 
+
 // Holds a token parsed from lexer. A very basic unit of an AST parser.
 class TokenNode<T>(
     val nodeType: Class<T>
