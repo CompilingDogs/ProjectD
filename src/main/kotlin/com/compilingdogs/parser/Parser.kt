@@ -155,6 +155,7 @@ val primary = any("primary") {
     }
 }
 
+
 val unary: AlternationNode = any("unary") {
     +reference
     +concat("typeCheckOperator") {
