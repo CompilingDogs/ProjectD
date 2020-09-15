@@ -42,7 +42,7 @@ class FASTAssignmentStatement(
     }
 }
 
-class FASTControlStatement(
+open class FASTControlStatement(
 
 ) : FASTStatement() {
     override fun clone(): FASTNode {
@@ -97,64 +97,112 @@ class FASTExpression (
     override fun clone(): FASTNode {
         TODO("Not yet implemented")
     }
-
 }
 
-class FASTRelation (
+class FASTOrOperator : FASTBinaryOperator()
+class FASTAndOperator : FASTBinaryOperator()
+class FASTXorOperator : FASTBinaryOperator()
 
+
+class FASTLessOperator : FASTBinaryOperator()
+class FASTLessEqualOperator : FASTBinaryOperator()
+class FASTGreaterOperator : FASTBinaryOperator()
+class FASTGreaterEqualOperator : FASTBinaryOperator()
+class FASTEqualOperator : FASTBinaryOperator()
+class FASTNotEqualOperator : FASTBinaryOperator()
+
+
+class FASTAddOperator : FASTBinaryOperator()
+class FASTSubtractOperator : FASTBinaryOperator()
+
+
+class FASTMultiplyOperator : FASTBinaryOperator()
+class FASTDivideOperator : FASTBinaryOperator()
+
+
+class FASTPositiveOperator : FASTUnaryOperator()
+class FASTNegativeOperator : FASTUnaryOperator()
+class FASTNotOperator : FASTUnaryOperator()
+
+
+
+abstract class FASTBinaryOperator (
+    var left: FASTExpression,
+    var right: FASTExpression
 ) : FASTNode()
 
-class FASTFactor (
-
-): FASTNode()
-
-class FASTTerm (
-
+abstract class FASTUnaryOperator (
+    var value: FASTExpression
 ) : FASTNode()
 
-class FASTUnary (
 
-) : FASTNode()
 
-class FASTPrimary (
-
-) : FASTNode()
 
 class FASTTypeIndicator (
 
-) : FASTNode()
+) : FASTNode() {
+    override fun clone(): FASTNode {
+        TODO("Not yet implemented")
+    }
+}
 
 class FASTFunctionLiteral (
 
-) : FASTLiteral()
+) : FASTLiteral() {
+    override fun clone(): FASTNode {
+        TODO("Not yet implemented")
+    }
+}
 
 class FASTFunctionBody (
     var statement: List<FASTStatement>
-) : FASTNode()
+) : FASTNode() {
+    override fun clone(): FASTNode {
+        TODO("Not yet implemented")
+    }
+}
 
-class FASTLiteral (
-
-) : FASTNode()
+abstract class FASTLiteral : FASTNode()
 
 class FASTIntegerLiteral (
 
-) : FASTLiteral()
+) : FASTLiteral() {
+    override fun clone(): FASTNode {
+        TODO("Not yet implemented")
+    }
+}
 
 class FASTRealLiteral (
 
-) : FASTLiteral()
+) : FASTLiteral() {
+    override fun clone(): FASTNode {
+        TODO("Not yet implemented")
+    }
+}
 
 class FASTStringLiteral (
 
-) : FASTLiteral()
+) : FASTLiteral() {
+    override fun clone(): FASTNode {
+        TODO("Not yet implemented")
+    }
+}
 
 class FASTBooleanLiteral (
 
-) : FASTLiteral()
+) : FASTLiteral() {
+    override fun clone(): FASTNode {
+        TODO("Not yet implemented")
+    }
+}
 
 class FASTEmptyLiteral (
 
-) : FASTLiteral()
+) : FASTLiteral() {
+    override fun clone(): FASTNode {
+        TODO("Not yet implemented")
+    }
+}
 
 class FASTArrayLiteral(
     var members: MutableList<FASTNode> = mutableListOf()
@@ -171,19 +219,25 @@ class FASTArrayLiteral(
 
 class FASTTupleLiteral (
 
-) : FASTLiteral()
+) : FASTLiteral() {
+    override fun clone(): FASTNode {
+        TODO("Not yet implemented")
+    }
+}
 
 class FASTTupleElement (
 
-) : FASTNode()
+) : FASTNode() {
+    override fun clone(): FASTNode {
+        TODO("Not yet implemented")
+    }
+}
 
 class FASTIfStructure (
 
 ) : FASTControlStatement()
 
-class FASTLoopStructure (
-
-) : FASTControlStatement()
+abstract class FASTLoopStructure : FASTControlStatement()
 
 class FASTForLoop (
 
