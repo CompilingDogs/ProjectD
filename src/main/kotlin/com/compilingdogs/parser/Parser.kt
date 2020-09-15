@@ -219,9 +219,9 @@ val relation: ConcatenationNode = concat("relation") {
 
 val expression: ConcatenationNode = concat("expression") {
     +relation
-    +repeat {
-        +concat {
-            +any {
+    +repeat("expressionRepeat") {
+        +concat("expressionRepeatConcat") {
+            +any("expressionRepeatConcatAny") {
                 +or
                 +and
                 +xor
@@ -441,7 +441,7 @@ val functionLiteral: ConcatenationNode = concat("functionLiteral") {
 }
 
 
-val testRoot = program
+val testRoot = arrayLiteral
 
 
 fun main() {
