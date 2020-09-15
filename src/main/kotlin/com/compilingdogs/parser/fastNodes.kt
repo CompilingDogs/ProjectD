@@ -2,7 +2,6 @@ package com.compilingdogs.parser
 
 import com.compilingdogs.parser.ast.FASTNode
 import tokens.Token
-import java.util.concurrent.locks.Condition
 
 class FASTToken<T : Token>(
     val token: T
@@ -27,10 +26,10 @@ class FASTProgram(
 abstract class FASTStatement : FASTNode()
 
 class FASTDeclarationStatement(
-    val definitions: List<FASTVarDefinition>
+    val definitions: MutableList<FASTVarDefinition>
 ) : FASTStatement() {
     override fun clone(): FASTNode {
-        TODO("Not yet implemented")
+        return FASTDeclarationStatement(definitions.toMutableList())
     }
 }
 
@@ -39,7 +38,7 @@ class FASTAssignmentStatement(
     var value: FASTExpression
 ) : FASTStatement() {
     override fun clone(): FASTNode {
-        TODO("Not yet implemented")
+        return FASTAssignmentStatement(reference, value)
     }
 }
 
@@ -237,17 +236,13 @@ class FASTFunctionLiteral(
     var args: MutableList<FASTIdentifier> = mutableListOf(),
     var body: FASTFunctionBody
 ) : FASTLiteral() {
-    override fun clone(): FASTNode {
-        TODO("Not yet implemented")
-    }
+    override fun clone() = FASTFunctionLiteral(args.toMutableList(), body.clone())
 }
 
 class FASTFunctionBody(
     var statements: List<FASTStatement>
 ) : FASTNode() {
-    override fun clone(): FASTNode {
-        TODO("Not yet implemented")
-    }
+    override fun clone() = FASTFunctionBody(statements.toMutableList())
 }
 
 abstract class FASTLiteral : FASTNode()
@@ -255,39 +250,29 @@ abstract class FASTLiteral : FASTNode()
 class FASTIntegerLiteral(
     var value: Int
 ) : FASTLiteral() {
-    override fun clone(): FASTNode {
-        TODO("Not yet implemented")
-    }
+    override fun clone() = FASTIntegerLiteral(value)
 }
 
 class FASTRealLiteral(
     var value: Float
 ) : FASTLiteral() {
-    override fun clone(): FASTNode {
-        TODO("Not yet implemented")
-    }
+    override fun clone() = FASTRealLiteral(value)
 }
 
 class FASTStringLiteral(
     var value: String
 ) : FASTLiteral() {
-    override fun clone(): FASTNode {
-        TODO("Not yet implemented")
-    }
+    override fun clone() = FASTStringLiteral(value)
 }
 
 class FASTBooleanLiteral(
     var value: Boolean
 ) : FASTLiteral() {
-    override fun clone(): FASTNode {
-        TODO("Not yet implemented")
-    }
+    override fun clone() = FASTBooleanLiteral(value)
 }
 
 class FASTEmptyLiteral : FASTLiteral() {
-    override fun clone(): FASTNode {
-        TODO("Not yet implemented")
-    }
+    override fun clone() = this
 }
 
 class FASTArrayLiteral(
@@ -306,18 +291,14 @@ class FASTArrayLiteral(
 class FASTTupleLiteral(
     var members: MutableList<FASTTupleElement> = mutableListOf()
 ) : FASTLiteral() {
-    override fun clone(): FASTNode {
-        TODO("Not yet implemented")
-    }
+    override fun clone() = FASTTupleLiteral(members.toMutableList())
 }
 
 class FASTTupleElement(
     var name: FASTIdentifier?,
     var value: FASTExpression
 ) : FASTNode() {
-    override fun clone(): FASTNode {
-        TODO("Not yet implemented")
-    }
+    override fun clone() = FASTTupleElement(name, value)
 }
 
 class FASTIfStructure(
@@ -325,9 +306,7 @@ class FASTIfStructure(
     var body: FASTFunctionBody,
     var elseBody: FASTFunctionBody?
 ) : FASTControlStatement() {
-    override fun clone(): FASTNode {
-        TODO("Not yet implemented")
-    }
+    override fun clone() = FASTIfStructure(condition, body, elseBody)
 }
 
 abstract class FASTLoopStructure : FASTControlStatement()
@@ -339,17 +318,13 @@ class FASTForLoop(
     var iterable: FASTExpression?,
     var body: FASTFunctionBody
 ) : FASTLoopStructure() {
-    override fun clone(): FASTNode {
-        TODO("Not yet implemented")
-    }
+    override fun clone() = FASTForLoop(varName, rangeBegin, rangeEnd, iterable, body)
 }
 
 class FASTWhileLoop(
     var cond: FASTExpression,
     var body: FASTFunctionBody
 ) : FASTLoopStructure() {
-    override fun clone(): FASTNode {
-        TODO("Not yet implemented")
-    }
+    override fun clone() = FASTWhileLoop(cond, body)
 }
 
