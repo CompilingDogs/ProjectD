@@ -16,10 +16,10 @@ class FASTToken<T : Token>(
 }
 
 class FASTProgram(
-    val statements: List<FASTStatement>
+    val statements: MutableList<FASTStatement>
 ) : FASTNode() {
     override fun clone(): FASTNode {
-        TODO("Not yet implemented")
+        return FASTProgram(statements.toMutableList())
     }
 }
 
@@ -42,16 +42,10 @@ class FASTAssignmentStatement(
     }
 }
 
-open class FASTControlStatement(
-
-) : FASTStatement() {
-    override fun clone(): FASTNode {
-        TODO("Not yet implemented")
-    }
-}
+abstract class FASTControlStatement : FASTStatement()
 
 class FASTPrintStatement (
-
+    var values : MutableList<FASTExpression> = mutableListOf()
 ) : FASTStatement() {
     override fun clone(): FASTNode {
         TODO("Not yet implemented")
@@ -59,7 +53,7 @@ class FASTPrintStatement (
 }
 
 class FASTReturnStatement (
-
+    var value : FASTExpression?
 ) : FASTStatement() {
     override fun clone(): FASTNode {
         TODO("Not yet implemented")
@@ -84,58 +78,143 @@ class FASTReference (
 }
 
 class FASTIdentifier (
-
+    var name: String
 ) : FASTNode() {
     override fun clone(): FASTNode {
         TODO("Not yet implemented")
     }
 }
 
-class FASTExpression (
+abstract class FASTExpression : FASTNode()
 
-) : FASTNode() {
+class FASTOrOperator : FASTBinaryOperator() {
     override fun clone(): FASTNode {
         TODO("Not yet implemented")
     }
 }
 
-class FASTOrOperator : FASTBinaryOperator()
-class FASTAndOperator : FASTBinaryOperator()
-class FASTXorOperator : FASTBinaryOperator()
+class FASTAndOperator : FASTBinaryOperator() {
+    override fun clone(): FASTNode {
+        TODO("Not yet implemented")
+    }
+}
+
+class FASTXorOperator : FASTBinaryOperator() {
+    override fun clone(): FASTNode {
+        TODO("Not yet implemented")
+    }
+}
 
 
-class FASTLessOperator : FASTBinaryOperator()
-class FASTLessEqualOperator : FASTBinaryOperator()
-class FASTGreaterOperator : FASTBinaryOperator()
-class FASTGreaterEqualOperator : FASTBinaryOperator()
-class FASTEqualOperator : FASTBinaryOperator()
-class FASTNotEqualOperator : FASTBinaryOperator()
+class FASTLessOperator : FASTBinaryOperator() {
+    override fun clone(): FASTNode {
+        TODO("Not yet implemented")
+    }
+}
+
+class FASTLessEqualOperator : FASTBinaryOperator() {
+    override fun clone(): FASTNode {
+        TODO("Not yet implemented")
+    }
+}
+
+class FASTGreaterOperator : FASTBinaryOperator() {
+    override fun clone(): FASTNode {
+        TODO("Not yet implemented")
+    }
+}
+
+class FASTGreaterEqualOperator : FASTBinaryOperator() {
+    override fun clone(): FASTNode {
+        TODO("Not yet implemented")
+    }
+}
+
+class FASTEqualOperator : FASTBinaryOperator() {
+    override fun clone(): FASTNode {
+        TODO("Not yet implemented")
+    }
+}
+
+class FASTNotEqualOperator : FASTBinaryOperator() {
+    override fun clone(): FASTNode {
+        TODO("Not yet implemented")
+    }
+}
 
 
-class FASTAddOperator : FASTBinaryOperator()
-class FASTSubtractOperator : FASTBinaryOperator()
+class FASTAddOperator : FASTBinaryOperator() {
+    override fun clone(): FASTNode {
+        TODO("Not yet implemented")
+    }
+}
+
+class FASTSubtractOperator : FASTBinaryOperator() {
+    override fun clone(): FASTNode {
+        TODO("Not yet implemented")
+    }
+}
 
 
-class FASTMultiplyOperator : FASTBinaryOperator()
-class FASTDivideOperator : FASTBinaryOperator()
+class FASTMultiplyOperator : FASTBinaryOperator() {
+    override fun clone(): FASTNode {
+        TODO("Not yet implemented")
+    }
+}
+
+class FASTDivideOperator : FASTBinaryOperator() {
+    override fun clone(): FASTNode {
+        TODO("Not yet implemented")
+    }
+}
 
 
-class FASTPositiveOperator : FASTUnaryOperator()
-class FASTNegativeOperator : FASTUnaryOperator()
-class FASTNotOperator : FASTUnaryOperator()
+class FASTPositiveOperator : FASTUnaryOperator() {
+    override fun clone(): FASTNode {
+        TODO("Not yet implemented")
+    }
+}
 
+class FASTNegativeOperator : FASTUnaryOperator() {
+    override fun clone(): FASTNode {
+        TODO("Not yet implemented")
+    }
+}
+
+class FASTNotOperator : FASTUnaryOperator() {
+    override fun clone(): FASTNode {
+        TODO("Not yet implemented")
+    }
+}
+
+
+abstract class FASTExpressionLeaf : FASTExpression()
+
+class FASTExpressionLiteralLeaf : FASTExpressionLeaf() {
+    override fun clone(): FASTNode {
+        TODO("Not yet implemented")
+    }
+}
+
+class FASTExpressionReferenceLeaf : FASTExpressionLeaf() {
+    override fun clone(): FASTNode {
+        TODO("Not yet implemented")
+    }
+}
 
 
 abstract class FASTBinaryOperator (
     var left: FASTExpression,
     var right: FASTExpression
-) : FASTNode()
+) : FASTNode() {
+    constructor()
+}
 
 abstract class FASTUnaryOperator (
     var value: FASTExpression
-) : FASTNode()
-
-
+) : FASTNode() {
+    constructor()
+}
 
 
 class FASTTypeIndicator (
@@ -235,15 +314,27 @@ class FASTTupleElement (
 
 class FASTIfStructure (
 
-) : FASTControlStatement()
+) : FASTControlStatement() {
+    override fun clone(): FASTNode {
+        TODO("Not yet implemented")
+    }
+}
 
 abstract class FASTLoopStructure : FASTControlStatement()
 
 class FASTForLoop (
 
-) : FASTLoopStructure()
+) : FASTLoopStructure() {
+    override fun clone(): FASTNode {
+        TODO("Not yet implemented")
+    }
+}
 
 class FASTWhileLoop (
 
-) : FASTLoopStructure()
+) : FASTLoopStructure() {
+    override fun clone(): FASTNode {
+        TODO("Not yet implemented")
+    }
+}
 
