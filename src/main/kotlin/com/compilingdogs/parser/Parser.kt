@@ -83,7 +83,7 @@ val emptyLiteral = TokenNode(Literal.EmptyLiteral::class.java)
  * AST Declaration
  */
 val literal = any("literal") {
-    +integerLiteral
+    +(integerLiteral onSuccess { p: Any, nextFastNode: FASTNode ->  })
     +realLiteral
     +stringLiteral
     +booleanLiteral
@@ -217,7 +217,7 @@ val relation: ConcatenationNode = concat("relation") {
     }
 }
 
-val expression: ConcatenationNode = concat("expression") {
+val expression = concat("expression") {
     +relation
     +repeat("expressionRepeat") {
         +concat("expressionRepeatConcat") {
@@ -386,9 +386,7 @@ val tupleLiteral: ConcatenationNode = concat("tupleLiteral") {
     +closeBrace
 }
 
-val arrayLiteral: ConcatenationNode = concat("arrayLiteral") {
-    mapTo<FASTArrayLiteral>()
-
+val arrayLiteral = concat("arrayLiteral") {
     +openBracket
     +maybe("maybeArrayElements") {
         concat("concatArrayElements") {
