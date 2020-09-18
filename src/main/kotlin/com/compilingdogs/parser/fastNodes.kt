@@ -69,11 +69,28 @@ class FASTVarDefinition(
     }
 }
 
-class FASTReference(
+// TODO: Done By Alecsey
+enum class FASTMemberReferenceType {
+    DOT_REFERENCE, BRACKETS_REFERENCE
+}
 
+// TODO: Done By Alecsey
+class FASTMemberReference(
+    var member: FASTExpression,
+    var type: FASTMemberReferenceType
 ) : FASTNode() {
     override fun clone(): FASTNode {
-        TODO("Not yet implemented")
+        return FASTMemberReference(member, type)
+    }
+}
+
+// TODO: Done By Alecsey
+class FASTReference(
+    var identifier: FASTIdentifier,
+    var references: MutableList<FASTMemberReference>
+) : FASTNode() {
+    override fun clone(): FASTNode {
+        return FASTReference(identifier, references)
     }
 }
 
@@ -85,112 +102,175 @@ open class FASTIdentifier(
 
 abstract class FASTExpression : FASTNode()
 
-class FASTOrOperator : FASTBinaryOperator() {
+// TODO: Done By Alecsey
+class FASTOrOperator() : FASTBinaryOperator() {
     override fun clone(): FASTNode {
-        TODO("Not yet implemented")
+        return FASTOrOperator().also {
+            it.left = left
+            it.right = right
+        }
     }
 }
 
-class FASTAndOperator : FASTBinaryOperator() {
+// TODO: Done By Alecsey
+class FASTAndOperator() : FASTBinaryOperator() {
     override fun clone(): FASTNode {
-        TODO("Not yet implemented")
+        return FASTAndOperator().also {
+            it.left = left
+            it.right = right
+        }
     }
 }
 
-class FASTXorOperator : FASTBinaryOperator() {
+// TODO: Done By Alecsey
+class FASTXorOperator() : FASTBinaryOperator() {
     override fun clone(): FASTNode {
-        TODO("Not yet implemented")
-    }
-}
-
-
-class FASTLessOperator : FASTBinaryOperator() {
-    override fun clone(): FASTNode {
-        TODO("Not yet implemented")
-    }
-}
-
-class FASTLessEqualOperator : FASTBinaryOperator() {
-    override fun clone(): FASTNode {
-        TODO("Not yet implemented")
-    }
-}
-
-class FASTGreaterOperator : FASTBinaryOperator() {
-    override fun clone(): FASTNode {
-        TODO("Not yet implemented")
-    }
-}
-
-class FASTGreaterEqualOperator : FASTBinaryOperator() {
-    override fun clone(): FASTNode {
-        TODO("Not yet implemented")
-    }
-}
-
-class FASTEqualOperator : FASTBinaryOperator() {
-    override fun clone(): FASTNode {
-        TODO("Not yet implemented")
-    }
-}
-
-class FASTNotEqualOperator : FASTBinaryOperator() {
-    override fun clone(): FASTNode {
-        TODO("Not yet implemented")
+        return FASTXorOperator().also {
+            it.left = left
+            it.right = right
+        }
     }
 }
 
 
-class FASTAddOperator : FASTBinaryOperator() {
+// TODO: Done By Alecsey
+class FASTLessOperator() : FASTBinaryOperator() {
     override fun clone(): FASTNode {
-        TODO("Not yet implemented")
+        return FASTLessOperator().also {
+            it.left = left
+            it.right = right
+        }
     }
 }
 
-class FASTSubtractOperator : FASTBinaryOperator() {
+// TODO: Done By Alecsey
+class FASTLessEqualOperator() : FASTBinaryOperator() {
     override fun clone(): FASTNode {
-        TODO("Not yet implemented")
+        return FASTLessEqualOperator().also {
+            it.left = left
+            it.right = right
+        }
+    }
+}
+
+// TODO: Done By Alecsey
+class FASTGreaterOperator() : FASTBinaryOperator() {
+    override fun clone(): FASTNode {
+        return FASTGreaterOperator().also {
+            it.left = left
+            it.right = right
+        }
+    }
+}
+
+// TODO: Done By Alecsey
+class FASTGreaterEqualOperator() : FASTBinaryOperator() {
+    override fun clone(): FASTNode {
+        return FASTGreaterEqualOperator().also {
+            it.left = left
+            it.right = right
+        }
+    }
+}
+
+// TODO: Done By Alecsey
+class FASTEqualOperator() : FASTBinaryOperator() {
+    override fun clone(): FASTNode {
+        return FASTEqualOperator().also {
+            it.left = left
+            it.right = right
+        }
+    }
+}
+
+// TODO: Done By Alecsey
+class FASTNotEqualOperator() : FASTBinaryOperator() {
+    override fun clone(): FASTNode {
+        return FASTNotEqualOperator().also {
+            it.left = left
+            it.right = right
+        }
     }
 }
 
 
-class FASTMultiplyOperator : FASTBinaryOperator() {
+// TODO: Done By Alecsey
+class FASTAddOperator() : FASTBinaryOperator() {
     override fun clone(): FASTNode {
-        TODO("Not yet implemented")
+        return FASTAddOperator().also {
+            it.left = left
+            it.right = right
+        }
     }
 }
 
-class FASTDivideOperator : FASTBinaryOperator() {
+// TODO: Done By Alecsey
+class FASTSubtractOperator() : FASTBinaryOperator() {
     override fun clone(): FASTNode {
-        TODO("Not yet implemented")
+        return FASTSubtractOperator().also {
+            it.left = left
+            it.right = right
+        }
     }
 }
 
-class FASTIsOperator : FASTBinaryOperator() {
+
+// TODO: Done By Alecsey
+class FASTMultiplyOperator() : FASTBinaryOperator() {
     override fun clone(): FASTNode {
-        TODO("Not yet implemented")
+        return FASTMultiplyOperator().also {
+            it.left = left
+            it.right = right
+        }
     }
 }
 
+// TODO: Done By Alecsey
+class FASTDivideOperator() : FASTBinaryOperator() {
+    override fun clone(): FASTNode {
+        return FASTDivideOperator().also {
+            it.left = left
+            it.right = right
+        }
+    }
+}
 
+// TODO: Done By Alecsey
+class FASTIsOperator() : FASTBinaryOperator() {
+    override fun clone(): FASTNode {
+        return FASTIsOperator().also {
+            it.left = left
+            it.right = right
+        }
+    }
+}
+
+// TODO: Done By Alecsey
 class FASTPositiveOperator : FASTUnaryOperator() {
     override fun clone(): FASTNode {
-        TODO("Not yet implemented")
+        return FASTPositiveOperator().also {
+            it.value = value
+        }
     }
 }
 
+// TODO: Done By Alecsey
 class FASTNegativeOperator : FASTUnaryOperator() {
     override fun clone(): FASTNode {
-        TODO("Not yet implemented")
+        return FASTNegativeOperator().also {
+            it.value = value
+        }
     }
 }
 
+// TODO: Done By Alecsey
 class FASTNotOperator : FASTUnaryOperator() {
     override fun clone(): FASTNode {
-        TODO("Not yet implemented")
+        return FASTNotOperator().also {
+            it.value = value
+        }
     }
 }
-
 
 abstract class FASTExpressionLeaf : FASTExpression()
 
