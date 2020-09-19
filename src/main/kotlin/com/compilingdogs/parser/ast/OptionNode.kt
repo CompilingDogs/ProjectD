@@ -32,6 +32,8 @@ class OptionalNode(
 
         // If match was successful, fire appropriate callbacks
         node.successCallback?.invoke(fastNode, res.second)
+        if (node.attachedTo != null)
+            fastNode.consume(res.second)
 
         return Pair(res.first, res.second)
     }

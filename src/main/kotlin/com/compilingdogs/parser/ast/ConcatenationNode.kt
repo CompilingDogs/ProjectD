@@ -45,6 +45,8 @@ open class ConcatenationNode(
                 println("fastNode before callback: $fastNode")
                 // If match was successful, fire appropriate callbacks
                 child.successCallback?.invoke(fastNode, m.second)
+                if (child.attachedTo != null)
+                    fastNode.consume(m.second)
                 println("fastNode after callback: $fastNode")
             }
         }

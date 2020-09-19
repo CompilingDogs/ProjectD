@@ -47,6 +47,8 @@ class RepetitionNode(
 
                 // If match was successful, fire appropriate callbacks
                 child.successCallback?.invoke(ft, m.second)
+                if (child.attachedTo != null)
+                    ft.consume(m.second)
             }
 
             fastNode = ft

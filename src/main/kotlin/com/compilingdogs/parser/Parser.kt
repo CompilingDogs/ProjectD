@@ -14,15 +14,15 @@ val identifier = TokenNode(Identifier::class.java)
  * Keywords
  */
 val varKeyword = TokenNode(Keyword.VarKeyword::class.java)
-val int = TokenNode(Keyword.IntKeyword::class.java)
-var real = TokenNode(Keyword.RealKeyword::class.java)
-var bool = TokenNode(Keyword.BoolKeyword::class.java)
-val string = TokenNode(Keyword.StringKeyword::class.java)
-var empty = TokenNode(Keyword.EmptyKeyword::class.java)
-var func = TokenNode(Keyword.FuncKeyword::class.java)
-val readInt = TokenNode(Keyword.ReadIntKeyword::class.java)
-val readReal = TokenNode(Keyword.ReadRealKeyword::class.java)
-val readString = TokenNode(Keyword.ReadStringKeyword::class.java)
+val int = TokenNode(Keyword.IntKeyword::class.java).apply { mapTo<FASTTypeIndicatorInt>() }
+var real = TokenNode(Keyword.RealKeyword::class.java).apply { mapTo<FASTTypeIndicatorReal>() }
+var bool = TokenNode(Keyword.BoolKeyword::class.java).apply { mapTo<FASTTypeIndicatorBool>() }
+val string = TokenNode(Keyword.StringKeyword::class.java).apply { mapTo<FASTTypeIndicatorString>() }
+var empty = TokenNode(Keyword.EmptyKeyword::class.java).apply { mapTo<FASTTypeIndicatorEmpty>() }
+var func = TokenNode(Keyword.FuncKeyword::class.java).apply { mapTo<FASTTypeIndicatorFunc>() }
+val readInt = TokenNode(Keyword.ReadIntKeyword::class.java).apply { mapTo<FASTReadIntCall>() }
+val readReal = TokenNode(Keyword.ReadRealKeyword::class.java).apply { mapTo<FASTReadRealCall>() }
+val readString = TokenNode(Keyword.ReadStringKeyword::class.java).apply { mapTo<FASTReadStringCall>() }
 val end = TokenNode(Keyword.EndKeyword::class.java)
 val print = TokenNode(Keyword.PrintKeyword::class.java)
 val returnKeyword = TokenNode(Keyword.ReturnKeyword::class.java)
@@ -72,13 +72,11 @@ val period = TokenNode(Separator.PeriodSeparator::class.java)
 /**
  * Literals
  */
-val integerLiteral = TokenNode(Literal.IntegerLiteral::class.java).apply {
-    mapTo<FASTIntegerLiteral>()
-}
-val realLiteral = TokenNode(Literal.RealLiteral::class.java)
-val stringLiteral = TokenNode(Literal.StringLiteral::class.java)
-val booleanLiteral = TokenNode(Keyword.BoolKeyword::class.java)
-val emptyLiteral = TokenNode(Literal.EmptyLiteral::class.java)
+val integerLiteral = TokenNode(Literal.IntegerLiteral::class.java).apply { mapTo<FASTIntegerLiteral>() }
+val realLiteral = TokenNode(Literal.RealLiteral::class.java).apply { mapTo<FASTRealLiteral>() }
+val stringLiteral = TokenNode(Literal.StringLiteral::class.java).apply { mapTo<FASTStringLiteral>() }
+val booleanLiteral = TokenNode(Keyword.BoolKeyword::class.java).apply { mapTo<FASTIntegerLiteral>() }
+val emptyLiteral = TokenNode(Literal.EmptyLiteral::class.java).apply { mapTo<FASTEmptyLiteral>() }
 
 
 /**
@@ -95,6 +93,7 @@ val literal = any("literal") {
 //    +functionLiteral // this is added separately to break circular dependency cycle
 }
 
+// TODO: decide what to do with this
 val referencePath = any("referencePath") {
     +identifier
     +concat("path") {
@@ -104,6 +103,7 @@ val referencePath = any("referencePath") {
     }
 }
 
+// TODO: and this
 val reference = any("reference") {
 //    +identifier
     +referencePath
@@ -121,15 +121,19 @@ val typeIndicator = any("typeIndicator") {
     +bool
     +string
     +empty
+    +func
     +concat("arrayTypeIndicator") {
+        mapTo<FASTTypeIndicatorArray>()
+
         +openBracket
         +closeBracket
     }
     +concat("tupleTypeIndicator") {
+        mapTo<FASTTypeIndicatorTuple>()
+
         +openBrace
         +closeBrace
     }
-    +func
 }
 
 val primary = any("primary") {
@@ -138,6 +142,8 @@ val primary = any("primary") {
     +readReal
     +readString
     +concat("functionCall") {
+        mapTo<FASTFunctionCall>()
+
         +reference
         +openParenthesis
         +maybe("maybe") {
@@ -151,6 +157,7 @@ val primary = any("primary") {
         }
     }
     +concat("groupedExpression") {
+        // TODO: think if we need to make a fast node for that
         +openParenthesis
 //        +expression // this is added separately to break circular dependency cycle
         +closeParenthesis
@@ -158,14 +165,17 @@ val primary = any("primary") {
 }
 
 
-val unary: AlternationNode = any("unary") {
+val unary = any("unary") {
     +reference
     +concat("typeCheckOperator") {
+        mapTo<FASTTypeCheckOperator>()
+
         +reference
         +isOp
         +typeIndicator
     }
     +concat("primary") {
+        // TODO: implement this
         +maybe("primaryMaybe") {
             any("primaryMaybeSign") {
                 +plus
@@ -177,7 +187,7 @@ val unary: AlternationNode = any("unary") {
     }
 }
 
-val term: ConcatenationNode = concat("term") {
+val term = concat("term") {
     +unary
     +repeat {
         +concat {
@@ -190,7 +200,7 @@ val term: ConcatenationNode = concat("term") {
     }
 }
 
-val factor: ConcatenationNode = concat("factor") {
+val factor = concat("factor") {
     +term
     +repeat {
         +concat {
@@ -203,7 +213,7 @@ val factor: ConcatenationNode = concat("factor") {
     }
 }
 
-val relation: ConcatenationNode = concat("relation") {
+val relation = concat("relation") {
     +factor
     +maybe {
         concat {
@@ -233,7 +243,7 @@ val expression = concat("expression") {
     }
 }
 
-val varDefinition: ConcatenationNode = concat("varDefinition") {
+val varDefinition = concat("varDefinition") {
     +identifier
     +maybe {
         concat {
@@ -243,7 +253,7 @@ val varDefinition: ConcatenationNode = concat("varDefinition") {
     }
 }
 
-val declaration: ConcatenationNode = concat("declaration") {
+val declaration = concat("declaration") {
     +varKeyword
     +varDefinition
     +repeat {
@@ -253,16 +263,20 @@ val declaration: ConcatenationNode = concat("declaration") {
         }
     }
 }
-val assignmentStatement: ConcatenationNode = concat("assignmentStatement") {
+val assignmentStatement = concat("assignmentStatement") {
+    mapTo<FASTAssignmentStatement>()
+
     +reference
     +assignmentOperator
     +expression
 }
-val controlStructure: AlternationNode = any("controlStructure") {
+val controlStructure = any("controlStructure") {
 //    +ifControlStructure   // this is added separately to break circular dependency cycle
 //    +loopControlStructure // this is added separately to break circular dependency cycle
 }
-val printStatement: ConcatenationNode = concat("printStatement") {
+val printStatement = concat("printStatement") {
+    mapTo<FASTPrintStatement>()
+
     +print
     +expression
     +repeat {
@@ -270,20 +284,24 @@ val printStatement: ConcatenationNode = concat("printStatement") {
         +expression
     }
 }
-val returnStatement: ConcatenationNode = concat("returnStatement") {
+val returnStatement = concat("returnStatement") {
+    mapTo<FASTReturnStatement>()
+
     +returnKeyword
     +maybe {
         expression
     }
 }
-val statement: AlternationNode = any("statement") {
+val statement = any("statement") {
     +declaration
     +assignmentStatement
     +controlStructure
     +printStatement
     +returnStatement
 }
-val program: ConcatenationNode = concat("program") {
+val program = concat("program") {
+    mapTo<FASTProgram>()
+
     +repeat {
         +concat {
             +statement
@@ -294,11 +312,13 @@ val program: ConcatenationNode = concat("program") {
         }
     }
 }
-val body: AlternationNode = any("body") {
+val body = any("body") {
     +program
 }
 
-val ifControlStructure: ConcatenationNode = concat("ifControlStructure") {
+val ifControlStructure = concat("ifControlStructure") {
+    mapTo<FASTIfStructure>()
+
     +ifKeyword
     +expression
     +thenKeyword
@@ -313,7 +333,9 @@ val ifControlStructure: ConcatenationNode = concat("ifControlStructure") {
 }
 
 
-val forControlStructure: ConcatenationNode = concat("forControlStructure") {
+val forControlStructure = concat("forControlStructure") {
+    mapTo<FASTForLoop>()
+
     +forKeyword
     +any {
         +concat {
@@ -338,7 +360,9 @@ val forControlStructure: ConcatenationNode = concat("forControlStructure") {
     +end
 }
 
-val whileControlStructure: ConcatenationNode = concat("whileControlStructure") {
+val whileControlStructure = concat("whileControlStructure") {
+    mapTo<FASTWhileLoop>()
+
     +whileKeyword
     +expression
     +loopKeyword
@@ -347,13 +371,17 @@ val whileControlStructure: ConcatenationNode = concat("whileControlStructure") {
 }
 
 
-val loopControlStructure: AlternationNode = any("loopControlStructure") {
+val loopControlStructure = any("loopControlStructure") {
     +forControlStructure
     +whileControlStructure
 }
 
 
-val funcBody: AlternationNode = any("funcBody") {
+val funcBody = any("funcBody") {
+    mapTo<FASTFunctionBody>()
+
+    // TODO: complete this
+
     +concat {
         +isOp
         +body
@@ -365,7 +393,9 @@ val funcBody: AlternationNode = any("funcBody") {
     }
 }
 
-val tupleElement: ConcatenationNode = concat("tupleElement") {
+val tupleElement = concat("tupleElement") {
+    mapTo<FASTTupleElement>()
+
     +maybe {
         concat {
             +identifier
@@ -374,7 +404,9 @@ val tupleElement: ConcatenationNode = concat("tupleElement") {
     }
     +expression
 }
-val tupleLiteral: ConcatenationNode = concat("tupleLiteral") {
+val tupleLiteral = concat("tupleLiteral") {
+    mapTo<FASTTupleLiteral>()
+
     +openBrace
     +maybe {
         concat {
@@ -394,23 +426,19 @@ val arrayLiteral = concat("arrayLiteral") {
     +openBracket
     +maybe("maybeArrayElements") {
         concat("concatArrayElements") {
-            +(expression onSuccess { fastNode: FASTArrayLiteral, nextFastNode ->
-                println("Adding $nextFastNode to $fastNode")
-                fastNode.members.add(nextFastNode)
-            })
+            +expression
             +repeat("followingArrayElements") {
                 +comma
-                +(expression onSuccess { fastNode: FASTArrayLiteral, nextFastNode ->
-                    println("Adding $nextFastNode to $fastNode")
-                    fastNode.members.add(nextFastNode)
-                })
+                +expression
             }
         }
     }
     +closeBracket
 }
 
-val functionLiteral: ConcatenationNode = concat("functionLiteral") {
+val functionLiteral = concat("functionLiteral") {
+    mapTo<FASTFunctionLiteral>()
+
     +func
     +maybe {
         concat {

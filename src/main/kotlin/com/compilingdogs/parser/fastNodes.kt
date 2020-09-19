@@ -2,6 +2,8 @@ package com.compilingdogs.parser
 
 import com.compilingdogs.parser.ast.FASTNode
 import tokens.Token
+import java.lang.IllegalArgumentException
+import java.lang.IllegalStateException
 
 class FASTToken<T : Token>(
     val token: T
@@ -432,6 +434,51 @@ class FASTFunctionLiteral(
     }
 }
 
+
+class FASTReadIntCall : FASTNode() {
+    override fun clone() = FASTReadIntCall()
+
+    override fun consume(node: FASTNode) {
+        throw IllegalStateException("Not implemented for this node")
+    }
+}
+
+class FASTReadRealCall : FASTNode() {
+    override fun clone() = FASTReadRealCall()
+
+    override fun consume(node: FASTNode) {
+        throw IllegalStateException("Not implemented for this node")
+    }
+}
+
+class FASTReadStringCall : FASTNode() {
+    override fun clone() = FASTReadStringCall()
+
+    override fun consume(node: FASTNode) {
+        throw IllegalStateException("Not implemented for this node")
+    }
+}
+
+
+class FASTFunctionCall(
+    var args: MutableList<FASTExpression> = mutableListOf()
+) : FASTNode() {
+    override fun clone() = FASTFunctionCall(args.toMutableList())
+
+    override fun consume(node: FASTNode) {
+        when (node) {
+            is FASTExpression -> args.add(node)
+            else -> throw IllegalArgumentException()
+        }
+    }
+}
+
+class FASTTypeCheckOperator : FASTBinaryOperator() {
+    override fun clone() = FASTTypeCheckOperator().also {
+        it.left = left
+        it.right = right
+    }
+}
 class FASTFunctionBody(
     var statements: MutableList<FASTStatement> = mutableListOf()
 ) : FASTNode() {
