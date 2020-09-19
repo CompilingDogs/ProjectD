@@ -72,7 +72,9 @@ val period = TokenNode(Separator.PeriodSeparator::class.java)
 /**
  * Literals
  */
-val integerLiteral = TokenNode(Literal.IntegerLiteral::class.java)
+val integerLiteral = TokenNode(Literal.IntegerLiteral::class.java).apply {
+    mapTo<FASTIntegerLiteral>()
+}
 val realLiteral = TokenNode(Literal.RealLiteral::class.java)
 val stringLiteral = TokenNode(Literal.StringLiteral::class.java)
 val booleanLiteral = TokenNode(Keyword.BoolKeyword::class.java)
@@ -83,7 +85,7 @@ val emptyLiteral = TokenNode(Literal.EmptyLiteral::class.java)
  * AST Declaration
  */
 val literal = any("literal") {
-    +(integerLiteral onSuccess { p: Any, nextFastNode: FASTNode ->  })
+    +integerLiteral
     +realLiteral
     +stringLiteral
     +booleanLiteral
@@ -387,6 +389,8 @@ val tupleLiteral: ConcatenationNode = concat("tupleLiteral") {
 }
 
 val arrayLiteral = concat("arrayLiteral") {
+    mapTo<FASTArrayLiteral>()
+
     +openBracket
     +maybe("maybeArrayElements") {
         concat("concatArrayElements") {
@@ -435,7 +439,6 @@ fun main() {
     (referencePath["path"] as ConcatenationNode).apply { children.add(referencePath) }
 
     (reference["operatorGet"] as ConcatenationNode).apply { children.add(2, expression) }
-
 
     (primary["functionCall"]!!["maybe"]!!["concat"] as ConcatenationNode).apply { children.add(0, expression) }
     (primary["functionCall"]!!["maybe"]!!["concat"]!!["repeat"] as RepetitionNode).apply { children.add(expression) }

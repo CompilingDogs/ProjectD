@@ -288,17 +288,13 @@ class FASTExpressionReferenceLeaf(
 
 
 abstract class FASTBinaryOperator(
-    var left: FASTExpression,
-    var right: FASTExpression
-) : FASTNode() {
-    constructor()
-}
+    var left: FASTExpression? = null,
+    var right: FASTExpression? = null
+) : FASTNode()
 
 abstract class FASTUnaryOperator(
-    var value: FASTExpression
-) : FASTNode() {
-    constructor()
-}
+    var value: FASTExpression? = null
+) : FASTNode()
 
 abstract class FASTTypeIndicator(name: String) : FASTIdentifier(name)
 
@@ -406,5 +402,11 @@ class FASTWhileLoop(
     var body: FASTFunctionBody
 ) : FASTLoopStructure() {
     override fun clone() = FASTWhileLoop(cond, body)
+}
+
+class FASTEmptyOptionalNode : FASTNode() {
+    override fun clone(): FASTNode {
+        TODO("Not yet implemented")
+    }
 }
 
