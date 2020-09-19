@@ -30,14 +30,14 @@ class RepetitionNode(
         while (true) {
 //            println("Matching repetition child in $name ${counter++}")
 
-            val ft = fastNode.clone()
+            val fn = fastNode.clone()
 
             for (child in children) {
                 // Do creation stuff
-                child.createCallback?.invoke(ft)
+                child.createCallback?.invoke(fn)
 
                 // Try to match the AST node
-                val m = child.match(tokens.subList(offset, tokens.size), ft, depth + 1)
+                val m = child.match(tokens.subList(offset, tokens.size), fn, depth + 1)
 
                 // If child did not match, abort
                 if (m == null)
@@ -46,12 +46,15 @@ class RepetitionNode(
                 offset += m.first
 
                 // If match was successful, fire appropriate callbacks
-                child.successCallback?.invoke(ft, m.second)
-                if (child.attachedTo != null)
-                    ft.consume(m.second)
+                child.successCallback?.invoke(fn, m.second)
+                if (child.attachedTo != null) {
+                    println("Adding ${m.second} to $fn")
+                    fn.consume(m.second)
+                    println("Now parent is $fn")
+                }
             }
 
-            fastNode = ft
+            fastNode = fn
         }
     }
 

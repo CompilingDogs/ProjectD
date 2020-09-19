@@ -40,8 +40,11 @@ class AlternationNode(
 
             // If match was successful, fire appropriate callbacks
             child.successCallback?.invoke(fn, m.second)
-            if (child.attachedTo != null)
+            if (child.attachedTo != null) {
+                println("Adding ${m.second} to $fn")
                 fn.consume(m.second)
+                println("Now parent is $fn")
+            }
 
             return Pair(m.first, m.second)
         }

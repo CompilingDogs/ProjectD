@@ -7,7 +7,7 @@ import java.lang.IllegalStateException
 
 class FASTToken<T : Token>(
     val token: T
-) : FASTNode() {
+) : FASTExpression() {
     override fun clone(): FASTNode {
         return FASTToken(token)
     }
@@ -346,35 +346,6 @@ class FASTNotOperator : FASTUnaryOperator() {
     }
 }
 
-abstract class FASTExpressionLeaf : FASTExpression()
-
-class FASTExpressionLiteralLeaf(
-    var literal: FASTLiteral
-) : FASTExpressionLeaf() {
-    override fun clone() = FASTExpressionLiteralLeaf(literal)
-    override fun consume(node: FASTNode) {
-        if (node is FASTLiteral) {
-            this.literal = node
-        } else {
-            throw IllegalArgumentException("Argument of type " + node::class.simpleName + " not supported")
-        }
-    }
-}
-
-class FASTExpressionReferenceLeaf(
-    var reference: FASTReference
-) : FASTExpressionLeaf() {
-    override fun clone() = FASTExpressionReferenceLeaf(reference)
-    override fun consume(node: FASTNode) {
-        if (node is FASTReference) {
-            this.reference = node
-        } else {
-            throw IllegalArgumentException("Argument of type " + node::class.simpleName + " not supported")
-        }
-    }
-}
-
-
 abstract class FASTBinaryOperator(
     var left: FASTExpression? = null,
     var right: FASTExpression? = null
@@ -423,7 +394,7 @@ class FASTTypeIndicatorFunc : FASTTypeIndicator("func")
 class FASTFunctionLiteral(
     var args: MutableList<FASTIdentifier> = mutableListOf(),
     var body: FASTFunctionBody
-) : FASTLiteral() {
+) : FASTExpression() {
     override fun clone() = FASTFunctionLiteral(args.toMutableList(), body.clone())
     override fun consume(node: FASTNode) {
         when (node) {
@@ -492,11 +463,9 @@ class FASTFunctionBody(
     }
 }
 
-abstract class FASTLiteral : FASTNode()
-
 class FASTIntegerLiteral(
     var value: Int
-) : FASTLiteral() {
+) : FASTExpression() {
     override fun clone() = FASTIntegerLiteral(value)
     override fun consume(node: FASTNode) {
         throw NotImplementedError("Consume not applicable to " + this::class.simpleName)
@@ -504,7 +473,7 @@ class FASTIntegerLiteral(
 }
 class FASTRealLiteral(
     var value: Float
-) : FASTLiteral() {
+) : FASTExpression() {
     override fun clone() = FASTRealLiteral(value)
     override fun consume(node: FASTNode) {
         throw NotImplementedError("Consume not applicable to " + this::class.simpleName)
@@ -513,7 +482,7 @@ class FASTRealLiteral(
 
 class FASTStringLiteral(
     var value: String
-) : FASTLiteral() {
+) : FASTExpression() {
     override fun clone() = FASTStringLiteral(value)
     override fun consume(node: FASTNode) {
         throw NotImplementedError("Consume not applicable to " + this::class.simpleName)
@@ -522,14 +491,14 @@ class FASTStringLiteral(
 
 class FASTBooleanLiteral(
     var value: Boolean
-) : FASTLiteral() {
+) : FASTExpression() {
     override fun clone() = FASTBooleanLiteral(value)
     override fun consume(node: FASTNode) {
         throw NotImplementedError("Consume not applicable to " + this::class.simpleName)
     }
 }
 
-class FASTEmptyLiteral : FASTLiteral() {
+class FASTEmptyLiteral : FASTExpression() {
     override fun clone() = this
     override fun consume(node: FASTNode) {
         throw NotImplementedError("Consume not applicable to " + this::class.simpleName)
@@ -538,7 +507,7 @@ class FASTEmptyLiteral : FASTLiteral() {
 
 class FASTArrayLiteral(
     var members: MutableList<FASTExpression> = mutableListOf()
-) : FASTNode() {
+) : FASTExpression() {
 
     override fun clone(): FASTNode {
         return FASTArrayLiteral(members.toMutableList())
@@ -559,7 +528,7 @@ class FASTArrayLiteral(
 
 class FASTTupleLiteral(
     var members: MutableList<FASTTupleElement> = mutableListOf()
-) : FASTLiteral() {
+) : FASTExpression() {
     override fun clone() = FASTTupleLiteral(members.toMutableList())
     override fun consume(node: FASTNode) {
         if (node is FASTTupleElement) {

@@ -32,8 +32,11 @@ class OptionalNode(
 
         // If match was successful, fire appropriate callbacks
         node.successCallback?.invoke(fastNode, res.second)
-        if (node.attachedTo != null)
+        if (node.attachedTo != null) {
+            println("Adding ${res.second} to $fastNode")
             fastNode.consume(res.second)
+            println("Now parent is $fastNode")
+        }
 
         return Pair(res.first, res.second)
     }
