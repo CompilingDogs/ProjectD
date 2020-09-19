@@ -6,4 +6,5 @@ package com.compilingdogs.parser.ast
 
 abstract class FASTNode {
     abstract fun clone(): FASTNode
+    abstract fun consume(node: FASTNode)
 }
