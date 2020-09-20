@@ -12,7 +12,7 @@ import tokens.Token
 
 val logNodeTraversal = true
 val logFASTNodes = false
-val logFASTTokens = true
+val logFASTTokens = false
 
 
 // Function used to generate different kinds of nodes in DSL. See particular usages of this function below.

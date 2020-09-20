@@ -1,6 +1,8 @@
 package com.compilingdogs.parser.ast
 
+import com.compilingdogs.parser.greenColor
 import com.compilingdogs.parser.indent
+import com.compilingdogs.parser.noColor
 import tokens.Token
 import java.lang.IllegalStateException
 
@@ -46,14 +48,15 @@ open class ConcatenationNode(
                 // If match was successful, fire appropriate callbacks
                 child.successCallback?.invoke(fastNode, m.second)
                 if (child.attachedTo != null) {
-                    println("Adding ${m.second} to $fastNode")
+                    println("${indent(depth + 1)}${greenColor}Adding ${m.second} to $fastNode$noColor")
                     fastNode.consume(m.second)
-                    println("Now parent is $fastNode")
+                    println("${indent(depth + 1)}${greenColor}Now parent is $fastNode$noColor")
                 }
                 println("fastNode after callback: $fastNode")
             }
         }
 
+        println("${indent(depth + 1)}Returning $fastNode")
         return Pair(offset, fastNode)
     }
 

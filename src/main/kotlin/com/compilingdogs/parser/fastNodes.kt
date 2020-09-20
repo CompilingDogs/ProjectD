@@ -514,6 +514,8 @@ class FASTArrayLiteral(
     }
 
     override fun consume(node: FASTNode) {
+        println("Consuming $node to array literal")
+
         if (node is FASTExpression) {
             this.members.add(node)
         } else {

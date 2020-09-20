@@ -1,6 +1,8 @@
 package com.compilingdogs.parser.ast
 
+import com.compilingdogs.parser.greenColor
 import com.compilingdogs.parser.indent
+import com.compilingdogs.parser.noColor
 import tokens.Token
 import java.lang.IllegalStateException
 
@@ -40,17 +42,19 @@ class RepetitionNode(
                 val m = child.match(tokens.subList(offset, tokens.size), fn, depth + 1)
 
                 // If child did not match, abort
-                if (m == null)
+                if (m == null) {
+                    println("${indent(depth + 1)}Returning $fastNode")
                     return Pair(offset, fastNode)
+                }
 
                 offset += m.first
 
                 // If match was successful, fire appropriate callbacks
                 child.successCallback?.invoke(fn, m.second)
                 if (child.attachedTo != null) {
-                    println("Adding ${m.second} to $fn")
+                    println("${indent(depth + 1)}${greenColor}Adding ${m.second} to $fn$noColor")
                     fn.consume(m.second)
-                    println("Now parent is $fn")
+                    println("${indent(depth + 1)}${greenColor}Now parent is $fn$noColor")
                 }
             }
 

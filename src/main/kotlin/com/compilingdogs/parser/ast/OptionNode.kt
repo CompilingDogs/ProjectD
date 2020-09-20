@@ -1,7 +1,9 @@
 package com.compilingdogs.parser.ast
 
 import com.compilingdogs.parser.FASTEmptyOptionalNode
+import com.compilingdogs.parser.greenColor
 import com.compilingdogs.parser.indent
+import com.compilingdogs.parser.noColor
 import tokens.Token
 import java.lang.IllegalStateException
 
@@ -33,12 +35,13 @@ class OptionalNode(
         // If match was successful, fire appropriate callbacks
         node.successCallback?.invoke(fastNode, res.second)
         if (node.attachedTo != null) {
-            println("Adding ${res.second} to $fastNode")
+            println("${indent(depth + 1)}${greenColor}Adding ${res.second} to $fastNode$noColor")
             fastNode.consume(res.second)
-            println("Now parent is $fastNode")
+            println("${indent(depth + 1)}${greenColor}Now parent is $fastNode$noColor")
         }
 
-        return Pair(res.first, res.second)
+        println("${indent(depth + 1)}Returning $fastNode")
+        return Pair(res.first, fastNode)
     }
 
     override fun clone(): ASTNode = OptionalNode(node.clone()).also { it.name = name }

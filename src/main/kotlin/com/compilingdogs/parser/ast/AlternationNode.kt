@@ -1,6 +1,8 @@
 package com.compilingdogs.parser.ast
 
+import com.compilingdogs.parser.greenColor
 import com.compilingdogs.parser.indent
+import com.compilingdogs.parser.noColor
 import tokens.Token
 import java.lang.IllegalStateException
 
@@ -41,12 +43,13 @@ class AlternationNode(
             // If match was successful, fire appropriate callbacks
             child.successCallback?.invoke(fn, m.second)
             if (child.attachedTo != null) {
-                println("Adding ${m.second} to $fn")
+                println("${indent(depth + 1)}${greenColor}Adding ${m.second} to $fn${noColor}")
                 fn.consume(m.second)
-                println("Now parent is $fn")
+                println("${indent(depth + 1)}${greenColor}Now parent is $fn$noColor")
             }
 
-            return Pair(m.first, m.second)
+            println("${indent(depth + 1)}Returning $fn")
+            return Pair(m.first, fn)
         }
 
         return null
