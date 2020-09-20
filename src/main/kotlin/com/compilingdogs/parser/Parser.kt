@@ -14,15 +14,15 @@ val identifier = TokenNode(Identifier::class.java)
  * Keywords
  */
 val varKeyword = TokenNode(Keyword.VarKeyword::class.java)
-val int = TokenNode(Keyword.IntKeyword::class.java).apply { mapTo<FASTTypeIndicatorInt>() }
-var real = TokenNode(Keyword.RealKeyword::class.java).apply { mapTo<FASTTypeIndicatorReal>() }
-var bool = TokenNode(Keyword.BoolKeyword::class.java).apply { mapTo<FASTTypeIndicatorBool>() }
-val string = TokenNode(Keyword.StringKeyword::class.java).apply { mapTo<FASTTypeIndicatorString>() }
-var empty = TokenNode(Keyword.EmptyKeyword::class.java).apply { mapTo<FASTTypeIndicatorEmpty>() }
-var func = TokenNode(Keyword.FuncKeyword::class.java).apply { mapTo<FASTTypeIndicatorFunc>() }
-val readInt = TokenNode(Keyword.ReadIntKeyword::class.java).apply { mapTo<FASTReadIntCall>() }
-val readReal = TokenNode(Keyword.ReadRealKeyword::class.java).apply { mapTo<FASTReadRealCall>() }
-val readString = TokenNode(Keyword.ReadStringKeyword::class.java).apply { mapTo<FASTReadStringCall>() }
+val int = TokenNode(Keyword.IntKeyword::class.java, true).apply { mapTo<FASTTypeIndicatorInt>() }
+var real = TokenNode(Keyword.RealKeyword::class.java, true).apply { mapTo<FASTTypeIndicatorReal>() }
+var bool = TokenNode(Keyword.BoolKeyword::class.java, true).apply { mapTo<FASTTypeIndicatorBool>() }
+val string = TokenNode(Keyword.StringKeyword::class.java, true).apply { mapTo<FASTTypeIndicatorString>() }
+var empty = TokenNode(Keyword.EmptyKeyword::class.java, true).apply { mapTo<FASTTypeIndicatorEmpty>() }
+var func = TokenNode(Keyword.FuncKeyword::class.java, true).apply { mapTo<FASTTypeIndicatorFunc>() }
+val readInt = TokenNode(Keyword.ReadIntKeyword::class.java, true).apply { mapTo<FASTReadIntCall>() }
+val readReal = TokenNode(Keyword.ReadRealKeyword::class.java, true).apply { mapTo<FASTReadRealCall>() }
+val readString = TokenNode(Keyword.ReadStringKeyword::class.java, true).apply { mapTo<FASTReadStringCall>() }
 val end = TokenNode(Keyword.EndKeyword::class.java)
 val print = TokenNode(Keyword.PrintKeyword::class.java)
 val returnKeyword = TokenNode(Keyword.ReturnKeyword::class.java)
@@ -72,11 +72,11 @@ val period = TokenNode(Separator.PeriodSeparator::class.java)
 /**
  * Literals
  */
-val integerLiteral = TokenNode(Literal.IntegerLiteral::class.java).apply { mapTo<FASTIntegerLiteral>() }
-val realLiteral = TokenNode(Literal.RealLiteral::class.java).apply { mapTo<FASTRealLiteral>() }
-val stringLiteral = TokenNode(Literal.StringLiteral::class.java).apply { mapTo<FASTStringLiteral>() }
-val booleanLiteral = TokenNode(Keyword.BoolKeyword::class.java).apply { mapTo<FASTIntegerLiteral>() }
-val emptyLiteral = TokenNode(Literal.EmptyLiteral::class.java).apply { mapTo<FASTEmptyLiteral>() }
+val integerLiteral = TokenNode(Literal.IntegerLiteral::class.java, true).apply { mapTo<FASTIntegerLiteral>() }
+val realLiteral = TokenNode(Literal.RealLiteral::class.java, true).apply { mapTo<FASTRealLiteral>() }
+val stringLiteral = TokenNode(Literal.StringLiteral::class.java, true).apply { mapTo<FASTStringLiteral>() }
+val booleanLiteral = TokenNode(Keyword.BoolKeyword::class.java, true).apply { mapTo<FASTIntegerLiteral>() }
+val emptyLiteral = TokenNode(Literal.EmptyLiteral::class.java, true).apply { mapTo<FASTEmptyLiteral>() }
 
 
 /**
@@ -456,7 +456,7 @@ val functionLiteral = concat("functionLiteral") {
 }
 
 
-val testRoot = arrayLiteral
+val testRoot = program
 
 
 fun main() {
@@ -487,11 +487,10 @@ fun runTest() {
     parse(tokens)
 }
 
-fun parse(tokens: List<Token>): Pair<Int, FASTNode>? {
-    println(tokens)
-    val node = testRoot.match(tokens, null, 0)
-    println("Node: $node")
-    println("Node: ${node?.second}")
-    println("Node type: ${node!!::class.qualifiedName}")
-    return node
+fun parse(tokens: List<Token>): FASTNode {
+//    println(tokens)
+    val parent = FASTProgram()
+    val node = testRoot.match(tokens, parent, 0)
+    println("Node: $parent")
+    return parent
 }

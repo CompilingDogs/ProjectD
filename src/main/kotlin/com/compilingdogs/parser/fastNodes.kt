@@ -393,9 +393,9 @@ class FASTTypeIndicatorFunc : FASTTypeIndicator("func")
 
 class FASTFunctionLiteral(
     var args: MutableList<FASTIdentifier> = mutableListOf(),
-    var body: FASTFunctionBody
+    var body: FASTFunctionBody? = null
 ) : FASTExpression() {
-    override fun clone() = FASTFunctionLiteral(args.toMutableList(), body.clone())
+    override fun clone() = FASTFunctionLiteral(args.toMutableList(), body?.clone())
     override fun consume(node: FASTNode) {
         when (node) {
             is FASTIdentifier -> this.args.add(node)
@@ -620,16 +620,6 @@ class FASTWhileLoop(
             is FASTFunctionBody -> this.body = node
             else -> throw IllegalArgumentException("Argument of type " + node::class.simpleName + " not supported")
         }
-    }
-}
-
-class FASTEmptyOptionalNode : FASTNode() {
-    override fun clone(): FASTNode {
-        TODO("Not yet implemented")
-    }
-
-    override fun consume(node: FASTNode) {
-        throw NotImplementedError("Consume not applicable to " + this::class.simpleName)
     }
 }
 

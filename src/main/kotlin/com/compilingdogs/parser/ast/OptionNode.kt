@@ -10,36 +10,27 @@ class OptionalNode(
     var node: ASTNode
 ) : ASTNode() {
 
-    override fun match(tokens: List<Token>, parentNode: FASTNode?, depth: Int): Pair<Int, FASTNode>? {
+    override fun match(tokens: List<Token>, parentNode: FASTNode, depth: Int): Int? {
         if (logNodeTraversal)
             println("${indent(depth)}Matching OptionalNode $name; parent is $parentNode")
 
         // If this node contains its own mapped FASTNode, use it.
         // If not, propagate parent FASTNode instead.
-        val fastNode = attachedTo?.newInstance() ?: parentNode?.clone()
-        ?: throw IllegalStateException("No FASTNode provided, and ASTNode is not mapped to any FASTNode")
+        val fastNode = attachedTo?.newInstance() ?: parentNode
 
-        if (logFASTNodes)
-            println("${indent(depth)}Node after update: $fastNode")
+        var res: Int? = 0
 
-        // Do creation stuff
-        node.createCallback?.invoke(fastNode)
-
-        val res = node.match(tokens, fastNode, depth + 1)
-
-        if (res == null)
-            return Pair(0, FASTEmptyOptionalNode())
-
-        // If match was successful, fire appropriate callbacks
-        node.successCallback?.invoke(fastNode, res.second)
-        if (node.attachedTo != null) {
-            println("${indent(depth + 1)}${blueColor}Adding ${res.second} to $fastNode$noColor")
-            fastNode.consume(res.second)
-            println("${indent(depth + 1)}${blueColor}Now parent is $fastNode$noColor")
+        for (n in listOf(fastNode.clone(), fastNode)) {
+            res = node.match(tokens, n, depth + 1)
+            if (res == null)
+                return 0
         }
 
-        println("${indent(depth + 1)}${blueColor}Returning $fastNode$noColor")
-        return Pair(res.first, fastNode)
+        if (attachedTo != null)
+            parentNode.consume(fastNode)
+
+        println("${indent(depth + 1)}${blueColor}Stopping with parent = $parentNode$noColor")
+        return res
     }
 
     override fun clone(): ASTNode = OptionalNode(node.clone()).also { it.name = name }

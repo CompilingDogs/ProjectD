@@ -13,46 +13,40 @@ class AlternationNode(
 
     operator fun ASTNode.unaryPlus() = variants.add(this)
 
-    override fun match(tokens: List<Token>, parentNode: FASTNode?, depth: Int): Pair<Int, FASTNode>? {
+    override fun match(tokens: List<Token>, parentNode: FASTNode, depth: Int): Int? {
         if (logNodeTraversal)
             println("${indent(depth)}Matching AlternationNode $name; parent is $parentNode")
 
         // If this node contains its own mapped FASTNode, use it.
         // If not, propagate parent FASTNode instead.
-        val fastNode = attachedTo?.newInstance() ?: parentNode?.clone()
-        ?: throw IllegalStateException("No FASTNode provided, and ASTNode is not mapped to any FASTNode")
+        val fastNode = attachedTo?.newInstance() ?: parentNode
 
-        if (logFASTNodes)
-            println("${indent(depth)}Node after update: $fastNode")
+
+        var parsedLen = -1
 
         for (child in variants) {
-//            println("Matching alternation child in $name ${counter++}")
-
             val fn = fastNode.clone()
-
-            // Do creation stuff
-            child.createCallback?.invoke(fn)
 
             // Try to match the AST nodes
             val m = child.match(tokens, fn, depth + 1)
 
             // If child did not match, continue
-            if (m == null)
-                continue
+            if (m == null) continue
 
-            // If match was successful, fire appropriate callbacks
-            child.successCallback?.invoke(fn, m.second)
-            if (child.attachedTo != null) {
-                println("${indent(depth + 1)}${greenColor}Adding ${m.second} to $fn${noColor}")
-                fn.consume(m.second)
-                println("${indent(depth + 1)}${greenColor}Now parent is $fn$noColor")
-            }
+            // If match was successful, apply the same on the real parent/fastNode
+            parsedLen = child.match(tokens, fastNode, depth + 1)!!
 
-            println("${indent(depth + 1)}${greenColor}Returning $fn$noColor")
-            return Pair(m.first, fn)
+            break
         }
 
-        return null
+        if (parsedLen == -1)
+            return null
+
+        if (attachedTo != null)
+            parentNode.consume(fastNode)
+
+        println("${indent(depth + 1)}${greenColor}Stopping with parent = $parentNode$noColor")
+        return parsedLen
     }
 
     override fun clone(): ASTNode = AlternationNode(variants.toMutableList()).also { it.name = name }

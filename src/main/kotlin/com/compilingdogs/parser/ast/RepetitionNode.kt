@@ -15,51 +15,43 @@ class RepetitionNode(
 
     operator fun ASTNode.unaryPlus() = children.add(this)
 
-    override fun match(tokens: List<Token>, parentNode: FASTNode?, depth: Int): Pair<Int, FASTNode>? {
+    override fun match(tokens: List<Token>, parentNode: FASTNode, depth: Int): Int? {
         if (logNodeTraversal)
             println("${indent(depth)}Matching RepetitionNode $name; parent is $parentNode")
 
         // If this node contains its own mapped FASTNode, use it.
         // If not, propagate parent FASTNode instead.
-        var fastNode = attachedTo?.newInstance() ?: parentNode?.clone()
-        ?: throw IllegalStateException("No FASTNode provided, and ASTNode is not mapped to any FASTNode")
-
-        if (logFASTNodes)
-            println("${indent(depth)}Node after update: $fastNode")
+        val fastNode = attachedTo?.newInstance() ?: parentNode
 
         // Offset in the token list
         var offset = 0
 
         while (true) {
-//            println("Matching repetition child in $name ${counter++}")
+            var tmpOffset = 0
 
-            val fn = fastNode.clone()
+            for (node in listOf(fastNode.clone(), fastNode)) {
+                var localOffset = 0
 
-            for (child in children) {
-                // Do creation stuff
-                child.createCallback?.invoke(fn)
+                for (child in children) {
+                    // Try to match the AST node
+                    val res = child.match(tokens.subList(offset + localOffset, tokens.size), node, depth + 1)
 
-                // Try to match the AST node
-                val m = child.match(tokens.subList(offset, tokens.size), fn, depth + 1)
+                    // If child did not match, abort
+                    if (res == null) {
+                        if (attachedTo != null)
+                            parentNode.consume(fastNode)
 
-                // If child did not match, abort
-                if (m == null) {
-                    println("${indent(depth + 1)}${magentaColor}Returning $fastNode$noColor")
-                    return Pair(offset, fastNode)
+                        println("${indent(depth + 1)}${magentaColor}Stopping with parent = $parentNode$noColor")
+                        return offset
+                    }
+
+                    localOffset += res
                 }
 
-                offset += m.first
-
-                // If match was successful, fire appropriate callbacks
-                child.successCallback?.invoke(fn, m.second)
-                if (child.attachedTo != null) {
-                    println("${indent(depth + 1)}${magentaColor}Adding ${m.second} to $fn$noColor")
-                    fn.consume(m.second)
-                    println("${indent(depth + 1)}${magentaColor}Now parent is $fn$noColor")
-                }
+                tmpOffset = localOffset
             }
 
-            fastNode = fn
+            offset += tmpOffset
         }
     }
 

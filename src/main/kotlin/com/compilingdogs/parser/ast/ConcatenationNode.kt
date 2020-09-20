@@ -14,51 +14,37 @@ open class ConcatenationNode(
     operator fun ASTNode.unaryPlus() = children.add(this)
 
 
-    override fun match(tokens: List<Token>, parentNode: FASTNode?, depth: Int): Pair<Int, FASTNode>? {
+    override fun match(tokens: List<Token>, parentNode: FASTNode, depth: Int): Int? {
         if (logNodeTraversal)
             println("${indent(depth)}Matching ConcatenationNode $name; parent is $parentNode")
 
         // If this node contains its own mapped FASTNode, use it.
         // If not, propagate parent FASTNode instead.
-        val fastNode = attachedTo?.newInstance() ?: parentNode?.clone()
-        ?: throw IllegalStateException("No FASTNode provided, and ASTNode is not mapped to any FASTNode")
-
-        if (logFASTNodes)
-            println("${indent(depth)}Node after update: $fastNode")
+        val fastNode = attachedTo?.newInstance() ?: parentNode
 
         // Offset in the token list
         var offset = 0
 
-        for (child in children) {
-//            println("Matching concatenation child in $name ${counter++}")
+        // First try applying on the clone node, then on the real one
+        for (node in listOf(fastNode.clone(), fastNode)) {
+            offset = 0
 
-            // Do creation stuff
-            child.createCallback?.invoke(fastNode)
+            for (child in children) {
+                // Try to match the AST node
+                val m = child.match(tokens.subList(offset, tokens.size), node, depth + 1)
 
-            // Try to match the AST node
-            val m = child.match(tokens.subList(offset, tokens.size), fastNode, depth + 1)
+                // If child did not match, abort
+                if (m == null) return null
 
-            // If child did not match, abort
-            if (m == null)
-                return null
-
-            offset += m.first
-
-            if (child.successCallback != null) {
-                println("fastNode before callback: $fastNode")
-                // If match was successful, fire appropriate callbacks
-                child.successCallback?.invoke(fastNode, m.second)
-                if (child.attachedTo != null) {
-                    println("${indent(depth + 1)}${yellowColor}Adding ${m.second} to $fastNode$noColor")
-                    fastNode.consume(m.second)
-                    println("${indent(depth + 1)}${yellowColor}Now parent is $fastNode$noColor")
-                }
-                println("fastNode after callback: $fastNode")
+                offset += m
             }
         }
 
-        println("${indent(depth + 1)}${yellowColor}Returning $fastNode$noColor")
-        return Pair(offset, fastNode)
+        if (attachedTo != null)
+            parentNode.consume(fastNode)
+
+        println("${indent(depth + 1)}${yellowColor}Stopping with parent = $parentNode$noColor")
+        return offset
     }
 
     override fun clone(): ASTNode = ConcatenationNode(children.toMutableList()).also { it.name = name }

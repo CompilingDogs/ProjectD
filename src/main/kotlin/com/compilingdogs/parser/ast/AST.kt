@@ -31,10 +31,10 @@ abstract class ASTNode(
     // Specifies the data structure that this node is attached to.
     // While parsing, the particular values will be accumulated here.
     var attachedTo: Class<FASTNode>? = null,
-    var createCallback: ((FASTNode?) -> Unit)? = null,
-    var successCallback: ((FASTNode?, FASTNode) -> Unit)? = null,
+//    var createCallback: ((FASTNode?) -> Unit)? = null,
+//    var successCallback: ((FASTNode?, FASTNode?) -> Unit)? = null,
 ) {
-    abstract fun match(tokens: List<Token>, parentNode: FASTNode?, depth: Int): Pair<Int, FASTNode>?
+    abstract fun match(tokens: List<Token>, parentNode: FASTNode, depth: Int): Int?
 
     abstract fun clone(): ASTNode
 
@@ -51,17 +51,17 @@ fun node(name: String = "", init: ASTNode.() -> Unit): ASTNode = initialize(init
 
 // --------------------------------------------------------------------------------------------------------
 
-infix fun <T : FASTNode?> ASTNode.onCreate(callback: (fastNode: T) -> Unit): ASTNode {
-    val newNode = clone()
-    newNode.createCallback = callback as (FASTNode?) -> Unit
-    return newNode
-}
+//infix fun <T : FASTNode?> ASTNode.onCreate(callback: (fastNode: T) -> Unit): ASTNode {
+//    val newNode = clone()
+//    newNode.createCallback = callback as (FASTNode?) -> Unit
+//    return newNode
+//}
 
-infix fun <T : FASTNode?> ASTNode.onSuccess(callback: (fastNode: T, nextFastNode: FASTNode) -> Unit): ASTNode {
-    val newNode = clone()
-    newNode.successCallback = callback as (FASTNode?, FASTNode) -> Unit
-    return newNode
-}
+//infix fun <T : FASTNode?> ASTNode.onSuccess(callback: (fastNode: T, nextFastNode: FASTNode) -> Unit): ASTNode {
+//    val newNode = clone()
+//    newNode.successCallback = callback as (FASTNode?, FASTNode?) -> Unit
+//    return newNode
+//}
 
 
 
