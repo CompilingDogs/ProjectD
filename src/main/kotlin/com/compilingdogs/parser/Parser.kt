@@ -8,7 +8,7 @@ import java.io.File
 /**
  * Identifiers
  */
-val identifier = TokenNode(Identifier::class.java)
+val identifier = TokenNode(Identifier::class.java, true).apply { mapTo<FASTIdentifier>() }
 
 /**
  * Keywords
@@ -244,9 +244,11 @@ val expression = concat("expression") {
 }
 
 val varDefinition = concat("varDefinition") {
+    mapTo<FASTVarDefinition>()
+
     +identifier
-    +maybe {
-        concat {
+    +maybe("maybeVarValue") {
+        concat("concatVarValue") {
             +assignmentOperator
             +expression
         }
@@ -254,14 +256,16 @@ val varDefinition = concat("varDefinition") {
 }
 
 val declaration = concat("declaration") {
+    mapTo<FASTDeclarationStatement>()
+
     +varKeyword
     +varDefinition
-    +repeat {
-        concat {
-            +comma
-            +varDefinition
-        }
-    }
+//    +repeat {
+//        concat {
+//            +comma
+//            +varDefinition
+//        }
+//    }
 }
 val assignmentStatement = concat("assignmentStatement") {
     mapTo<FASTAssignmentStatement>()
@@ -300,7 +304,7 @@ val statement = any("statement") {
     +returnStatement
 }
 val program = concat("program") {
-    mapTo<FASTProgram>()
+//    mapTo<FASTProgram>()
 
     +repeat {
         +concat {

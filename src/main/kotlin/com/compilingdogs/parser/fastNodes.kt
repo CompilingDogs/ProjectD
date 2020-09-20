@@ -1,6 +1,7 @@
 package com.compilingdogs.parser
 
 import com.compilingdogs.parser.ast.FASTNode
+import tokens.Identifier
 import tokens.Token
 import java.lang.IllegalArgumentException
 import java.lang.IllegalStateException
@@ -17,7 +18,7 @@ class FASTToken<T : Token>(
     }
 
     override fun toString(): String {
-        return "FASTToken($token)"
+        return "FASTToken<${token.javaClass.simpleName}>($token)"
     }
 }
 
@@ -34,6 +35,10 @@ class FASTProgram(
         } else {
             throw IllegalArgumentException("Argument of type " + node::class.simpleName + " not supported")
         }
+    }
+
+    override fun toString(): String {
+        return "FASTProgram($statements)"
     }
 }
 
@@ -53,11 +58,15 @@ class FASTDeclarationStatement(
             throw IllegalArgumentException("Argument of type " + node::class.simpleName + " not supported")
         }
     }
+
+    override fun toString(): String {
+        return "FASTDeclarationStatement($definitions)"
+    }
 }
 
 class FASTAssignmentStatement(
-    var reference: FASTReference,
-    var value: FASTExpression
+    var reference: FASTReference? = null,
+    var value: FASTExpression? = null
 ) : FASTStatement() {
     override fun clone(): FASTNode {
         return FASTAssignmentStatement(reference, value)
@@ -91,7 +100,7 @@ class FASTPrintStatement(
 }
 
 class FASTReturnStatement(
-    var value: FASTExpression?
+    var value: FASTExpression? = null
 ) : FASTStatement() {
     override fun clone(): FASTNode {
         return FASTReturnStatement(value)
@@ -107,19 +116,24 @@ class FASTReturnStatement(
 }
 
 class FASTVarDefinition(
-    var name: FASTIdentifier,
-    var value: FASTExpression?
+    var name: Identifier? = null,
+    var value: FASTExpression? = null
 ) : FASTNode() {
     override fun clone(): FASTNode {
         return FASTVarDefinition(name, value)
     }
 
     override fun consume(node: FASTNode) {
-        when (node) {
-            is FASTIdentifier -> this.name = node
-            is FASTExpression -> this.value = node
-            else -> throw IllegalArgumentException("Argument of type " + node::class.simpleName + " not supported")
-        }
+        if (node is FASTToken<*> && node.token is Identifier)
+            this.name = (node as FASTToken<Identifier>).token
+        else if (node is FASTExpression)
+            this.value = node
+        else
+            throw IllegalArgumentException("Argument of type " + node::class.simpleName + " not supported")
+    }
+
+    override fun toString(): String {
+        return "FASTVarDefinition($name = $value)"
     }
 }
 
@@ -130,8 +144,8 @@ enum class FASTMemberReferenceType {
 
 // TODO: Done By Alecsey
 class FASTMemberReference(
-    var member: FASTExpression,
-    var type: FASTMemberReferenceType
+    var member: FASTExpression? = null,
+    var type: FASTMemberReferenceType? = null
 ) : FASTNode() {
     override fun clone(): FASTNode {
         return FASTMemberReference(member, type)
@@ -148,24 +162,25 @@ class FASTMemberReference(
 
 // TODO: Done By Alecsey
 class FASTReference(
-    var identifier: FASTIdentifier,
-    var references: MutableList<FASTMemberReference>
+    var identifier: Identifier? = null,
+    var references: MutableList<FASTMemberReference> = mutableListOf()
 ) : FASTNode() {
     override fun clone(): FASTNode {
         return FASTReference(identifier, references)
     }
 
     override fun consume(node: FASTNode) {
-        when (node) {
-            is FASTIdentifier -> this.identifier = node
-            is FASTMemberReference -> this.references.add(node)
-            else -> throw IllegalArgumentException("Argument of type " + node::class.simpleName + " not supported")
-        }
+        if (node is FASTToken<*> && node.token is Identifier)
+            this.identifier = (node as FASTToken<Identifier>).token
+        else if (node is FASTMemberReference)
+            this.references.add(node)
+        else
+            throw IllegalArgumentException("Argument of type " + node::class.simpleName + " not supported")
     }
 }
 
 open class FASTIdentifier(
-    var name: String
+    var name: String? = null
 ) : FASTNode() {
     override fun clone() = FASTIdentifier(name)
 
@@ -379,29 +394,73 @@ abstract class FASTUnaryOperator(
     }
 }
 
-abstract class FASTTypeIndicator(name: String) : FASTIdentifier(name)
+abstract class FASTTypeIndicator(val name: String) : FASTNode() {
+    override fun consume(node: FASTNode) {
+        TODO("Not yet implemented")
+    }
+}
 
-class FASTTypeIndicatorInt : FASTTypeIndicator("int")
-class FASTTypeIndicatorReal : FASTTypeIndicator("real")
-class FASTTypeIndicatorBool : FASTTypeIndicator("bool")
-class FASTTypeIndicatorString : FASTTypeIndicator("string")
-class FASTTypeIndicatorEmpty : FASTTypeIndicator("empty")
-class FASTTypeIndicatorArray : FASTTypeIndicator("[]")
-class FASTTypeIndicatorTuple : FASTTypeIndicator("{}")
-class FASTTypeIndicatorFunc : FASTTypeIndicator("func")
+class FASTTypeIndicatorInt : FASTTypeIndicator("int") {
+    override fun clone(): FASTNode {
+        return FASTTypeIndicatorInt()
+    }
+}
+
+class FASTTypeIndicatorReal : FASTTypeIndicator("real") {
+    override fun clone(): FASTNode {
+        return FASTTypeIndicatorReal()
+    }
+}
+
+class FASTTypeIndicatorBool : FASTTypeIndicator("bool") {
+    override fun clone(): FASTNode {
+        return FASTTypeIndicatorBool()
+    }
+}
+
+class FASTTypeIndicatorString : FASTTypeIndicator("string") {
+    override fun clone(): FASTNode {
+        return FASTTypeIndicatorString()
+    }
+}
+
+class FASTTypeIndicatorEmpty : FASTTypeIndicator("empty") {
+    override fun clone(): FASTNode {
+        return FASTTypeIndicatorEmpty()
+    }
+}
+
+class FASTTypeIndicatorArray : FASTTypeIndicator("[]") {
+    override fun clone(): FASTNode {
+        return FASTTypeIndicatorArray()
+    }
+}
+
+class FASTTypeIndicatorTuple : FASTTypeIndicator("{}") {
+    override fun clone(): FASTNode {
+        return FASTTypeIndicatorTuple()
+    }
+}
+
+class FASTTypeIndicatorFunc : FASTTypeIndicator("func") {
+    override fun clone(): FASTNode {
+        return FASTTypeIndicatorFunc()
+    }
+}
 
 
 class FASTFunctionLiteral(
-    var args: MutableList<FASTIdentifier> = mutableListOf(),
+    var args: MutableList<Identifier> = mutableListOf(),
     var body: FASTFunctionBody? = null
 ) : FASTExpression() {
     override fun clone() = FASTFunctionLiteral(args.toMutableList(), body?.clone())
     override fun consume(node: FASTNode) {
-        when (node) {
-            is FASTIdentifier -> this.args.add(node)
-            is FASTFunctionBody -> this.body = node
-            else -> throw IllegalArgumentException("Argument of type " + node::class.simpleName + " not supported")
-        }
+        if (node is FASTToken<*> && node.token is Identifier)
+            this.args.add((node as FASTToken<Identifier>).token)
+        else if (node is FASTFunctionBody)
+            this.body = node
+        else
+            throw IllegalArgumentException("Argument of type " + node::class.simpleName + " not supported")
     }
 }
 
@@ -450,6 +509,7 @@ class FASTTypeCheckOperator : FASTBinaryOperator() {
         it.right = right
     }
 }
+
 class FASTFunctionBody(
     var statements: MutableList<FASTStatement> = mutableListOf()
 ) : FASTNode() {
@@ -464,15 +524,16 @@ class FASTFunctionBody(
 }
 
 class FASTIntegerLiteral(
-    var value: Int
+    var value: Int? = null
 ) : FASTExpression() {
     override fun clone() = FASTIntegerLiteral(value)
     override fun consume(node: FASTNode) {
         throw NotImplementedError("Consume not applicable to " + this::class.simpleName)
     }
 }
+
 class FASTRealLiteral(
-    var value: Float
+    var value: Float? = null
 ) : FASTExpression() {
     override fun clone() = FASTRealLiteral(value)
     override fun consume(node: FASTNode) {
@@ -481,7 +542,7 @@ class FASTRealLiteral(
 }
 
 class FASTStringLiteral(
-    var value: String
+    var value: String? = null
 ) : FASTExpression() {
     override fun clone() = FASTStringLiteral(value)
     override fun consume(node: FASTNode) {
@@ -490,7 +551,7 @@ class FASTStringLiteral(
 }
 
 class FASTBooleanLiteral(
-    var value: Boolean
+    var value: Boolean? = null
 ) : FASTExpression() {
     override fun clone() = FASTBooleanLiteral(value)
     override fun consume(node: FASTNode) {
@@ -542,23 +603,24 @@ class FASTTupleLiteral(
 }
 
 class FASTTupleElement(
-    var name: FASTIdentifier?,
-    var value: FASTExpression
+    var name: Identifier? = null,
+    var value: FASTExpression? = null
 ) : FASTNode() {
     override fun clone() = FASTTupleElement(name, value)
     override fun consume(node: FASTNode) {
-        when (node) {
-            is FASTIdentifier -> this.name = node
-            is FASTExpression -> this.value = node
-            else -> throw IllegalArgumentException("Argument of type " + node::class.simpleName + " not supported")
-        }
+        if (node is FASTToken<*> && node.token is Identifier)
+            this.name = (node as FASTToken<Identifier>).token
+        else if (node is FASTExpression)
+            this.value = node
+        else
+            throw IllegalArgumentException("Argument of type " + node::class.simpleName + " not supported")
     }
 }
 
 class FASTIfStructure(
-    var condition: FASTExpression,
-    var body: FASTFunctionBody?,
-    var elseBody: FASTFunctionBody?
+    var condition: FASTExpression? = null,
+    var body: FASTFunctionBody? = null,
+    var elseBody: FASTFunctionBody? = null
 ) : FASTControlStatement() {
     override fun clone() = FASTIfStructure(condition, body, elseBody)
     override fun consume(node: FASTNode) {
@@ -580,38 +642,39 @@ class FASTIfStructure(
 abstract class FASTLoopStructure : FASTControlStatement()
 
 class FASTForLoop(
-    var varName: FASTIdentifier?,
-    var rangeBegin: FASTExpression?,
-    var rangeEnd: FASTExpression?,
-    var iterable: FASTExpression?,
-    var body: FASTFunctionBody?
+    var varName: Identifier? = null,
+    var rangeBegin: FASTExpression? = null,
+    var rangeEnd: FASTExpression? = null,
+    var iterable: FASTExpression? = null,
+    var body: FASTFunctionBody? = null
 ) : FASTLoopStructure() {
     override fun clone() = FASTForLoop(varName, rangeBegin, rangeEnd, iterable, body)
     override fun consume(node: FASTNode) {
-        when (node) {
-            is FASTIdentifier -> this.varName = node
-            is FASTFunctionBody -> this.body = node
-            is FASTExpression -> {
-                if (this.iterable == null) {
-                    this.iterable = node
-                } else {
-                    if (this.rangeBegin == null) {
-                        this.rangeBegin = this.iterable
-                        this.rangeEnd = node
-                        this.iterable = null
-                    } else {
-                        throw IllegalStateException("Both of left and right operands are satisfied for " + this::class.simpleName)
-                    }
-                }
-            }
-            else -> throw IllegalArgumentException("Argument of type " + node::class.simpleName + " not supported")
-        }
+        TODO("Not implemented")
+//        when (node) {
+//            is FASTIdentifier -> this.varName = node
+//            is FASTFunctionBody -> this.body = node
+//            is FASTExpression -> {
+//                if (this.iterable == null) {
+//                    this.iterable = node
+//                } else {
+//                    if (this.rangeBegin == null) {
+//                        this.rangeBegin = this.iterable
+//                        this.rangeEnd = node
+//                        this.iterable = null
+//                    } else {
+//                        throw IllegalStateException("Both of left and right operands are satisfied for " + this::class.simpleName)
+//                    }
+//                }
+//            }
+//            else -> throw IllegalArgumentException("Argument of type " + node::class.simpleName + " not supported")
+//        }
     }
 }
 
 class FASTWhileLoop(
-    var cond: FASTExpression,
-    var body: FASTFunctionBody
+    var cond: FASTExpression? = null,
+    var body: FASTFunctionBody? = null
 ) : FASTLoopStructure() {
     override fun clone() = FASTWhileLoop(cond, body)
     override fun consume(node: FASTNode) {
