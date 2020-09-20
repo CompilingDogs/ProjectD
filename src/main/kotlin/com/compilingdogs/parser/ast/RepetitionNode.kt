@@ -2,6 +2,7 @@ package com.compilingdogs.parser.ast
 
 import com.compilingdogs.parser.greenColor
 import com.compilingdogs.parser.indent
+import com.compilingdogs.parser.magentaColor
 import com.compilingdogs.parser.noColor
 import tokens.Token
 import java.lang.IllegalStateException
@@ -43,7 +44,7 @@ class RepetitionNode(
 
                 // If child did not match, abort
                 if (m == null) {
-                    println("${indent(depth + 1)}Returning $fastNode")
+                    println("${indent(depth + 1)}${magentaColor}Returning $fastNode$noColor")
                     return Pair(offset, fastNode)
                 }
 
@@ -52,9 +53,9 @@ class RepetitionNode(
                 // If match was successful, fire appropriate callbacks
                 child.successCallback?.invoke(fn, m.second)
                 if (child.attachedTo != null) {
-                    println("${indent(depth + 1)}${greenColor}Adding ${m.second} to $fn$noColor")
+                    println("${indent(depth + 1)}${magentaColor}Adding ${m.second} to $fn$noColor")
                     fn.consume(m.second)
-                    println("${indent(depth + 1)}${greenColor}Now parent is $fn$noColor")
+                    println("${indent(depth + 1)}${magentaColor}Now parent is $fn$noColor")
                 }
             }
 

@@ -48,7 +48,7 @@ class AlternationNode(
                 println("${indent(depth + 1)}${greenColor}Now parent is $fn$noColor")
             }
 
-            println("${indent(depth + 1)}Returning $fn")
+            println("${indent(depth + 1)}${greenColor}Returning $fn$noColor")
             return Pair(m.first, fn)
         }
 

@@ -1,9 +1,7 @@
 package com.compilingdogs.parser.ast
 
-import com.compilingdogs.parser.FASTEmptyOptionalNode
+import com.compilingdogs.parser.*
 import com.compilingdogs.parser.greenColor
-import com.compilingdogs.parser.indent
-import com.compilingdogs.parser.noColor
 import tokens.Token
 import java.lang.IllegalStateException
 
@@ -35,12 +33,12 @@ class OptionalNode(
         // If match was successful, fire appropriate callbacks
         node.successCallback?.invoke(fastNode, res.second)
         if (node.attachedTo != null) {
-            println("${indent(depth + 1)}${greenColor}Adding ${res.second} to $fastNode$noColor")
+            println("${indent(depth + 1)}${blueColor}Adding ${res.second} to $fastNode$noColor")
             fastNode.consume(res.second)
-            println("${indent(depth + 1)}${greenColor}Now parent is $fastNode$noColor")
+            println("${indent(depth + 1)}${blueColor}Now parent is $fastNode$noColor")
         }
 
-        println("${indent(depth + 1)}Returning $fastNode")
+        println("${indent(depth + 1)}${blueColor}Returning $fastNode$noColor")
         return Pair(res.first, fastNode)
     }
 
