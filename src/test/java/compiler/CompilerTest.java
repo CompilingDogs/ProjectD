@@ -1,5 +1,7 @@
-package lexical_analyzer;
+package compiler;
 
+import com.compilingdogs.parser.ParserKt;
+import com.compilingdogs.parser.ast.FASTNode;
 import com.google.gson.*;
 import exception.LexicalAnalysisException;
 import org.junit.Test;
@@ -12,9 +14,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Type;
 
-public class LexicalAnalyzerTest {
+public class CompilerTest {
 
-    private static final Logger log = org.slf4j.LoggerFactory.getLogger(LexicalAnalyzerTest.class);
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(CompilerTest.class);
     private final LexicalAnalyzer lexicalAnalyzer = LexicalAnalyzer.getInstance();
 
     private final String[] testingSourceCodes = new String[]{
@@ -44,20 +46,35 @@ public class LexicalAnalyzerTest {
     }
 
     public void createTestingResults(String fullPath) throws IOException {
-        var gson = new GsonBuilder().registerTypeHierarchyAdapter(Token.class, new TDeserializer())
-                                    .create();
+        var gsonTok = new GsonBuilder().registerTypeHierarchyAdapter(
+                Token.class,
+                new TDeserializer()
+        ).create();
+        var gsonAst = new GsonBuilder().registerTypeHierarchyAdapter(
+                FASTNode.class,
+                new AstDeserializer()
+        ).create();
+
         var sourceCode = new File(fullPath);
         var fileName = sourceCode.getName().split("\\.")[0];
 
         try {
             var generatedTokens = lexicalAnalyzer.tokenize(sourceCode);
-            var fileOut = new FileOutputStream(
-                    new File("src/test/resources/lexical_analyzer_results/" + fileName + ".json")
+            var generatedAst = ParserKt.parse(generatedTokens);
+
+            var tokensOut = new FileOutputStream(
+                    new File("src/test/resources/lexical_analyzer_results/" + fileName + "_tokens.json")
+            );
+            var astOut = new FileOutputStream(
+                    new File("src/test/resources/syntax_analyzer_results/" + fileName + "_ast.json")
             );
 
-            String res = gson.toJson(generatedTokens);
-            fileOut.write(res.getBytes());
-        } catch (LexicalAnalysisException e){
+            String resTokens = gsonTok.toJson(generatedTokens);
+            String resAst = gsonAst.toJson(generatedAst);
+
+            tokensOut.write(resTokens.getBytes());
+            astOut.write(resAst.getBytes());
+        } catch (LexicalAnalysisException e) {
             log.error(e.getMessage());
             e.printStackTrace();
         }
@@ -68,6 +85,19 @@ public class LexicalAnalyzerTest {
     public static class TDeserializer implements JsonSerializer<Token> {
         @Override
         public JsonElement serialize(Token src, Type typeOfSrc, JsonSerializationContext context) {
+            Gson gson = new Gson();
+            JsonElement serialize = gson.toJsonTree(src);
+            JsonObject o = (JsonObject) serialize;
+            o.addProperty("class", src.getClass().getSimpleName());
+            return serialize;
+        }
+    }
+
+    public static class AstDeserializer implements JsonSerializer<FASTNode> {
+        @Override
+        public JsonElement serialize(
+                FASTNode src, Type typeOfSrc, JsonSerializationContext context
+        ) {
             Gson gson = new Gson();
             JsonElement serialize = gson.toJsonTree(src);
             JsonObject o = (JsonObject) serialize;
