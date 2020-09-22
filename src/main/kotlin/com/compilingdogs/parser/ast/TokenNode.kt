@@ -14,7 +14,7 @@ class TokenNode<T>(
     override fun match(tokens: List<Token>, parentNode: FASTNode, depth: Int, enablePrints: Boolean): Int? {
         if (enablePrints && logNodeTraversal) {
             println("${indent(depth)}Matching TokenNode of type ${nodeType.simpleName}; parent is $parentNode")
-            println("${indent(depth)}Tokens: ${tokens.joinToString( )}")
+            println("${indent(depth)}Tokens: ${tokens.joinToString(" ")}")
         }
 
         if (tokens.isNotEmpty() && tokens[0].javaClass == nodeType) {

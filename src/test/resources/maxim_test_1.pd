@@ -1,9 +1,11 @@
-var arr := "testString"
+var arr := "testString";
+
 if (1) then
     var integer := 1;
     var integer := 1;
     var integer := 1;
     var integer := 1;
-else
     var integer := 2;
-end
+end;
+
+

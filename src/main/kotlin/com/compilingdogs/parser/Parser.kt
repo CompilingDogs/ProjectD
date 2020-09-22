@@ -298,13 +298,24 @@ val returnStatement = concat("returnStatement") {
     }
 }
 val statement = any("statement") {
-    transformTokens = { s -> s.filter { token -> token.token != "\n" } }
-
     +declaration
     +assignmentStatement
     +controlStructure
     +printStatement
     +returnStatement
+}
+
+val govno = concat("gonvo") {
+    +any("anyGovno") {
+        +newLine
+        +semicolon
+    }
+    repeat("repeatGovno") {
+        +any("anyGovno2") {
+            +newLine
+            +semicolon
+        }
+    }
 }
 
 //val program = concat("program") {
@@ -314,16 +325,13 @@ val program =
 
 //    +repeat("programPiece") {
     repeat("program") {
+//        transformTokens = { s -> s.filter { token -> token.token != "\n" } }
+
+
         +concat("statement+separator") {
             +statement
 
-            +any("statementSeparator") {
-                +semicolon
-                +newLine
-            }
-            +repeat("statementSeparatorNewLinezz") {
-                +newLine
-            }
+            +govno
         }
     }
 //}
