@@ -6,6 +6,10 @@ if (1) then
     var integer := 1;
     var integer := 1;
     var integer := 2;
-end;
+else
+    var float1 := 0;
+end
 
-
+for ochko in jopa loop
+    var v = 0;
+end

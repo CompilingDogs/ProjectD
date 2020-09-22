@@ -305,18 +305,18 @@ val statement = any("statement") {
     +returnStatement
 }
 
-val govno = concat("gonvo") {
-    +any("anyGovno") {
-        +newLine
-        +semicolon
-    }
-    repeat("repeatGovno") {
-        +any("anyGovno2") {
-            +newLine
-            +semicolon
-        }
-    }
-}
+//val govno = concat("gonvo") {
+//    +any("anyGovno") {
+//        +newLine
+//        +semicolon
+//    }
+//    repeat("repeatGovno") {
+//        +any("anyGovno2") {
+//            +newLine
+//            +semicolon
+//        }
+//    }
+//}
 
 //val program = concat("program") {
 val program =
@@ -329,9 +329,19 @@ val program =
 
 
         +concat("statement+separator") {
+            +repeat("repeatSeparator") {
+                +newLine
+            }
+
             +statement
 
-            +govno
+            +any("anySeparator") {
+                +newLine
+                +semicolon
+            }
+            +repeat("repeatSeparator2") {
+                +newLine
+            }
         }
     }
 //}
