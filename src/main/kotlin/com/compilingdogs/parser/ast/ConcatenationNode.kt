@@ -15,8 +15,10 @@ open class ConcatenationNode(
 
 
     override fun match(tokens: List<Token>, parentNode: FASTNode, depth: Int, enablePrints: Boolean): Int? {
-        if (enablePrints && logNodeTraversal)
+        if (enablePrints && logNodeTraversal) {
             println("${indent(depth)}Matching ConcatenationNode $name; parent is $parentNode")
+            println("${indent(depth)}Tokens: ${tokens.joinToString( )}")
+        }
 
         // If this node contains its own mapped FASTNode, use it.
         // If not, propagate parent FASTNode instead.
@@ -31,7 +33,7 @@ open class ConcatenationNode(
 
             for (child in children) {
                 // Try to match the AST node
-                val m = child.match(tokens.subList(offset, tokens.size),
+                val m = child.match(transformTokens(tokens.subList(offset, tokens.size)),
                     node, depth + 1, enablePrints && System.identityHashCode(node) != System.identityHashCode(fastNode))
 
                 // If child did not match, abort

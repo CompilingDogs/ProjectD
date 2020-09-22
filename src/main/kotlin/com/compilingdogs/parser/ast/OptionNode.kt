@@ -11,8 +11,10 @@ class OptionalNode(
 ) : ASTNode() {
 
     override fun match(tokens: List<Token>, parentNode: FASTNode, depth: Int, enablePrints: Boolean): Int? {
-        if (enablePrints && logNodeTraversal)
+        if (enablePrints && logNodeTraversal) {
             println("${indent(depth)}Matching OptionalNode $name; parent is $parentNode")
+            println("${indent(depth)}Tokens: ${tokens.joinToString( )}")
+        }
 
         // If this node contains its own mapped FASTNode, use it.
         // If not, propagate parent FASTNode instead.
@@ -21,7 +23,7 @@ class OptionalNode(
         var res: Int? = 0
 
         for (n in listOf(fastNode.clone(), fastNode)) {
-            res = node.match(tokens, n, depth + 1, enablePrints && System.identityHashCode(n) != System.identityHashCode(fastNode))
+            res = node.match(transformTokens(tokens), n, depth + 1, enablePrints && System.identityHashCode(n) != System.identityHashCode(fastNode))
             if (res == null)
                 return 0
         }

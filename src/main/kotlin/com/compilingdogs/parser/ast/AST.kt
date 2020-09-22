@@ -37,6 +37,8 @@ abstract class ASTNode(
     // If this is true and when node is parsed to an end,
     // and some tokens are still left till the end, throw exception.
 //    var mandatory: Boolean = false
+
+    var transformTokens: (List<Token>) -> List<Token> = { s -> s }
 ) {
     abstract fun match(tokens: List<Token>, parentNode: FASTNode, depth: Int, enablePrints: Boolean): Int?
 

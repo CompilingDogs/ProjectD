@@ -441,13 +441,13 @@ class FASTTypeIndicatorFunc : FASTTypeIndicator("func") {
 
 data class FASTFunctionLiteral(
     var args: MutableList<Identifier> = mutableListOf(),
-    var body: FASTFunctionBody? = null
+    var body: FASTBody? = null
 ) : FASTExpression() {
     override fun clone() = FASTFunctionLiteral(args.toMutableList(), body?.clone())
     override fun consume(node: FASTNode) {
         if (node is FASTToken<*> && node.token is Identifier)
             this.args.add((node as FASTToken<Identifier>).token)
-        else if (node is FASTFunctionBody)
+        else if (node is FASTBody)
             this.body = node
         else
             throw IllegalArgumentException("Argument of type " + node::class.simpleName + " not supported")
@@ -500,10 +500,10 @@ class FASTTypeCheckOperator : FASTBinaryOperator() {
     }
 }
 
-data class FASTFunctionBody(
+data class FASTBody(
     var statements: MutableList<FASTStatement> = mutableListOf()
 ) : FASTNode() {
-    override fun clone() = FASTFunctionBody(statements.toMutableList())
+    override fun clone() = FASTBody(statements.toMutableList())
     override fun consume(node: FASTNode) {
         if (node is FASTStatement) {
             this.statements.add(node)
@@ -609,14 +609,14 @@ data class FASTTupleElement(
 
 data class FASTIfStructure(
     var condition: FASTExpression? = null,
-    var body: FASTFunctionBody? = null,
-    var elseBody: FASTFunctionBody? = null
+    var body: FASTBody? = null,
+    var elseBody: FASTBody? = null
 ) : FASTControlStatement() {
     override fun clone() = FASTIfStructure(condition, body, elseBody)
     override fun consume(node: FASTNode) {
         when (node) {
             is FASTExpression -> this.condition = node
-            is FASTFunctionBody -> {
+            is FASTBody -> {
                 if (this.body == null) {
                     this.body = node
                 } else if (this.elseBody == null) {
@@ -636,7 +636,7 @@ data class FASTForLoop(
     var rangeBegin: FASTExpression? = null,
     var rangeEnd: FASTExpression? = null,
     var iterable: FASTExpression? = null,
-    var body: FASTFunctionBody? = null
+    var body: FASTBody? = null
 ) : FASTLoopStructure() {
     override fun clone() = FASTForLoop(varName, rangeBegin, rangeEnd, iterable, body)
     override fun consume(node: FASTNode) {
@@ -664,13 +664,13 @@ data class FASTForLoop(
 
 data class FASTWhileLoop(
     var cond: FASTExpression? = null,
-    var body: FASTFunctionBody? = null
+    var body: FASTBody? = null
 ) : FASTLoopStructure() {
     override fun clone() = FASTWhileLoop(cond, body)
     override fun consume(node: FASTNode) {
         when (node) {
             is FASTExpression -> this.cond = node
-            is FASTFunctionBody -> this.body = node
+            is FASTBody -> this.body = node
             else -> throw IllegalArgumentException("Argument of type " + node::class.simpleName + " not supported")
         }
     }

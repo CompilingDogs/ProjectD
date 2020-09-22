@@ -1,8 +1,9 @@
-var arr := 5;
-
-
-// if (true) then
-//     var arr = 1
-// else
-//     var arr = 2
-// end
+var arr := "testString"
+if (1) then
+    var integer := 1;
+    var integer := 1;
+    var integer := 1;
+    var integer := 1;
+else
+    var integer := 2;
+end

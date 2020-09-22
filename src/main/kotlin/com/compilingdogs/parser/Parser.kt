@@ -4,12 +4,11 @@ import com.compilingdogs.parser.ast.*
 import stages.LexicalAnalyzer
 import tokens.*
 import java.io.File
-import kotlin.system.exitProcess
 
 /**
  * Identifiers
  */
-val identifier = TokenNode(Identifier::class.java, true).apply {  }
+val identifier = TokenNode(Identifier::class.java, true).apply { }
 
 /**
  * Keywords
@@ -216,9 +215,9 @@ val factor = concat("factor") {
 
 val relation = concat("relation") {
     +factor
-    +maybe {
-        concat {
-            +any {
+    +maybe("relationMaybe") {
+        concat("relationConcat") {
+            +any("relationAny") {
                 +less
                 +lessOrEqual
                 +equal
@@ -294,32 +293,44 @@ val returnStatement = concat("returnStatement") {
     mapTo<FASTReturnStatement>()
 
     +returnKeyword
-    +maybe {
+    +maybe("returnStatementMaybe") {
         expression
     }
 }
 val statement = any("statement") {
+    transformTokens = { s -> s.filter { token -> token.token != "\n" } }
+
     +declaration
     +assignmentStatement
     +controlStructure
     +printStatement
     +returnStatement
 }
-val program = concat("program") {
+
+//val program = concat("program") {
+val program =
 // commented out as program FAST node is passed from the outside
 //    mapTo<FASTProgram>()
 
-    +repeat("programPiece") {
+//    +repeat("programPiece") {
+    repeat("program") {
         +concat("statement+separator") {
             +statement
+
             +any("statementSeparator") {
                 +semicolon
                 +newLine
             }
+            +repeat("statementSeparatorNewLinezz") {
+                +newLine
+            }
         }
     }
-}
+//}
+
 val body = any("body") {
+    mapTo<FASTBody>()
+
     +program
 }
 
@@ -330,8 +341,8 @@ val ifControlStructure = concat("ifControlStructure") {
     +expression
     +thenKeyword
     +body
-    +maybe {
-        concat {
+    +maybe("ifControlStructureMaybe") {
+        concat("ifControlStructureConcat") {
             +elseKeyword
             +body
         }
@@ -344,10 +355,10 @@ val forControlStructure = concat("forControlStructure") {
     mapTo<FASTForLoop>()
 
     +forKeyword
-    +any {
-        +concat {
-            +maybe {
-                concat {
+    +any("forControlStructureAny") {
+        +concat("forControlStructureConcat") {
+            +maybe("forControlStructureMaybe") {
+                concat("forControlStructureConcat2") {
                     +identifier
                     +inKeyword
                 }
@@ -356,7 +367,7 @@ val forControlStructure = concat("forControlStructure") {
             +range
             +expression
         }
-        +concat {
+        +concat("forControlStructureConcat3") {
             +identifier
             +inKeyword
             +expression
@@ -385,16 +396,16 @@ val loopControlStructure = any("loopControlStructure") {
 
 
 val funcBody = any("funcBody") {
-    mapTo<FASTFunctionBody>()
+    mapTo<FASTBody>()
 
     // TODO: complete this
 
-    +concat {
+    +concat("funcBodyConcat") {
         +isOp
         +body
         +end
     }
-    +concat {
+    +concat("funcBodyConcat2") {
         +arrow
         +expression
     }
@@ -403,8 +414,8 @@ val funcBody = any("funcBody") {
 val tupleElement = concat("tupleElement") {
     mapTo<FASTTupleElement>()
 
-    +maybe {
-        concat {
+    +maybe("tupleElementMaybe") {
+        concat("tupleElementConcat") {
             +identifier
             +assignmentOperator
         }
@@ -491,10 +502,10 @@ fun runTest() {
     val lexer = LexicalAnalyzer.getInstance()
     val tokens = lexer.tokenize(File(path))
 
-    Thread {
-        Thread.sleep(1000)
-        exitProcess(0)
-    }.start()
+//    Thread {
+//        Thread.sleep(1000)
+//        exitProcess(0)
+//    }.start()
 
     parse(tokens)
 }

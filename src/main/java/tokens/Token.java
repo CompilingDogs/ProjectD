@@ -16,7 +16,9 @@ public class Token {
 
     @Override
     public String toString() {
-        return "\"" + token + "\"";
+        if (token.equals("\n"))
+            return "\\n";
+        return token;
     }
 
     public static Token tokenize(String token, Integer line, Integer column) {
