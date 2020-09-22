@@ -22,7 +22,7 @@ class FASTToken<T : Token>(
     }
 }
 
-class FASTProgram(
+data class FASTProgram(
     val statements: MutableList<FASTStatement> = mutableListOf()
 ) : FASTNode() {
     override fun clone(): FASTNode {
@@ -44,7 +44,7 @@ class FASTProgram(
 
 abstract class FASTStatement : FASTNode()
 
-class FASTDeclarationStatement(
+data class FASTDeclarationStatement(
     val definitions: MutableList<FASTVarDefinition> = mutableListOf()
 ) : FASTStatement() {
     override fun clone(): FASTNode {
@@ -64,7 +64,7 @@ class FASTDeclarationStatement(
     }
 }
 
-class FASTAssignmentStatement(
+data class FASTAssignmentStatement(
     var reference: FASTReference? = null,
     var value: FASTExpression? = null
 ) : FASTStatement() {
@@ -83,7 +83,7 @@ class FASTAssignmentStatement(
 
 abstract class FASTControlStatement : FASTStatement()
 
-class FASTPrintStatement(
+data class FASTPrintStatement(
     var values: MutableList<FASTExpression> = mutableListOf()
 ) : FASTStatement() {
     override fun clone(): FASTNode {
@@ -99,7 +99,7 @@ class FASTPrintStatement(
     }
 }
 
-class FASTReturnStatement(
+data class FASTReturnStatement(
     var value: FASTExpression? = null
 ) : FASTStatement() {
     override fun clone(): FASTNode {
@@ -115,7 +115,7 @@ class FASTReturnStatement(
     }
 }
 
-class FASTVarDefinition(
+data class FASTVarDefinition(
     var name: Identifier? = null,
     var value: FASTExpression? = null
 ) : FASTNode() {
@@ -143,7 +143,7 @@ enum class FASTMemberReferenceType {
 }
 
 // TODO: Done By Alecsey
-class FASTMemberReference(
+data class FASTMemberReference(
     var member: FASTExpression? = null,
     var type: FASTMemberReferenceType? = null
 ) : FASTNode() {
@@ -161,7 +161,7 @@ class FASTMemberReference(
 }
 
 // TODO: Done By Alecsey
-class FASTReference(
+data class FASTReference(
     var identifier: Identifier? = null,
     var references: MutableList<FASTMemberReference> = mutableListOf()
 ) : FASTNode() {
@@ -176,16 +176,6 @@ class FASTReference(
             this.references.add(node)
         else
             throw IllegalArgumentException("Argument of type " + node::class.simpleName + " not supported")
-    }
-}
-
-open class FASTIdentifier(
-    var name: String? = null
-) : FASTNode() {
-    override fun clone() = FASTIdentifier(name)
-
-    override fun consume(node: FASTNode) {
-        throw NotImplementedError("Consume not applicable to " + this::class.simpleName)
     }
 }
 
@@ -449,7 +439,7 @@ class FASTTypeIndicatorFunc : FASTTypeIndicator("func") {
 }
 
 
-class FASTFunctionLiteral(
+data class FASTFunctionLiteral(
     var args: MutableList<Identifier> = mutableListOf(),
     var body: FASTFunctionBody? = null
 ) : FASTExpression() {
@@ -490,7 +480,7 @@ class FASTReadStringCall : FASTNode() {
 }
 
 
-class FASTFunctionCall(
+data class FASTFunctionCall(
     var args: MutableList<FASTExpression> = mutableListOf()
 ) : FASTNode() {
     override fun clone() = FASTFunctionCall(args.toMutableList())
@@ -510,7 +500,7 @@ class FASTTypeCheckOperator : FASTBinaryOperator() {
     }
 }
 
-class FASTFunctionBody(
+data class FASTFunctionBody(
     var statements: MutableList<FASTStatement> = mutableListOf()
 ) : FASTNode() {
     override fun clone() = FASTFunctionBody(statements.toMutableList())
@@ -523,7 +513,7 @@ class FASTFunctionBody(
     }
 }
 
-class FASTIntegerLiteral(
+data class FASTIntegerLiteral(
     var value: Int? = null
 ) : FASTExpression() {
     override fun clone() = FASTIntegerLiteral(value)
@@ -532,7 +522,7 @@ class FASTIntegerLiteral(
     }
 }
 
-class FASTRealLiteral(
+data class FASTRealLiteral(
     var value: Float? = null
 ) : FASTExpression() {
     override fun clone() = FASTRealLiteral(value)
@@ -541,7 +531,7 @@ class FASTRealLiteral(
     }
 }
 
-class FASTStringLiteral(
+data class FASTStringLiteral(
     var value: String? = null
 ) : FASTExpression() {
     override fun clone() = FASTStringLiteral(value)
@@ -550,7 +540,7 @@ class FASTStringLiteral(
     }
 }
 
-class FASTBooleanLiteral(
+data class FASTBooleanLiteral(
     var value: Boolean? = null
 ) : FASTExpression() {
     override fun clone() = FASTBooleanLiteral(value)
@@ -566,7 +556,7 @@ class FASTEmptyLiteral : FASTExpression() {
     }
 }
 
-class FASTArrayLiteral(
+data class FASTArrayLiteral(
     var members: MutableList<FASTExpression> = mutableListOf()
 ) : FASTExpression() {
 
@@ -589,7 +579,7 @@ class FASTArrayLiteral(
     }
 }
 
-class FASTTupleLiteral(
+data class FASTTupleLiteral(
     var members: MutableList<FASTTupleElement> = mutableListOf()
 ) : FASTExpression() {
     override fun clone() = FASTTupleLiteral(members.toMutableList())
@@ -602,7 +592,7 @@ class FASTTupleLiteral(
     }
 }
 
-class FASTTupleElement(
+data class FASTTupleElement(
     var name: Identifier? = null,
     var value: FASTExpression? = null
 ) : FASTNode() {
@@ -617,7 +607,7 @@ class FASTTupleElement(
     }
 }
 
-class FASTIfStructure(
+data class FASTIfStructure(
     var condition: FASTExpression? = null,
     var body: FASTFunctionBody? = null,
     var elseBody: FASTFunctionBody? = null
@@ -641,7 +631,7 @@ class FASTIfStructure(
 
 abstract class FASTLoopStructure : FASTControlStatement()
 
-class FASTForLoop(
+data class FASTForLoop(
     var varName: Identifier? = null,
     var rangeBegin: FASTExpression? = null,
     var rangeEnd: FASTExpression? = null,
@@ -672,7 +662,7 @@ class FASTForLoop(
     }
 }
 
-class FASTWhileLoop(
+data class FASTWhileLoop(
     var cond: FASTExpression? = null,
     var body: FASTFunctionBody? = null
 ) : FASTLoopStructure() {

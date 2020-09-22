@@ -4,11 +4,12 @@ import com.compilingdogs.parser.ast.*
 import stages.LexicalAnalyzer
 import tokens.*
 import java.io.File
+import kotlin.system.exitProcess
 
 /**
  * Identifiers
  */
-val identifier = TokenNode(Identifier::class.java, true).apply { mapTo<FASTIdentifier>() }
+val identifier = TokenNode(Identifier::class.java, true).apply {  }
 
 /**
  * Keywords
@@ -189,9 +190,9 @@ val unary = any("unary") {
 
 val term = concat("term") {
     +unary
-    +repeat {
-        +concat {
-            +any {
+    +repeat("termRepeat") {
+        +concat("termConcat") {
+            +any("termAny") {
                 +mult
                 +div
             }
@@ -202,9 +203,9 @@ val term = concat("term") {
 
 val factor = concat("factor") {
     +term
-    +repeat {
-        +concat {
-            +any {
+    +repeat("factorRepeat") {
+        +concat("factorConcat") {
+            +any("factorAny") {
                 +plus
                 +minus
             }
@@ -260,6 +261,7 @@ val declaration = concat("declaration") {
 
     +varKeyword
     +varDefinition
+    // TODO: uncomment and fix
 //    +repeat {
 //        concat {
 //            +comma
@@ -283,7 +285,7 @@ val printStatement = concat("printStatement") {
 
     +print
     +expression
-    +repeat {
+    +repeat("printStatementRepeat") {
         +comma
         +expression
     }
@@ -304,12 +306,13 @@ val statement = any("statement") {
     +returnStatement
 }
 val program = concat("program") {
+// commented out as program FAST node is passed from the outside
 //    mapTo<FASTProgram>()
 
-    +repeat {
-        +concat {
+    +repeat("programPiece") {
+        +concat("statement+separator") {
             +statement
-            +any {
+            +any("statementSeparator") {
                 +semicolon
                 +newLine
             }
@@ -412,10 +415,10 @@ val tupleLiteral = concat("tupleLiteral") {
     mapTo<FASTTupleLiteral>()
 
     +openBrace
-    +maybe {
-        concat {
+    +maybe("tupleLiteralMaybe") {
+        concat("tupleLiteralConcat") {
             +tupleElement
-            +repeat {
+            +repeat("tupleLiteralRepeat") {
                 +comma
                 +tupleElement
             }
@@ -444,11 +447,11 @@ val functionLiteral = concat("functionLiteral") {
     mapTo<FASTFunctionLiteral>()
 
     +func
-    +maybe {
-        concat {
+    +maybe("functionLiteralMaybe") {
+        concat("functionLiteralConcat") {
             +openParenthesis
             +identifier
-            +repeat {
+            +repeat("functionLiteralRepeat") {
                 +comma
                 +identifier
             }
@@ -479,7 +482,6 @@ fun main() {
     controlStructure.apply { +ifControlStructure }
     controlStructure.apply { +loopControlStructure }
 
-
     runTest()
 }
 
@@ -488,13 +490,19 @@ fun runTest() {
     val path = "src/test/resources/maxim_test_1.pd"
     val lexer = LexicalAnalyzer.getInstance()
     val tokens = lexer.tokenize(File(path))
+
+    Thread {
+        Thread.sleep(1000)
+        exitProcess(0)
+    }.start()
+
     parse(tokens)
 }
 
 fun parse(tokens: List<Token>): FASTNode {
 //    println(tokens)
     val parent = FASTProgram()
-    val node = testRoot.match(tokens, parent, 0)
+    val node = testRoot.match(tokens, parent, 0, true)
     println("Node: $parent")
     return parent
 }

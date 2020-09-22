@@ -1,1 +1,8 @@
-[1, 2, 3]
+var arr := 5;
+
+
+// if (true) then
+//     var arr = 1
+// else
+//     var arr = 2
+// end

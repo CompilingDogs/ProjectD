@@ -33,8 +33,12 @@ abstract class ASTNode(
     var attachedTo: Class<FASTNode>? = null,
 //    var createCallback: ((FASTNode?) -> Unit)? = null,
 //    var successCallback: ((FASTNode?, FASTNode?) -> Unit)? = null,
+
+    // If this is true and when node is parsed to an end,
+    // and some tokens are still left till the end, throw exception.
+//    var mandatory: Boolean = false
 ) {
-    abstract fun match(tokens: List<Token>, parentNode: FASTNode, depth: Int): Int?
+    abstract fun match(tokens: List<Token>, parentNode: FASTNode, depth: Int, enablePrints: Boolean): Int?
 
     abstract fun clone(): ASTNode
 

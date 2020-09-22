@@ -10,8 +10,8 @@ class OptionalNode(
     var node: ASTNode
 ) : ASTNode() {
 
-    override fun match(tokens: List<Token>, parentNode: FASTNode, depth: Int): Int? {
-        if (logNodeTraversal)
+    override fun match(tokens: List<Token>, parentNode: FASTNode, depth: Int, enablePrints: Boolean): Int? {
+        if (enablePrints && logNodeTraversal)
             println("${indent(depth)}Matching OptionalNode $name; parent is $parentNode")
 
         // If this node contains its own mapped FASTNode, use it.
@@ -21,7 +21,7 @@ class OptionalNode(
         var res: Int? = 0
 
         for (n in listOf(fastNode.clone(), fastNode)) {
-            res = node.match(tokens, n, depth + 1)
+            res = node.match(tokens, n, depth + 1, enablePrints && System.identityHashCode(n) != System.identityHashCode(fastNode))
             if (res == null)
                 return 0
         }
@@ -29,7 +29,8 @@ class OptionalNode(
         if (attachedTo != null)
             parentNode.consume(fastNode)
 
-        println("${indent(depth + 1)}${blueColor}Stopping with parent = $parentNode$noColor")
+        if (enablePrints)
+            println("${indent(depth + 1)}${blueColor}Stopping with parent = $parentNode$noColor")
         return res
     }
 

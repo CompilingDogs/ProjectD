@@ -13,8 +13,8 @@ class AlternationNode(
 
     operator fun ASTNode.unaryPlus() = variants.add(this)
 
-    override fun match(tokens: List<Token>, parentNode: FASTNode, depth: Int): Int? {
-        if (logNodeTraversal)
+    override fun match(tokens: List<Token>, parentNode: FASTNode, depth: Int, enablePrints: Boolean): Int? {
+        if (enablePrints && logNodeTraversal)
             println("${indent(depth)}Matching AlternationNode $name; parent is $parentNode")
 
         // If this node contains its own mapped FASTNode, use it.
@@ -28,13 +28,13 @@ class AlternationNode(
             val fn = fastNode.clone()
 
             // Try to match the AST nodes
-            val m = child.match(tokens, fn, depth + 1)
+            val m = child.match(tokens, fn, depth + 1, enablePrints)
 
             // If child did not match, continue
             if (m == null) continue
 
             // If match was successful, apply the same on the real parent/fastNode
-            parsedLen = child.match(tokens, fastNode, depth + 1)!!
+            parsedLen = child.match(tokens, fastNode, depth + 1, false)!!
 
             break
         }
@@ -45,7 +45,8 @@ class AlternationNode(
         if (attachedTo != null)
             parentNode.consume(fastNode)
 
-        println("${indent(depth + 1)}${greenColor}Stopping with parent = $parentNode$noColor")
+        if (enablePrints)
+            println("${indent(depth + 1)}${greenColor}Stopping with parent = $parentNode$noColor")
         return parsedLen
     }
 

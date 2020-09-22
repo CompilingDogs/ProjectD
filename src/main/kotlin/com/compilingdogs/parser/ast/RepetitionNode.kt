@@ -15,8 +15,8 @@ class RepetitionNode(
 
     operator fun ASTNode.unaryPlus() = children.add(this)
 
-    override fun match(tokens: List<Token>, parentNode: FASTNode, depth: Int): Int? {
-        if (logNodeTraversal)
+    override fun match(tokens: List<Token>, parentNode: FASTNode, depth: Int, enablePrints: Boolean): Int? {
+        if (enablePrints && logNodeTraversal)
             println("${indent(depth)}Matching RepetitionNode $name; parent is $parentNode")
 
         // If this node contains its own mapped FASTNode, use it.
@@ -34,14 +34,20 @@ class RepetitionNode(
 
                 for (child in children) {
                     // Try to match the AST node
-                    val res = child.match(tokens.subList(offset + localOffset, tokens.size), node, depth + 1)
+                    val res = child.match(
+                        tokens.subList(offset + localOffset, tokens.size),
+                        node,
+                        depth + 1,
+                        enablePrints && System.identityHashCode(node) != System.identityHashCode(fastNode)
+                    )
 
                     // If child did not match, abort
                     if (res == null) {
                         if (attachedTo != null)
                             parentNode.consume(fastNode)
 
-                        println("${indent(depth + 1)}${magentaColor}Stopping with parent = $parentNode$noColor")
+                        if (enablePrints)
+                            println("${indent(depth + 1)}${magentaColor}Stopping with parent = $parentNode$noColor")
                         return offset
                     }
 

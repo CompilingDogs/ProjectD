@@ -11,14 +11,14 @@ class TokenNode<T>(
     val shouldBeReturned: Boolean = false,
 ) : ASTNode() where T : Token {
 
-    override fun match(tokens: List<Token>, parentNode: FASTNode, depth: Int): Int? {
-        if (logNodeTraversal)
+    override fun match(tokens: List<Token>, parentNode: FASTNode, depth: Int, enablePrints: Boolean): Int? {
+        if (enablePrints && logNodeTraversal)
             println("${indent(depth)}Matching TokenNode of type ${nodeType.simpleName}; parent is $parentNode")
 
         if (tokens.isNotEmpty() && tokens[0].javaClass == nodeType) {
             if (shouldBeReturned) {
                 parentNode.consume(FASTToken(tokens[0] as T).apply {
-                    if (logFASTTokens)
+                    if (enablePrints && logFASTTokens)
                         println("Matched ${tokens[0]} to $this")
                 })
             }

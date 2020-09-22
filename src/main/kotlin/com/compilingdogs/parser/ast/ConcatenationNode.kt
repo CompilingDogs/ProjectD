@@ -14,8 +14,8 @@ open class ConcatenationNode(
     operator fun ASTNode.unaryPlus() = children.add(this)
 
 
-    override fun match(tokens: List<Token>, parentNode: FASTNode, depth: Int): Int? {
-        if (logNodeTraversal)
+    override fun match(tokens: List<Token>, parentNode: FASTNode, depth: Int, enablePrints: Boolean): Int? {
+        if (enablePrints && logNodeTraversal)
             println("${indent(depth)}Matching ConcatenationNode $name; parent is $parentNode")
 
         // If this node contains its own mapped FASTNode, use it.
@@ -31,7 +31,8 @@ open class ConcatenationNode(
 
             for (child in children) {
                 // Try to match the AST node
-                val m = child.match(tokens.subList(offset, tokens.size), node, depth + 1)
+                val m = child.match(tokens.subList(offset, tokens.size),
+                    node, depth + 1, enablePrints && System.identityHashCode(node) != System.identityHashCode(fastNode))
 
                 // If child did not match, abort
                 if (m == null) return null
@@ -43,7 +44,8 @@ open class ConcatenationNode(
         if (attachedTo != null)
             parentNode.consume(fastNode)
 
-        println("${indent(depth + 1)}${yellowColor}Stopping with parent = $parentNode$noColor")
+        if (enablePrints)
+            println("${indent(depth + 1)}${yellowColor}Stopping with parent = $parentNode$noColor")
         return offset
     }
 
