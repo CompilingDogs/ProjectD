@@ -10,7 +10,7 @@ import static java.lang.String.format;
 public class Literal extends Token {
 
     public static final String EMPTY_LITERAL_TOKEN = "empty";
-    private static final Pattern pattern = Pattern.compile("-?\\d+(\\.\\d+)?");
+    private static final Pattern numericPattern = Pattern.compile("^[-+]?\\d*\\.?\\d*$");
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(Literal.class);
 
     public Literal(String token, Integer line, Integer column) {
@@ -32,24 +32,22 @@ public class Literal extends Token {
         if (token == null) {
             return false;
         }
-        return pattern.matcher(token).matches();
+        return numericPattern.matcher(token).matches();
     }
 
     public static Boolean isIntegerLiteral(String token) {
-        return isNumeric(token) && Integer.valueOf(Integer.parseInt(token))
-                                          .toString()
-                                          .equals(token.trim());
+        return isNumeric(token) && !token.contains(".");
     }
 
     public static Boolean isRealLiteral(String token) {
-        return isNumeric(token) && Double.valueOf(Double.parseDouble(token))
-                                         .toString()
-                                         .equals(token.trim());
+        return isNumeric(token);
     }
 
     public static Boolean isLiteral(String token) {
-        return isRealLiteral(token) || isIntegerLiteral(token) || isStringLiteral(token) || isEmptyLiteral(
-                token);
+        return isRealLiteral(token)
+                || isIntegerLiteral(token)
+                || isStringLiteral(token)
+                || isEmptyLiteral(token);
     }
 
     /**

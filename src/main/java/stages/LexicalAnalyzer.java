@@ -18,6 +18,7 @@ import static java.lang.Character.isLetter;
 import static java.lang.String.format;
 import static java.util.Objects.isNull;
 import static stages.LexicalAnalyzer.State.*;
+import static tokens.Literal.isRealLiteral;
 import static tokens.Operator.*;
 import static tokens.Separator.*;
 
@@ -148,7 +149,6 @@ public class LexicalAnalyzer {
         return tokens;
     }
 
-
     private boolean isStringLiteral(Character currChar) {
         return currChar == '\"' || currChar == '\'';
     }
@@ -228,14 +228,37 @@ public class LexicalAnalyzer {
     }
 
     private void commitBufferedToken() {
-        if (this.buffer.length() != 0) {
-            commitToken(this.buffer.toString());
+        if (this.buffer.length() == 0) {
+            return;
+        }
+
+        var bufferedStr = this.buffer.toString();
+        if (isRealLiteral("0." + bufferedStr) && tokens.size() >= 2) {
+            var tokensCnt = tokens.size();
+            var start = tokens.get(tokensCnt - 2);
+            var tryRealLiteral = start.getToken() + tokens.get(tokensCnt - 1)
+                                                          .getToken() + bufferedStr;
+
+            if (isRealLiteral(tryRealLiteral)) {
+                tokens.remove(tokensCnt - 1);
+                tokens.remove(tokensCnt - 2);
+                commitToken(tryRealLiteral, start.getLine(), start.getColumn());
+            } else {
+                commitToken(bufferedStr);
+            }
+            cleanBuffer();
+        } else {
+            commitToken(bufferedStr);
             cleanBuffer();
         }
     }
 
     private void commitToken(String token) {
         this.tokens.add(Token.tokenize(token, this.line, this.column - token.length()));
+    }
+
+    private void commitToken(String token, Integer line, Integer column) {
+        this.tokens.add(Token.tokenize(token, line, column));
     }
 
     private void cleanBuffer() {
