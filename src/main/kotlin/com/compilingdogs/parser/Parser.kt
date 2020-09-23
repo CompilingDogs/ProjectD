@@ -393,8 +393,6 @@ val loopControlStructure = any("loopControlStructure") {
 
 
 val funcBody = any("funcBody") {
-    mapTo<FASTBody>()
-
     // TODO: complete this
 
     +concat("funcBodyConcat") {
@@ -403,8 +401,11 @@ val funcBody = any("funcBody") {
         +end
     }
     +concat("funcBodyConcat2") {
+        mapTo<FASTBody>()
+
         +arrow
-        +expression
+        // that was expression... somewhen in the past :D
+        +statement
     }
 }
 

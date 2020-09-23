@@ -556,7 +556,7 @@ data class FASTFunctionLiteral(
 }
 
 
-class FASTReadIntCall : FASTNode() {
+class FASTReadIntCall : FASTExpression() {
     override fun clone() = FASTReadIntCall()
 
     override fun consume(node: FASTNode) {
@@ -568,7 +568,7 @@ class FASTReadIntCall : FASTNode() {
     }
 }
 
-class FASTReadRealCall : FASTNode() {
+class FASTReadRealCall : FASTExpression() {
     override fun clone() = FASTReadRealCall()
 
     override fun consume(node: FASTNode) {
@@ -580,7 +580,7 @@ class FASTReadRealCall : FASTNode() {
     }
 }
 
-class FASTReadStringCall : FASTNode() {
+class FASTReadStringCall : FASTExpression() {
     override fun clone() = FASTReadStringCall()
 
     override fun consume(node: FASTNode) {
