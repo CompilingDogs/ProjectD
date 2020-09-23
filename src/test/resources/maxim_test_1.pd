@@ -1,6 +1,10 @@
 // Solving the quadratic equation
 var findRoots := func(a, b, c) is
 
+    print "govno"
+
+     a := findRoots(d);
+
      // If a is 0, then equation is not
      // quadratic, but linear
 

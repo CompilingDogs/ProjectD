@@ -633,6 +633,8 @@ data class FASTBody(
 data class FASTIntegerLiteral(
     var value: Int? = null
 ) : FASTExpression() {
+    constructor(token: Token) : this(token.token.toInt())
+
     override fun clone() = FASTIntegerLiteral(value)
     override fun consume(node: FASTNode) {
         throw NotImplementedError("Consume not applicable to " + this::class.simpleName)
@@ -642,6 +644,8 @@ data class FASTIntegerLiteral(
 data class FASTRealLiteral(
     var value: Float? = null
 ) : FASTExpression() {
+    constructor(token: Token) : this(token.token.toFloat())
+
     override fun clone() = FASTRealLiteral(value)
     override fun consume(node: FASTNode) {
         throw NotImplementedError("Consume not applicable to " + this::class.simpleName)
@@ -651,6 +655,8 @@ data class FASTRealLiteral(
 data class FASTStringLiteral(
     var value: String? = null
 ) : FASTExpression() {
+    constructor(token: Token) : this(token.token)
+
     override fun clone() = FASTStringLiteral(value)
     override fun consume(node: FASTNode) {
         throw NotImplementedError("Consume not applicable to " + this::class.simpleName)
@@ -660,6 +666,8 @@ data class FASTStringLiteral(
 data class FASTBooleanLiteral(
     var value: Boolean? = null
 ) : FASTExpression() {
+    constructor(token: Token) : this(token.token.toBoolean())
+
     override fun clone() = FASTBooleanLiteral(value)
     override fun consume(node: FASTNode) {
         throw NotImplementedError("Consume not applicable to " + this::class.simpleName)

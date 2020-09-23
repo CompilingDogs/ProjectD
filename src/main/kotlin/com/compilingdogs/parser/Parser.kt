@@ -137,10 +137,6 @@ val typeIndicator = any("typeIndicator") {
 }
 
 val primary = any("primary") {
-    +literal
-    +readInt
-    +readReal
-    +readString
     +concat("functionCall") {
         mapTo<FASTFunctionCall>()
 
@@ -162,6 +158,10 @@ val primary = any("primary") {
 //        +expression // this is added separately to break circular dependency cycle
         +closeParenthesis
     }
+    +readInt
+    +readReal
+    +readString
+    +literal
 }
 
 
@@ -174,10 +174,10 @@ val unary = any("unary") {
         +typeIndicator
     }
     +reference
-    +concat("primary") {
+    +concat("unaryPrimary") {
         // TODO: implement this
-        +maybe("primaryMaybe") {
-            any("primaryMaybeSign") {
+        +maybe("unaryPrimaryMaybe") {
+            any("unaryPrimaryMaybeSign") {
                 +plus
                 +minus
                 +not

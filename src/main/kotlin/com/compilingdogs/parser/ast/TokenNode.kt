@@ -23,8 +23,12 @@ class TokenNode<T>(
         if (tokens.isNotEmpty() && tokens[0].javaClass == nodeType) {
             if (shouldBeReturned) {
                 val toConsume = if (attachedTo != null) {
-                    attachedTo?.constructors?.filter { c -> c.parameters.isEmpty() }
-                        ?.get(0)?.newInstance() as FASTNode
+                    val oneArgNode =
+                        attachedTo?.constructors?.firstOrNull { c -> c.parameters.size == 1 && c.parameters[0].type == Token::class.java }
+                            ?.newInstance(tokens[0] as T) as FASTNode?
+                    oneArgNode
+                        ?: attachedTo?.constructors?.firstOrNull { c -> c.parameters.isEmpty() }
+                            ?.newInstance() as FASTNode
                 } else {
                     FASTToken(tokens[0] as T)
                 }
