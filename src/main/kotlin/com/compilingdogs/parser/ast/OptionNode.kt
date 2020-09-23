@@ -13,7 +13,7 @@ class OptionalNode(
     override fun match(tokens: List<Token>, parentNode: FASTNode, depth: Int, enablePrints: Boolean): Int? {
         if (enablePrints && logNodeTraversal) {
             println("${indent(depth)}Matching OptionalNode $name; parent is $parentNode")
-            println("${indent(depth)}Tokens: ${tokens.joinToString(" ")}")
+            println("${indent(depth + 1)}${lightGray}Tokens: ${tokens.joinToString(" ")}${noColor}")
         }
 
         // If this node contains its own mapped FASTNode, use it.

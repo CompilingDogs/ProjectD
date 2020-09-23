@@ -21,3 +21,12 @@ fun indent(depth: Int): String =
             append("${lightGray}┆${noColor} ")
         }
     }.toString()
+
+/**
+ * Executes the given [block] and returns elapsed time in milliseconds.
+ */
+inline fun measureTimeMillis(block: () -> Unit): Long {
+    val start = System.currentTimeMillis()
+    block()
+    return System.currentTimeMillis() - start
+}

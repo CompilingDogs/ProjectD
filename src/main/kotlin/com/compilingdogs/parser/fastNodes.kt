@@ -640,33 +640,27 @@ data class FASTForLoop(
 ) : FASTLoopStructure() {
     override fun clone() = FASTForLoop(varName, rangeBegin, rangeEnd, iterable, body)
     override fun consume(node: FASTNode) {
-//        if (node is FASTToken<*> && node.token is Identifier)
-//            this.varName = (node as FASTToken<Identifier>).token
-//        else if (node is FASTBody)
-//            this.body = node
-//        else if ()
-//        else
-//            throw IllegalArgumentException("Argument of type " + node::class.simpleName + " not supported")
-
-        TODO("Not implemented")
-//        when (node) {
-//            is FASTIdentifier -> this.varName = node
-//            is FASTFunctionBody -> this.body = node
-//            is FASTExpression -> {
-//                if (this.iterable == null) {
-//                    this.iterable = node
-//                } else {
-//                    if (this.rangeBegin == null) {
-//                        this.rangeBegin = this.iterable
-//                        this.rangeEnd = node
-//                        this.iterable = null
-//                    } else {
-//                        throw IllegalStateException("Both of left and right operands are satisfied for " + this::class.simpleName)
-//                    }
-//                }
-//            }
-//            else -> throw IllegalArgumentException("Argument of type " + node::class.simpleName + " not supported")
-//        }
+        when (node) {
+            is FASTToken<*> -> if (node.token is Identifier)
+                this.varName = node.token
+            else
+                throw IllegalArgumentException("Unexpected token type ${node.token.javaClass.simpleName} for loop iterator name")
+            is FASTBody -> this.body = node
+            is FASTExpression -> {
+                if (this.iterable == null) {
+                    this.iterable = node
+                } else {
+                    if (this.rangeBegin == null) {
+                        this.rangeBegin = this.iterable
+                        this.rangeEnd = node
+                        this.iterable = null
+                    } else {
+                        throw IllegalStateException("Both of left and right operands are satisfied for " + this::class.simpleName)
+                    }
+                }
+            }
+            else -> throw IllegalArgumentException("Argument of type " + node::class.simpleName + " not supported")
+        }
     }
 }
 

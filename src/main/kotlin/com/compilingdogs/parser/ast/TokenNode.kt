@@ -2,6 +2,8 @@ package com.compilingdogs.parser.ast
 
 import com.compilingdogs.parser.FASTToken
 import com.compilingdogs.parser.indent
+import com.compilingdogs.parser.lightGray
+import com.compilingdogs.parser.noColor
 import tokens.Token
 
 
@@ -14,7 +16,7 @@ class TokenNode<T>(
     override fun match(tokens: List<Token>, parentNode: FASTNode, depth: Int, enablePrints: Boolean): Int? {
         if (enablePrints && logNodeTraversal) {
             println("${indent(depth)}Matching TokenNode of type ${nodeType.simpleName}; parent is $parentNode")
-            println("${indent(depth)}Tokens: ${tokens.joinToString(" ")}")
+            println("${indent(depth + 1)}${lightGray}Tokens: ${tokens.joinToString(" ")}$noColor")
         }
 
         if (tokens.isNotEmpty() && tokens[0].javaClass == nodeType) {

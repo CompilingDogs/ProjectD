@@ -305,46 +305,25 @@ val statement = any("statement") {
     +returnStatement
 }
 
-//val govno = concat("gonvo") {
-//    +any("anyGovno") {
-//        +newLine
-//        +semicolon
-//    }
-//    repeat("repeatGovno") {
-//        +any("anyGovno2") {
-//            +newLine
-//            +semicolon
-//        }
-//    }
-//}
 
-//val program = concat("program") {
-val program =
-// commented out as program FAST node is passed from the outside
-//    mapTo<FASTProgram>()
+val program = repeat("program") {
+    +concat("statement+separator") {
+        +repeat("repeatSeparator") {
+            +newLine
+        }
 
-//    +repeat("programPiece") {
-    repeat("program") {
-//        transformTokens = { s -> s.filter { token -> token.token != "\n" } }
+        +statement
 
-
-        +concat("statement+separator") {
-            +repeat("repeatSeparator") {
-                +newLine
-            }
-
-            +statement
-
-            +any("anySeparator") {
-                +newLine
-                +semicolon
-            }
-            +repeat("repeatSeparator2") {
-                +newLine
-            }
+        +any("anySeparator") {
+            +newLine
+            +semicolon
+        }
+        +repeat("repeatSeparator2") {
+            +newLine
         }
     }
-//}
+}
+
 
 val body = any("body") {
     mapTo<FASTBody>()
@@ -492,15 +471,13 @@ val functionLiteral = concat("functionLiteral") {
 }
 
 
-val testRoot = program
-
-
 fun main() {
     literal.apply { +arrayLiteral }
     literal.apply { +tupleLiteral }
     literal.apply { +functionLiteral }
 
     (referencePath["path"] as ConcatenationNode).apply { children.add(referencePath) }
+//    (referencePath["path"] as ConcatenationNode).apply { children.add(reference) }
 
     (reference["operatorGet"] as ConcatenationNode).apply { children.add(2, expression) }
 
@@ -520,18 +497,15 @@ fun runTest() {
     val lexer = LexicalAnalyzer.getInstance()
     val tokens = lexer.tokenize(File(path))
 
-//    Thread {
-//        Thread.sleep(1000)
-//        exitProcess(0)
-//    }.start()
-
-    parse(tokens)
+    val time = measureTimeMillis {
+        parse(tokens)
+    }
+    println("Elapsed time: ${time.toFloat() / 1000} seconds")
 }
 
 fun parse(tokens: List<Token>): FASTNode {
-//    println(tokens)
     val parent = FASTProgram()
-    val node = testRoot.match(tokens, parent, 0, true)
+    program.match(tokens, parent, 0, true)
     println("Node: $parent")
     return parent
 }
