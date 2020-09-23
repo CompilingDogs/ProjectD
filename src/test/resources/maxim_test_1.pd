@@ -1,15 +1,23 @@
-var arr := "testString";
+// var arr := "testString";
 
-if (1) then
-    var integer := 1;
-    var integer := 1;
-    var integer := 1;
-    var integer := 1;
-    var integer := 2;
-else
-    var float1 := 0;
-end
+// if (1) then
+//     var integer := 1;
+//     var integer := 1;
+//     var integer := 1;
+//     var integer := 1;
+//     var integer := 2;
+// else
+//     var float1 := 0;
+// end
 
-for ochko in jopa loop
-    var v = 0;
-end
+// while 1 loop
+//     var t := 0;
+//
+//     for ochko in jopa loop
+//         var v := 0;
+//     end
+// end
+
+var d := a.b;
+
+

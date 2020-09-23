@@ -1,9 +1,6 @@
 package com.compilingdogs.parser.ast
 
-import com.compilingdogs.parser.greenColor
-import com.compilingdogs.parser.indent
-import com.compilingdogs.parser.magentaColor
-import com.compilingdogs.parser.noColor
+import com.compilingdogs.parser.*
 import tokens.Token
 import java.lang.IllegalStateException
 
@@ -18,7 +15,7 @@ class RepetitionNode(
     override fun match(tokens: List<Token>, parentNode: FASTNode, depth: Int, enablePrints: Boolean): Int? {
         if (enablePrints && logNodeTraversal) {
             println("${indent(depth)}Matching RepetitionNode $name; parent is $parentNode")
-            println("${indent(depth)}Tokens: ${tokens.joinToString(" ")}")
+            println("${indent(depth + 1)}${lightGray}Tokens: ${tokens.joinToString(" ")}${noColor}")
         }
 
         // If this node contains its own mapped FASTNode, use it.
