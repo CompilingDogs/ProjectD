@@ -5,6 +5,7 @@ import com.compilingdogs.parser.indent
 import com.compilingdogs.parser.lightGray
 import com.compilingdogs.parser.noColor
 import tokens.Token
+import java.lang.reflect.Constructor
 
 
 // Holds a token parsed from lexer. A very basic unit of an AST parser.
@@ -21,7 +22,14 @@ class TokenNode<T>(
 
         if (tokens.isNotEmpty() && tokens[0].javaClass == nodeType) {
             if (shouldBeReturned) {
-                parentNode.consume(FASTToken(tokens[0] as T).apply {
+                val toConsume = if (attachedTo != null) {
+                    attachedTo?.constructors?.filter { c -> c.parameters.isEmpty() }
+                        ?.get(0)?.newInstance() as FASTNode
+                } else {
+                    FASTToken(tokens[0] as T)
+                }
+
+                parentNode.consume(toConsume.apply {
                     if (enablePrints && logFASTTokens)
                         println("Matched ${tokens[0]} to $this")
                 })

@@ -189,6 +189,10 @@ class FASTOrOperator : FASTBinaryOperator() {
             it.right = right
         }
     }
+
+    override fun toString(): String {
+        return "FASTOrOperator(left=$left, right=$right)"
+    }
 }
 
 // TODO: Done By Alecsey
@@ -199,6 +203,10 @@ class FASTAndOperator : FASTBinaryOperator() {
             it.right = right
         }
     }
+
+    override fun toString(): String {
+        return "FASTAndOperator(left=$left, right=$right)"
+    }
 }
 
 // TODO: Done By Alecsey
@@ -208,6 +216,10 @@ class FASTXorOperator : FASTBinaryOperator() {
             it.left = left
             it.right = right
         }
+    }
+
+    override fun toString(): String {
+        return "FASTXorOperator(left=$left, right=$right)"
     }
 }
 
@@ -220,6 +232,10 @@ class FASTLessOperator : FASTBinaryOperator() {
             it.right = right
         }
     }
+
+    override fun toString(): String {
+        return "FASTLessOperator(left=$left, right=$right)"
+    }
 }
 
 // TODO: Done By Alecsey
@@ -229,6 +245,10 @@ class FASTLessEqualOperator : FASTBinaryOperator() {
             it.left = left
             it.right = right
         }
+    }
+
+    override fun toString(): String {
+        return "FASTLessEqualOperator(left=$left, right=$right)"
     }
 }
 
@@ -240,6 +260,10 @@ class FASTGreaterOperator : FASTBinaryOperator() {
             it.right = right
         }
     }
+
+    override fun toString(): String {
+        return "FASTGreaterOperator(left=$left, right=$right)"
+    }
 }
 
 // TODO: Done By Alecsey
@@ -249,6 +273,10 @@ class FASTGreaterEqualOperator : FASTBinaryOperator() {
             it.left = left
             it.right = right
         }
+    }
+
+    override fun toString(): String {
+        return "FASTGreaterEqualOperator(left=$left, right=$right)"
     }
 }
 
@@ -260,6 +288,10 @@ class FASTEqualOperator : FASTBinaryOperator() {
             it.right = right
         }
     }
+
+    override fun toString(): String {
+        return "FASTEqualOperator(left=$left, right=$right)"
+    }
 }
 
 // TODO: Done By Alecsey
@@ -269,6 +301,10 @@ class FASTNotEqualOperator : FASTBinaryOperator() {
             it.left = left
             it.right = right
         }
+    }
+
+    override fun toString(): String {
+        return "FASTNotEqualOperator(left=$left, right=$right)"
     }
 }
 
@@ -281,6 +317,10 @@ class FASTAddOperator : FASTBinaryOperator() {
             it.right = right
         }
     }
+
+    override fun toString(): String {
+        return "FASTAddOperator(left=$left, right=$right)"
+    }
 }
 
 // TODO: Done By Alecsey
@@ -290,6 +330,10 @@ class FASTSubtractOperator : FASTBinaryOperator() {
             it.left = left
             it.right = right
         }
+    }
+
+    override fun toString(): String {
+        return "FASTSubtractOperator(left=$left, right=$right)"
     }
 }
 
@@ -302,6 +346,10 @@ class FASTMultiplyOperator : FASTBinaryOperator() {
             it.right = right
         }
     }
+
+    override fun toString(): String {
+        return "FASTMultiplyOperator(left=$left, right=$right)"
+    }
 }
 
 // TODO: Done By Alecsey
@@ -311,6 +359,10 @@ class FASTDivideOperator : FASTBinaryOperator() {
             it.left = left
             it.right = right
         }
+    }
+
+    override fun toString(): String {
+        return "FASTDivideOperator(left=$left, right=$right)"
     }
 }
 
@@ -331,6 +383,10 @@ class FASTPositiveOperator : FASTUnaryOperator() {
             it.value = value
         }
     }
+
+    override fun toString(): String {
+        return "FASTPositiveOperator(value=$value)"
+    }
 }
 
 // TODO: Done By Alecsey
@@ -340,6 +396,11 @@ class FASTNegativeOperator : FASTUnaryOperator() {
             it.value = value
         }
     }
+
+    override fun toString(): String {
+        return "FASTNegativeOperator(value=$value)"
+    }
+
 }
 
 // TODO: Done By Alecsey
@@ -349,12 +410,17 @@ class FASTNotOperator : FASTUnaryOperator() {
             it.value = value
         }
     }
+
+    override fun toString(): String {
+        return "FASTNotOperator(value=$value)"
+    }
+
 }
 
 abstract class FASTBinaryOperator(
     var left: FASTExpression? = null,
     var right: FASTExpression? = null
-) : FASTNode() {
+) : FASTExpression() {
     override fun consume(node: FASTNode) {
         if (node is FASTExpression) {
 
@@ -384,7 +450,7 @@ abstract class FASTUnaryOperator(
     }
 }
 
-abstract class FASTTypeIndicator(val name: String) : FASTNode() {
+abstract class FASTTypeIndicator(val name: String) : FASTExpression() {
     override fun consume(node: FASTNode) {
         TODO("Not yet implemented")
     }
@@ -394,11 +460,19 @@ class FASTTypeIndicatorInt : FASTTypeIndicator("int") {
     override fun clone(): FASTNode {
         return FASTTypeIndicatorInt()
     }
+
+    override fun toString(): String {
+        return "FASTTypeIndicatorInt"
+    }
 }
 
 class FASTTypeIndicatorReal : FASTTypeIndicator("real") {
     override fun clone(): FASTNode {
         return FASTTypeIndicatorReal()
+    }
+
+    override fun toString(): String {
+        return "FASTTypeIndicatorReal"
     }
 }
 
@@ -406,11 +480,19 @@ class FASTTypeIndicatorBool : FASTTypeIndicator("bool") {
     override fun clone(): FASTNode {
         return FASTTypeIndicatorBool()
     }
+
+    override fun toString(): String {
+        return "FASTTypeIndicatorBool"
+    }
 }
 
 class FASTTypeIndicatorString : FASTTypeIndicator("string") {
     override fun clone(): FASTNode {
         return FASTTypeIndicatorString()
+    }
+
+    override fun toString(): String {
+        return "FASTTypeIndicatorString"
     }
 }
 
@@ -418,11 +500,19 @@ class FASTTypeIndicatorEmpty : FASTTypeIndicator("empty") {
     override fun clone(): FASTNode {
         return FASTTypeIndicatorEmpty()
     }
+
+    override fun toString(): String {
+        return "FASTTypeIndicatorEmpty"
+    }
 }
 
 class FASTTypeIndicatorArray : FASTTypeIndicator("[]") {
     override fun clone(): FASTNode {
         return FASTTypeIndicatorArray()
+    }
+
+    override fun toString(): String {
+        return "FASTTypeIndicatorArray"
     }
 }
 
@@ -430,11 +520,19 @@ class FASTTypeIndicatorTuple : FASTTypeIndicator("{}") {
     override fun clone(): FASTNode {
         return FASTTypeIndicatorTuple()
     }
+
+    override fun toString(): String {
+        return "FASTTypeIndicatorTuple"
+    }
 }
 
 class FASTTypeIndicatorFunc : FASTTypeIndicator("func") {
     override fun clone(): FASTNode {
         return FASTTypeIndicatorFunc()
+    }
+
+    override fun toString(): String {
+        return "FASTTypeIndicatorFunc"
     }
 }
 
@@ -445,6 +543,9 @@ data class FASTFunctionLiteral(
 ) : FASTExpression() {
     override fun clone() = FASTFunctionLiteral(args.toMutableList(), body?.clone())
     override fun consume(node: FASTNode) {
+        if (node is FASTTypeIndicatorFunc)
+            return
+
         if (node is FASTToken<*> && node.token is Identifier)
             this.args.add((node as FASTToken<Identifier>).token)
         else if (node is FASTBody)
@@ -461,6 +562,10 @@ class FASTReadIntCall : FASTNode() {
     override fun consume(node: FASTNode) {
         throw IllegalStateException("Not implemented for this node")
     }
+
+    override fun toString(): String {
+        return "FASTReadIntCall"
+    }
 }
 
 class FASTReadRealCall : FASTNode() {
@@ -469,6 +574,10 @@ class FASTReadRealCall : FASTNode() {
     override fun consume(node: FASTNode) {
         throw IllegalStateException("Not implemented for this node")
     }
+
+    override fun toString(): String {
+        return "FASTReadRealCall"
+    }
 }
 
 class FASTReadStringCall : FASTNode() {
@@ -476,6 +585,10 @@ class FASTReadStringCall : FASTNode() {
 
     override fun consume(node: FASTNode) {
         throw IllegalStateException("Not implemented for this node")
+    }
+
+    override fun toString(): String {
+        return "FASTReadStringCall"
     }
 }
 
@@ -497,6 +610,10 @@ class FASTTypeCheckOperator : FASTBinaryOperator() {
     override fun clone() = FASTTypeCheckOperator().also {
         it.left = left
         it.right = right
+    }
+
+    override fun toString(): String {
+        return "FASTTypeCheckOperator(left=$left, right=$right)"
     }
 }
 
@@ -554,6 +671,10 @@ class FASTEmptyLiteral : FASTExpression() {
     override fun consume(node: FASTNode) {
         throw NotImplementedError("Consume not applicable to " + this::class.simpleName)
     }
+
+    override fun toString(): String {
+        return "FASTEmptyLiteral"
+    }
 }
 
 data class FASTArrayLiteral(
@@ -572,10 +693,6 @@ data class FASTArrayLiteral(
         } else {
             throw IllegalArgumentException("Argument of type " + node::class.simpleName + " not supported")
         }
-    }
-
-    override fun toString(): String {
-        return "FASTArrayLiteral($members)"
     }
 }
 

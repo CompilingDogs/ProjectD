@@ -8,7 +8,7 @@ import java.io.File
 /**
  * Identifiers
  */
-val identifier = TokenNode(Identifier::class.java, true).apply { }
+val identifier = TokenNode(Identifier::class.java, true)
 
 /**
  * Keywords
@@ -166,7 +166,6 @@ val primary = any("primary") {
 
 
 val unary = any("unary") {
-    +reference
     +concat("typeCheckOperator") {
         mapTo<FASTTypeCheckOperator>()
 
@@ -174,6 +173,7 @@ val unary = any("unary") {
         +isOp
         +typeIndicator
     }
+    +reference
     +concat("primary") {
         // TODO: implement this
         +maybe("primaryMaybe") {
@@ -463,7 +463,7 @@ val functionLiteral = concat("functionLiteral") {
                 +comma
                 +identifier
             }
-            +closeBracket
+            +closeParenthesis
         }
 
     }

@@ -1,23 +1,31 @@
-// var arr := "testString";
+// Solving the quadratic equation
+var findRoots := func(a, b, c) is
 
-// if (1) then
-//     var integer := 1;
-//     var integer := 1;
-//     var integer := 1;
-//     var integer := 1;
-//     var integer := 2;
-// else
-//     var float1 := 0;
-// end
+     // If a is 0, then equation is not
+     // quadratic, but linear
 
-// while 1 loop
-//     var t := 0;
-//
-//     for ochko in jopa loop
-//         var v := 0;
-//     end
-// end
+     if (a = 0) then
+        print "Invalid";
+        return;
+     end
 
-var d := a.b;
+     var d := b*b - 4*a*c;
+     var sqrtValue := sqrt(abs(d));
 
+     if (d > 0) then
+        print "Roots are real and different \n";
+        print (-b + sqrtValue) / (2 * a), "\n", (-b - sqrtValue) / (2 * a);
+     else // d < 0
+        print "Roots are complex \n";
+        print -b / ( 2 * a ), " + i", sqrtValue;
+		print "\n";
+	    print -b / ( 2 * a ), " - i", sqrtValue;
+	 end
+end
 
+print "Enter coefficients a, b, c\n";
+var a := readInt,
+	  b := readInt,
+		c := readInt;
+
+findRoots(a, b, c);
