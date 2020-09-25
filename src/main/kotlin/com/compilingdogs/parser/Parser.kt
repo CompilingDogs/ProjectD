@@ -20,8 +20,6 @@ var bool = TokenNode(Keyword.BoolKeyword::class.java, true).apply { mapTo<FASTTy
 val string = TokenNode(Keyword.StringKeyword::class.java, true).apply { mapTo<FASTTypeIndicatorString>() }
 var empty =
     TokenNode(Keyword.EmptyKeyword::class.java, true).apply { mapTo<FASTTypeIndicatorEmpty>() }
-val boolean =
-    TokenNode(Keyword.BoolKeyword::class.java, true).apply { mapTo<FASTTypeIndicatorBool>() }
 var func = TokenNode(Keyword.FuncKeyword::class.java, true).apply { mapTo<FASTTypeIndicatorFunc>() }
 val readInt = TokenNode(Keyword.ReadIntKeyword::class.java, true).apply { mapTo<FASTReadIntCall>() }
 val readReal = TokenNode(Keyword.ReadRealKeyword::class.java, true).apply { mapTo<FASTReadRealCall>() }
@@ -85,7 +83,6 @@ val trueKeyword =
     TokenNode(Keyword.TrueKeyword::class.java, true).apply { mapTo<FASTBooleanLiteral>() }
 val falseKeyword =
     TokenNode(Keyword.FalseKeyword::class.java, true).apply { mapTo<FASTBooleanLiteral>() }
-//val emptyLiteral = TokenNode(Literal.EmptyLiteral::class.java, true).apply { mapTo<FASTEmptyLiteral>() }
 
 
 /**
@@ -95,8 +92,8 @@ val literal = any("literal") {
     +integerLiteral
     +realLiteral
     +stringLiteral
-    // TODO: FIXXXX
-//    +boolean
+    +trueKeyword
+    +falseKeyword
     +empty
 //    +arrayLiteral    // this is added separately to break circular dependency cycle
 //    +tupleLiteral    // this is added separately to break circular dependency cycle
@@ -205,7 +202,7 @@ var termMult = concat("unaryTerm") {
     +repeat("termRepeat") {
         +concat("termConcat") {
             +mult
-            +unary
+//            +term // this is added separately to break circular dependency cycle
         }
     }
 }
@@ -217,7 +214,7 @@ val termDiv = concat("termDiv") {
     +repeat("termRepeat") {
         +concat("termConcat") {
             +div
-            +unary
+//            +term // this is added separately to break circular dependency cycle
         }
     }
 }
@@ -227,31 +224,36 @@ val term = any("term") {
     +termDiv
 }
 
-//val term = concat("term") {
-//    +unary
-//    +repeat("termRepeat") {
-//        +concat("termConcat") {
-//            +any("termAny") {
-//                +mult
-//                +div
-//            }
-//            +unary
-//        }
-//    }
-//}
 
-val factor = concat("factor") {
+val factorPlus = concat("factorPlus") {
+    mapTo<FASTAddOperator>()
+
     +term
     +repeat("factorRepeat") {
         +concat("factorConcat") {
-            +any("factorAny") {
-                +plus
-                +minus
-            }
-            +term
+            +plus
+//            +factor // this is added separately to break circular dependency cycle
         }
     }
 }
+
+val factorMinus = concat("factorMinus") {
+    mapTo<FASTSubtractOperator>()
+
+    +term
+    +repeat("factorRepeat") {
+        +concat("factorConcat") {
+            +minus
+//            +factor // this is added separately to break circular dependency cycle
+        }
+    }
+}
+
+val factor = any("factor") {
+    +factorPlus
+    +factorMinus
+}
+
 
 val relation = concat("relation") {
     +factor
@@ -517,14 +519,20 @@ fun initialize() {
     literal.apply { +tupleLiteral }
     literal.apply { +functionLiteral }
 
-    (referencePath["path"] as ConcatenationNode).apply { children.add(referencePath) }
+    (referencePath["path"] as ConcatenationNode).children.add(referencePath)
 //    (referencePath["path"] as ConcatenationNode).apply { children.add(reference) }
 
-    (reference["operatorGet"] as ConcatenationNode).apply { children.add(2, expression) }
+    (reference["operatorGet"] as ConcatenationNode).children.add(2, expression)
 
-    (primary["functionCall"]!!["maybe"]!!["concat"] as ConcatenationNode).apply { children.add(0, expression) }
-    (primary["functionCall"]!!["maybe"]!!["concat"]!!["repeat"] as RepetitionNode).apply { children.add(expression) }
-    (primary["groupedExpression"] as ConcatenationNode).apply { children.add(1, expression) }
+    (primary["functionCall"]!!["maybe"]!!["concat"] as ConcatenationNode).children.add(0, expression)
+    (primary["functionCall"]!!["maybe"]!!["concat"]!!["repeat"] as RepetitionNode).children.add(expression)
+    (primary["groupedExpression"] as ConcatenationNode).children.add(1, expression)
+
+    (termMult["termRepeat"]!!["termConcat"] as ConcatenationNode).children.add(term)
+    (termDiv["termRepeat"]!!["termConcat"] as ConcatenationNode).children.add(term)
+
+    (factorPlus["factorRepeat"]!!["factorConcat"] as ConcatenationNode).children.add(term)
+    (factorMinus["factorRepeat"]!!["factorConcat"] as ConcatenationNode).children.add(term)
 
     controlStructure.apply { +ifControlStructure }
     controlStructure.apply { +loopControlStructure }

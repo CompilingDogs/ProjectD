@@ -1,8 +1,8 @@
-if test is empty then
-    print "govno"
-end
+// if test is empty then
+//     print "govno"
+// end
 
-// var simpleExpr := 2 + 2
+var simpleExpr := 2 * 2 + 2
 
 // Defining different variables
 //
