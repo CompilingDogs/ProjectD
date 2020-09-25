@@ -18,8 +18,10 @@ val int = TokenNode(Keyword.IntKeyword::class.java, true).apply { mapTo<FASTType
 var real = TokenNode(Keyword.RealKeyword::class.java, true).apply { mapTo<FASTTypeIndicatorReal>() }
 var bool = TokenNode(Keyword.BoolKeyword::class.java, true).apply { mapTo<FASTTypeIndicatorBool>() }
 val string = TokenNode(Keyword.StringKeyword::class.java, true).apply { mapTo<FASTTypeIndicatorString>() }
-var empty = TokenNode(Keyword.EmptyKeyword::class.java, true).apply { mapTo<FASTTypeIndicatorEmpty>() }
-val boolean = TokenNode(Keyword.BoolKeyword::class.java, true).apply { mapTo<FASTBooleanLiteral>() }
+var empty =
+    TokenNode(Keyword.EmptyKeyword::class.java, true).apply { mapTo<FASTTypeIndicatorEmpty>() }
+val boolean =
+    TokenNode(Keyword.BoolKeyword::class.java, true).apply { mapTo<FASTTypeIndicatorBool>() }
 var func = TokenNode(Keyword.FuncKeyword::class.java, true).apply { mapTo<FASTTypeIndicatorFunc>() }
 val readInt = TokenNode(Keyword.ReadIntKeyword::class.java, true).apply { mapTo<FASTReadIntCall>() }
 val readReal = TokenNode(Keyword.ReadRealKeyword::class.java, true).apply { mapTo<FASTReadRealCall>() }
@@ -73,9 +75,16 @@ val period = TokenNode(Separator.PeriodSeparator::class.java)
 /**
  * Literals
  */
-val integerLiteral = TokenNode(Literal.IntegerLiteral::class.java, true).apply { mapTo<FASTIntegerLiteral>() }
-val realLiteral = TokenNode(Literal.RealLiteral::class.java, true).apply { mapTo<FASTRealLiteral>() }
-val stringLiteral = TokenNode(Literal.StringLiteral::class.java, true).apply { mapTo<FASTStringLiteral>() }
+val integerLiteral =
+    TokenNode(Literal.IntegerLiteral::class.java, true).apply { mapTo<FASTIntegerLiteral>() }
+val realLiteral =
+    TokenNode(Literal.RealLiteral::class.java, true).apply { mapTo<FASTRealLiteral>() }
+val stringLiteral =
+    TokenNode(Literal.StringLiteral::class.java, true).apply { mapTo<FASTStringLiteral>() }
+val trueKeyword =
+    TokenNode(Keyword.TrueKeyword::class.java, true).apply { mapTo<FASTBooleanLiteral>() }
+val falseKeyword =
+    TokenNode(Keyword.FalseKeyword::class.java, true).apply { mapTo<FASTBooleanLiteral>() }
 //val emptyLiteral = TokenNode(Literal.EmptyLiteral::class.java, true).apply { mapTo<FASTEmptyLiteral>() }
 
 
