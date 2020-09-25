@@ -20,22 +20,23 @@ public class CompilerTest {
     private final LexicalAnalyzer lexicalAnalyzer = LexicalAnalyzer.getInstance();
 
     private final String[] testingSourceCodes = new String[]{
-            "src/test/resources/case_1.pd",
-            "src/test/resources/case_2.pd",
-            "src/test/resources/case_3.pd",
-            "src/test/resources/case_4.pd",
-            "src/test/resources/case_5.pd",
-            "src/test/resources/case_6.pd",
-            "src/test/resources/case_7.pd",
-            "src/test/resources/case_8.pd",
-            "src/test/resources/case_9.pd",
-            "src/test/resources/case_10.pd",
-            "src/test/resources/case_11.pd",
-            "src/test/resources/case_12.pd",
-            "src/test/resources/case_13.pd",
-            "src/test/resources/case_14.pd",
-            "src/test/resources/case_15.pd",
-            "src/test/resources/case_16.pd"
+            "src/test/resources/case_0.pd",
+//            "src/test/resources/case_1.pd",
+//            "src/test/resources/case_2.pd",
+//            "src/test/resources/case_3.pd",
+//            "src/test/resources/case_4.pd",
+//            "src/test/resources/case_5.pd",
+//            "src/test/resources/case_6.pd",
+//            "src/test/resources/case_7.pd",
+//            "src/test/resources/case_8.pd",
+//            "src/test/resources/case_9.pd",
+//            "src/test/resources/case_10.pd",
+//            "src/test/resources/case_11.pd",
+//            "src/test/resources/case_12.pd",
+//            "src/test/resources/case_13.pd",
+//            "src/test/resources/case_14.pd",
+//            "src/test/resources/case_15.pd",
+//            "src/test/resources/case_16.pd"
     };
 
     @Test
@@ -46,18 +47,20 @@ public class CompilerTest {
     }
 
     public void createTestingResults(String fullPath) throws IOException {
-        var gsonTok = new GsonBuilder().registerTypeHierarchyAdapter(
+        var gsonTok = new GsonBuilder().setPrettyPrinting().registerTypeHierarchyAdapter(
                 Token.class,
                 new TDeserializer()
         ).create();
-        var gsonAst = new GsonBuilder().registerTypeHierarchyAdapter(
-                FASTNode.class,
-                new AstDeserializer()
-        ).create();
+        var gsonAst = new GsonBuilder().setLenient()
+                                       .setPrettyPrinting()
+                                       .registerTypeHierarchyAdapter(
+                                               FASTNode.class,
+                                               new AstDeserializer()
+                                       )
+                                       .create();
 
         var sourceCode = new File(fullPath);
         var fileName = sourceCode.getName().split("\\.")[0];
-
         try {
             var generatedTokens = lexicalAnalyzer.tokenize(sourceCode);
             var generatedAst = ParserKt.parse(generatedTokens);
@@ -78,8 +81,6 @@ public class CompilerTest {
             log.error(e.getMessage());
             e.printStackTrace();
         }
-
-
     }
 
     public static class TDeserializer implements JsonSerializer<Token> {
@@ -100,8 +101,6 @@ public class CompilerTest {
         ) {
             Gson gson = new Gson();
             JsonElement serialize = gson.toJsonTree(src);
-            JsonObject o = (JsonObject) serialize;
-            o.addProperty("class", src.getClass().getSimpleName());
             return serialize;
         }
     }

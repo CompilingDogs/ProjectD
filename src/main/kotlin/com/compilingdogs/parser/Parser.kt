@@ -96,7 +96,7 @@ val literal = any("literal") {
     +falseKeyword
     +empty
 //    +arrayLiteral    // this is added separately to break circular dependency cycle
-//    +tupleLiteral    // this is added separately to break circular dependency cycle
+//    +tupleLiteral    // this is added separately to break cir1cular dependency cycle
 //    +functionLiteral // this is added separately to break circular dependency cycle
 }
 
@@ -254,21 +254,72 @@ val factor = any("factor") {
     +factorMinus
 }
 
+val lessRelation = concat {
+    mapTo<FASTLessOperator>()
 
-val relation = concat("relation") {
     +factor
     +maybe("relationMaybe") {
         concat("relationConcat") {
-            +any("relationAny") {
-                +less
-                +lessOrEqual
-                +equal
-                +greater
-                +greaterOrEqual
-            }
+            +less
             +factor
         }
     }
+}
+
+val lessOrEqualRelation = concat {
+    mapTo<FASTLessEqualOperator>()
+
+    +factor
+    +maybe("relationMaybe") {
+        concat("relationConcat") {
+            +lessOrEqual
+            +factor
+        }
+    }
+}
+
+val equalRelation = concat {
+    mapTo<FASTEqualOperator>()
+
+    +factor
+    +maybe("relationMaybe") {
+        concat("relationConcat") {
+            +equal
+            +factor
+        }
+    }
+}
+
+val greaterRelation = concat {
+    mapTo<FASTGreaterOperator>()
+
+    +factor
+    +maybe("relationMaybe") {
+        concat("relationConcat") {
+            +greater
+            +factor
+        }
+    }
+}
+
+val greaterOrEqualRelation = concat {
+    mapTo<FASTGreaterEqualOperator>()
+
+    +factor
+    +maybe("relationMaybe") {
+        concat("relationConcat") {
+            +greaterOrEqual
+            +factor
+        }
+    }
+}
+
+val relation = any("factor") {
+    +lessRelation
+    +lessOrEqualRelation
+    +equalRelation
+    +greaterRelation
+    +greaterOrEqualRelation
 }
 
 val expression = concat("expression") {
