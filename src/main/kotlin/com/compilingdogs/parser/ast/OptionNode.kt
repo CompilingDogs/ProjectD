@@ -11,6 +11,7 @@ class OptionalNode(
 ) : ASTNode() {
 
     override fun match(tokens: List<Token>, parentNode: FASTNode, depth: Int, enablePrints: Boolean): Int? {
+        // Debugging stuff.
         if (enablePrints && logNodeTraversal) {
             println("${indent(depth)}Matching OptionalNode $name; parent is $parentNode")
             println("${indent(depth + 1)}${lightGray}Tokens: ${tokens.joinToString(" ")}${noColor}")
@@ -20,17 +21,26 @@ class OptionalNode(
         // If not, propagate parent FASTNode instead.
         val fastNode = attachedTo?.newInstance() ?: parentNode
 
+        // Result of parsing. Contains amount of parsed nodes.
         var res: Int? = 0
 
+        // Firstly, try parsing into a dummy node. If parsing succeeds, parse into parent node.
         for (n in listOf(fastNode.clone(), fastNode)) {
-            res = node.match(transformTokens(tokens), n, depth + 1, enablePrints && System.identityHashCode(n) != System.identityHashCode(fastNode))
+            res = node.match(
+                transformTokens(tokens),
+                n,
+                depth + 1,
+                enablePrints && System.identityHashCode(n) != System.identityHashCode(fastNode)
+            )
             if (res == null)
                 return 0
         }
 
+        // If this AST node is attached to some FAST node, consume the attached node to parent.
         if (attachedTo != null)
             parentNode.consume(fastNode)
 
+        // Debugging stuff.
         if (enablePrints)
             println("${indent(depth + 1)}${blueColor}Stopping $name with parent = $parentNode$noColor")
         return res
