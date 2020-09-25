@@ -261,7 +261,7 @@ val lessRelation = concat {
     +maybe("relationMaybe") {
         concat("relationConcat") {
             +less
-            +factor
+//            +relation // this is added separately to break circular dependency cycle
         }
     }
 }
@@ -273,7 +273,7 @@ val lessOrEqualRelation = concat {
     +maybe("relationMaybe") {
         concat("relationConcat") {
             +lessOrEqual
-            +factor
+//            +relation // this is added separately to break circular dependency cycle
         }
     }
 }
@@ -285,7 +285,7 @@ val equalRelation = concat {
     +maybe("relationMaybe") {
         concat("relationConcat") {
             +equal
-            +factor
+//            +relation // this is added separately to break circular dependency cycle
         }
     }
 }
@@ -297,7 +297,7 @@ val greaterRelation = concat {
     +maybe("relationMaybe") {
         concat("relationConcat") {
             +greater
-            +factor
+//            +relation // this is added separately to break circular dependency cycle
         }
     }
 }
@@ -309,12 +309,12 @@ val greaterOrEqualRelation = concat {
     +maybe("relationMaybe") {
         concat("relationConcat") {
             +greaterOrEqual
-            +factor
+//            +relation // this is added separately to break circular dependency cycle
         }
     }
 }
 
-val relation = any("factor") {
+val relation = any("relation") {
     +lessRelation
     +lessOrEqualRelation
     +equalRelation
@@ -322,18 +322,46 @@ val relation = any("factor") {
     +greaterOrEqualRelation
 }
 
-val expression = concat("expression") {
+val expressionOr = concat("expressionOr") {
+    mapTo<FASTOrOperator>()
+
     +relation
     +repeat("expressionRepeat") {
         +concat("expressionRepeatConcat") {
-            +any("expressionRepeatConcatAny") {
-                +or
-                +and
-                +xor
-            }
-            +relation
+            +or
+//            +expression // this is added separately to break circular dependency cycle
         }
     }
+}
+
+val expressionAnd = concat("expressionAnd") {
+    mapTo<FASTAndOperator>()
+
+    +relation
+    +repeat("expressionRepeat") {
+        +concat("expressionRepeatConcat") {
+            +and
+//            +expression // this is added separately to break circular dependency cycle
+        }
+    }
+}
+
+val expressionXor = concat("expressionXor") {
+    mapTo<FASTXorOperator>()
+
+    +relation
+    +repeat("expressionRepeat") {
+        +concat("expressionRepeatConcat") {
+            +xor
+//            +expression // this is added separately to break circular dependency cycle
+        }
+    }
+}
+
+val expression = any("expression") {
+    +expressionOr
+    +expressionAnd
+    +expressionXor
 }
 
 val varDefinition = concat("varDefinition") {
@@ -584,6 +612,16 @@ fun initialize() {
 
     (factorPlus["factorRepeat"]!!["factorConcat"] as ConcatenationNode).children.add(term)
     (factorMinus["factorRepeat"]!!["factorConcat"] as ConcatenationNode).children.add(term)
+
+    (expressionOr["expressionRepeat"]!!["expressionRepeatConcat"]!! as ConcatenationNode).children.add(expression)
+    (expressionAnd["expressionRepeat"]!!["expressionRepeatConcat"]!! as ConcatenationNode).children.add(expression)
+    (expressionXor["expressionRepeat"]!!["expressionRepeatConcat"]!! as ConcatenationNode).children.add(expression)
+
+    (lessRelation["relationMaybe"]!!["relationConcat"]!! as ConcatenationNode).children.add(relation)
+    (lessOrEqualRelation["relationMaybe"]!!["relationConcat"]!! as ConcatenationNode).children.add(relation)
+    (equalRelation["relationMaybe"]!!["relationConcat"]!! as ConcatenationNode).children.add(relation)
+    (greaterOrEqualRelation["relationMaybe"]!!["relationConcat"]!! as ConcatenationNode).children.add(relation)
+    (greaterRelation["relationMaybe"]!!["relationConcat"]!! as ConcatenationNode).children.add(relation)
 
     controlStructure.apply { +ifControlStructure }
     controlStructure.apply { +loopControlStructure }
