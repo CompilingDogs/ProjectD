@@ -12,7 +12,7 @@ class RepetitionNode(
 
     operator fun ASTNode.unaryPlus() = children.add(this)
 
-    override fun match(tokens: List<Token>, parentNode: FASTNode, depth: Int, enablePrints: Boolean): Int? {
+    override fun match(tokens: List<Token>, parentNode: FASTNode, depth: Int, enablePrints: Boolean): MatchResults {
         if (enablePrints && logNodeTraversal) {
             println("${indent(depth)}Matching RepetitionNode $name; parent is $parentNode")
             println("${indent(depth + 1)}${lightGray}Tokens: ${tokens.joinToString(" ")}${noColor}")
@@ -41,16 +41,16 @@ class RepetitionNode(
                     )
 
                     // If child did not match, abort
-                    if (res == null) {
+                    if (res.error != null) {
                         if (attachedTo != null)
                             parentNode.consume(fastNode)
 
                         if (enablePrints)
                             println("${indent(depth + 1)}${magentaColor}Stopping $name with parent = $parentNode$noColor")
-                        return offset
+                        return MatchResults(offset, null)
                     }
 
-                    localOffset += res
+                    localOffset += res.parsedTokens!!
                 }
 
                 tmpOffset = localOffset

@@ -19,6 +19,7 @@ var real = TokenNode(Keyword.RealKeyword::class.java, true).apply { mapTo<FASTTy
 var bool = TokenNode(Keyword.BoolKeyword::class.java, true).apply { mapTo<FASTTypeIndicatorBool>() }
 val string = TokenNode(Keyword.StringKeyword::class.java, true).apply { mapTo<FASTTypeIndicatorString>() }
 var empty = TokenNode(Keyword.EmptyKeyword::class.java, true).apply { mapTo<FASTTypeIndicatorEmpty>() }
+val boolean = TokenNode(Keyword.BoolKeyword::class.java, true).apply { mapTo<FASTBooleanLiteral>() }
 var func = TokenNode(Keyword.FuncKeyword::class.java, true).apply { mapTo<FASTTypeIndicatorFunc>() }
 val readInt = TokenNode(Keyword.ReadIntKeyword::class.java, true).apply { mapTo<FASTReadIntCall>() }
 val readReal = TokenNode(Keyword.ReadRealKeyword::class.java, true).apply { mapTo<FASTReadRealCall>() }
@@ -75,8 +76,7 @@ val period = TokenNode(Separator.PeriodSeparator::class.java)
 val integerLiteral = TokenNode(Literal.IntegerLiteral::class.java, true).apply { mapTo<FASTIntegerLiteral>() }
 val realLiteral = TokenNode(Literal.RealLiteral::class.java, true).apply { mapTo<FASTRealLiteral>() }
 val stringLiteral = TokenNode(Literal.StringLiteral::class.java, true).apply { mapTo<FASTStringLiteral>() }
-val booleanLiteral = TokenNode(Keyword.BoolKeyword::class.java, true).apply { mapTo<FASTIntegerLiteral>() }
-val emptyLiteral = TokenNode(Literal.EmptyLiteral::class.java, true).apply { mapTo<FASTEmptyLiteral>() }
+//val emptyLiteral = TokenNode(Literal.EmptyLiteral::class.java, true).apply { mapTo<FASTEmptyLiteral>() }
 
 
 /**
@@ -86,8 +86,9 @@ val literal = any("literal") {
     +integerLiteral
     +realLiteral
     +stringLiteral
-    +booleanLiteral
-    +emptyLiteral
+    // TODO: FIXXXX
+//    +boolean
+    +empty
 //    +arrayLiteral    // this is added separately to break circular dependency cycle
 //    +tupleLiteral    // this is added separately to break circular dependency cycle
 //    +functionLiteral // this is added separately to break circular dependency cycle
@@ -187,18 +188,48 @@ val unary = any("unary") {
     }
 }
 
-val term = concat("term") {
+
+var termMult = concat("unaryTerm") {
+    mapTo<FASTMultiplyOperator>()
+
     +unary
     +repeat("termRepeat") {
         +concat("termConcat") {
-            +any("termAny") {
-                +mult
-                +div
-            }
+            +mult
             +unary
         }
     }
 }
+
+val termDiv = concat("termDiv") {
+    mapTo<FASTDivideOperator>()
+
+    +unary
+    +repeat("termRepeat") {
+        +concat("termConcat") {
+            +div
+            +unary
+        }
+    }
+}
+
+val term = any("term") {
+    +termMult
+    +termDiv
+}
+
+//val term = concat("term") {
+//    +unary
+//    +repeat("termRepeat") {
+//        +concat("termConcat") {
+//            +any("termAny") {
+//                +mult
+//                +div
+//            }
+//            +unary
+//        }
+//    }
+//}
 
 val factor = concat("factor") {
     +term
@@ -513,7 +544,9 @@ fun parse(tokens: List<Token>): FASTNode {
     }
 
     val parent = FASTProgram()
-    program.match(tokens, parent, 0, true)
+    val results = program.match(tokens, parent, 0, true)
+    if (results.error != null)
+        error(results.error)
     println("Node: $parent")
     return parent
 }

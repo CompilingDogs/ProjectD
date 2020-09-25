@@ -5,6 +5,7 @@ import com.compilingdogs.parser.indent
 import com.compilingdogs.parser.lightGray
 import com.compilingdogs.parser.noColor
 import tokens.Token
+import java.lang.Error
 import java.lang.reflect.Constructor
 
 
@@ -14,7 +15,7 @@ class TokenNode<T>(
     val shouldBeReturned: Boolean = false,
 ) : ASTNode() where T : Token {
 
-    override fun match(tokens: List<Token>, parentNode: FASTNode, depth: Int, enablePrints: Boolean): Int? {
+    override fun match(tokens: List<Token>, parentNode: FASTNode, depth: Int, enablePrints: Boolean): MatchResults {
         if (enablePrints && logNodeTraversal) {
             println("${indent(depth)}Matching TokenNode of type ${nodeType.simpleName}; parent is $parentNode")
             println("${indent(depth + 1)}${lightGray}Tokens: ${tokens.joinToString(" ")}$noColor")
@@ -38,9 +39,14 @@ class TokenNode<T>(
                         println("Matched ${tokens[0]} to $this")
                 })
             }
-            return 1
+            return MatchResults(1, null)
         } else
-            return null
+            return MatchResults(null,
+                if (tokens.isNotEmpty())
+                    Error("Expected $name, got \"${tokens[0]}\"")
+                else
+                    Error("Expected $name, got end of file")
+            )
     }
 
     override fun clone(): ASTNode {

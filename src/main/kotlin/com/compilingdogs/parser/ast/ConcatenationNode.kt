@@ -11,7 +11,7 @@ open class ConcatenationNode(
     operator fun ASTNode.unaryPlus() = children.add(this)
 
 
-    override fun match(tokens: List<Token>, parentNode: FASTNode, depth: Int, enablePrints: Boolean): Int? {
+    override fun match(tokens: List<Token>, parentNode: FASTNode, depth: Int, enablePrints: Boolean): MatchResults {
         if (enablePrints && logNodeTraversal) {
             println("${indent(depth)}Matching ConcatenationNode $name; parent is $parentNode")
             println("${indent(depth + 1)}${lightGray}Tokens: ${tokens.joinToString(" ")}${noColor}")
@@ -33,10 +33,10 @@ open class ConcatenationNode(
                 val m = child.match(transformTokens(tokens.subList(offset, tokens.size)),
                     node, depth + 1, enablePrints && System.identityHashCode(node) != System.identityHashCode(fastNode))
 
-                // If child did not match, abort
-                if (m == null) return null
+                // If child did not match, abort and propagate the error up
+                if (m.error != null) return m
 
-                offset += m
+                offset += m.parsedTokens!!
             }
         }
 
@@ -45,7 +45,7 @@ open class ConcatenationNode(
 
         if (enablePrints)
             println("${indent(depth + 1)}${yellowColor}Stopping $name with parent = $parentNode$noColor")
-        return offset
+        return MatchResults(offset, null)
     }
 
     override fun clone(): ASTNode = ConcatenationNode(children.toMutableList()).also { it.name = name }

@@ -1,16 +1,18 @@
 package com.compilingdogs.parser.ast
 
-import com.compilingdogs.parser.*
-import com.compilingdogs.parser.greenColor
+import com.compilingdogs.parser.blueColor
+import com.compilingdogs.parser.indent
+import com.compilingdogs.parser.lightGray
+import com.compilingdogs.parser.noColor
 import tokens.Token
-import java.lang.IllegalStateException
+import java.lang.Error
 
 
 class OptionalNode(
     var node: ASTNode
 ) : ASTNode() {
 
-    override fun match(tokens: List<Token>, parentNode: FASTNode, depth: Int, enablePrints: Boolean): Int? {
+    override fun match(tokens: List<Token>, parentNode: FASTNode, depth: Int, enablePrints: Boolean): MatchResults {
         // Debugging stuff.
         if (enablePrints && logNodeTraversal) {
             println("${indent(depth)}Matching OptionalNode $name; parent is $parentNode")
@@ -22,7 +24,7 @@ class OptionalNode(
         val fastNode = attachedTo?.newInstance() ?: parentNode
 
         // Result of parsing. Contains amount of parsed nodes.
-        var res: Int? = 0
+        var res: MatchResults = MatchResults(null, Error("WTF???"))
 
         // Firstly, try parsing into a dummy node. If parsing succeeds, parse into parent node.
         for (n in listOf(fastNode.clone(), fastNode)) {
@@ -32,8 +34,8 @@ class OptionalNode(
                 depth + 1,
                 enablePrints && System.identityHashCode(n) != System.identityHashCode(fastNode)
             )
-            if (res == null)
-                return 0
+            if (res.parsedTokens == null)
+                return MatchResults(0, null)
         }
 
         // If this AST node is attached to some FAST node, consume the attached node to parent.
