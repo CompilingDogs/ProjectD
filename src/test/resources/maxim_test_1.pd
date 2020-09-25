@@ -1,39 +1,18 @@
-// Solving the quadratic equation
+// Defining different variables
 
-var fun := func(a, b) => print "govno"
+var int1 := 1
+var float1 := 1.0
+var string1 := "some string"
 
-
-var findRoots := func(a, b, c) is
-
-    print empty
-
-    a := (2+2)*2;
-
-    // If a is 0, then equation is not
-    // quadratic, but linear
-
-    if (a = 0) then
-       print "Invalid";
-       return;
+// some loops
+for i in 1..10 loop
+    // and branching
+    if i > 5 then
+        print i
+    else
+        print 10 - i
     end
-
-    var d := b*b - 4*a*c;
-    var sqrtValue := sqrt(abs(d));
-
-    if (d > 0) then
-       print "Roots are real and different \n";
-       print (-b + sqrtValue) / (2 * a), "\n", (-b - sqrtValue) / (2 * a);
-    else // d < 0
-       print "Roots are complex \n";
-       print -b / ( 2 * a ), " + i", sqrtValue;
-       print "\n";
-	   print -b / ( 2 * a ), " - i", sqrtValue;
-	end
 end
 
-print "Enter coefficients a, b, c\n";
-var a := readInt,
-	  b := readInt,
-		c := readInt;
 
-findRoots(a, b, c);
+
