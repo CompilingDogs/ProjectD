@@ -471,8 +471,8 @@ val functionLiteral = concat("functionLiteral") {
     +funcBody
 }
 
-
-fun main() {
+var initialized = false
+fun initialize() {
     literal.apply { +arrayLiteral }
     literal.apply { +tupleLiteral }
     literal.apply { +functionLiteral }
@@ -488,7 +488,9 @@ fun main() {
 
     controlStructure.apply { +ifControlStructure }
     controlStructure.apply { +loopControlStructure }
+}
 
+fun main() {
     runTest()
 }
 
@@ -505,6 +507,11 @@ fun runTest() {
 }
 
 fun parse(tokens: List<Token>): FASTNode {
+    if (!initialized) {
+        initialize()
+        initialized = true
+    }
+
     val parent = FASTProgram()
     program.match(tokens, parent, 0, true)
     println("Node: $parent")
