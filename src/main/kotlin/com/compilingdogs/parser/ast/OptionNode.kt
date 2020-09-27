@@ -12,40 +12,37 @@ class OptionalNode(
     var node: ASTNode
 ) : ASTNode() {
 
-    override fun match(tokens: List<Token>, parentNode: FASTNode, depth: Int, enablePrints: Boolean): MatchResults {
+    override fun match(tokens: List<Token>, depth: Int, enablePrints: Boolean): MatchResults {
         // Debugging stuff.
         if (enablePrints && logNodeTraversal) {
-            println("${indent(depth)}Matching OptionalNode $name; parent is $parentNode")
+            println("${indent(depth)}Matching OptionalNode $name")
             println("${indent(depth + 1)}${lightGray}Tokens: ${tokens.joinToString(" ")}${noColor}")
         }
 
         // If this node contains its own mapped FASTNode, use it.
-        // If not, propagate parent FASTNode instead.
-        val fastNode = attachedTo?.newInstance() ?: parentNode
+        val fastNode = attachedTo?.newInstance()
 
-        // Result of parsing. Contains amount of parsed nodes.
-        var res: MatchResults = MatchResults(null, Error("WTF???"))
+        val res = node.match(tokens, depth + 1, enablePrints)
 
-        // Firstly, try parsing into a dummy node. If parsing succeeds, parse into parent node.
-        for (n in listOf(fastNode.clone(), fastNode)) {
-            res = node.match(
-                transformTokens(tokens),
-                n,
-                depth + 1,
-                enablePrints && System.identityHashCode(n) != System.identityHashCode(fastNode)
-            )
-            if (res.parsedTokens == null)
-                return MatchResults(0, null)
-        }
+        // Check if parsing failed. Do nothing in this case.
+        if (res.error != null)
+            return MatchResults(listOf(), tokens, null)
 
-        // If this AST node is attached to some FAST node, consume the attached node to parent.
-        if (attachedTo != null)
-            parentNode.consume(fastNode)
+        if (fastNode != null)
+            res.result.forEach { node -> fastNode.consume(node) }
 
         // Debugging stuff.
         if (enablePrints)
-            println("${indent(depth + 1)}${blueColor}Stopping $name with parent = $parentNode$noColor")
-        return res
+            println("${indent(depth + 1)}${blueColor}Stopping $name")
+
+        return MatchResults(
+            if (fastNode != null)
+                listOf(fastNode)
+            else
+                res.result,
+            res.remainingTokens,
+            null
+        )
     }
 
     override fun clone(): ASTNode = OptionalNode(node.clone()).also { it.name = name }

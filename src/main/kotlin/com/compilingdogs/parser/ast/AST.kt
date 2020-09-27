@@ -25,7 +25,9 @@ inline fun <reified T : ASTNode> initialize(init: T.() -> Unit, name: String = "
 }
 
 
-data class MatchResults(val parsedTokens: Int?, val error: Error?)
+data class ParsingError(val expected: String, val received: String)
+
+data class MatchResults(val result: List<FASTNode>, val remainingTokens: List<Token>, val error: ParsingError?)
 
 
 // The base class for all AST nodes
@@ -41,9 +43,9 @@ abstract class ASTNode(
     // and some tokens are still left till the end, throw exception.
 //    var mandatory: Boolean = false
 
-    var transformTokens: (List<Token>) -> List<Token> = { s -> s }
+//    var transformTokens: (List<Token>) -> List<Token> = { s -> s }
 ) {
-    abstract fun match(tokens: List<Token>, parentNode: FASTNode, depth: Int, enablePrints: Boolean): MatchResults
+    abstract fun match(tokens: List<Token>, depth: Int, enablePrints: Boolean): MatchResults
 
     abstract fun clone(): ASTNode
 

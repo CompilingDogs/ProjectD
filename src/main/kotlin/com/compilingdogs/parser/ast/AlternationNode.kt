@@ -14,46 +14,51 @@ class AlternationNode(
 
     operator fun ASTNode.unaryPlus() = variants.add(this)
 
-    override fun match(tokens: List<Token>, parentNode: FASTNode, depth: Int, enablePrints: Boolean): MatchResults {
+    override fun match(tokens: List<Token>, depth: Int, enablePrints: Boolean): MatchResults {
         if (enablePrints && logNodeTraversal) {
-            println("${indent(depth)}Matching AlternationNode $name; parent is $parentNode")
+            println("${indent(depth)}Matching AlternationNode $name")
             println("${indent(depth + 1)}${lightGray}Tokens: ${tokens.joinToString(" ")}${noColor}")
         }
 
         // If this node contains its own mapped FASTNode, use it.
-        // If not, propagate parent FASTNode instead.
-        val fastNode = attachedTo?.newInstance() ?: parentNode
+        val fastNode = attachedTo?.newInstance()
 
+        // Initialize result with empty cases error
+        var result = MatchResults(listOf(), tokens, ParsingError(name, "empty cases in AlternationNode"))
 
-        var parsedLen = -1
+        if (variants.size == 0)
+            return result
 
         for (child in variants) {
-            val fn = fastNode.clone()
-
             // Try to match the AST nodes
-            val m = child.match(transformTokens(tokens), fn, depth + 1, enablePrints)
+//            result = child.match(transformTokens(tokens), depth + 1, enablePrints)
+            result = child.match(tokens, depth + 1, enablePrints)
 
-            // If child did not match, continue
-            if (m.error != null) continue
-
-            // If match was successful, apply the same on the real parent/fastNode
-            val res = child.match(transformTokens(tokens), fastNode, depth + 1, false)
-            parsedLen = res.parsedTokens!!
-
-            break
+            // If child did not match, continue. Otherwise - stop matching
+            if (result.error != null)
+                continue
+            else
+                break
         }
 
-        if (parsedLen == -1)
-            return MatchResults(null, Error("Parsing alternation node $name failed"))
+        if (result.error != null)
+            return MatchResults(listOf(), tokens, ParsingError(name, "No matching cases in AlternationNode"))
 
-        if (attachedTo != null)
-            parentNode.consume(fastNode)
+        // TODO: remake to consume a list of tokens
+        result.result.forEach { node -> fastNode?.consume(node) }
 
         if (enablePrints) {
-            println("${indent(depth + 1)}${greenColor}Stopping $name with parent = $parentNode$noColor")
-//            println("Tokens left: ${tokens.}")
+            println("${indent(depth + 1)}${greenColor}Stopping $name")
         }
-        return MatchResults(parsedLen, null)
+
+        return MatchResults(
+            if (fastNode == null)
+                result.result
+            else
+                listOf(fastNode),
+            result.remainingTokens,
+            null
+        )
     }
 
     override fun clone(): ASTNode = AlternationNode(variants.toMutableList()).also { it.name = name }

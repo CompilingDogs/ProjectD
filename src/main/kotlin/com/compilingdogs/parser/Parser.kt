@@ -428,6 +428,8 @@ val statement = any("statement") {
 
 
 val program = repeat("program") {
+    mapTo<FASTProgram>()
+
     +concat("statement+separator") {
         +repeat("repeatSeparator") {
             +newLine
@@ -649,10 +651,9 @@ fun parse(tokens: List<Token>): FASTNode {
         initialized = true
     }
 
-    val parent = FASTProgram()
-    val results = program.match(tokens, parent, 0, true)
+    val results = program.match(tokens, 0, true)
     if (results.error != null)
         error(results.error)
-    println("Node: $parent")
-    return parent
+    println("Node: ${results.result}")
+    return results.result.first()
 }

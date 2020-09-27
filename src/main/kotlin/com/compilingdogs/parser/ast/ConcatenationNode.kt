@@ -11,41 +11,58 @@ open class ConcatenationNode(
     operator fun ASTNode.unaryPlus() = children.add(this)
 
 
-    override fun match(tokens: List<Token>, parentNode: FASTNode, depth: Int, enablePrints: Boolean): MatchResults {
+    override fun match(tokens_: List<Token>, depth: Int, enablePrints: Boolean): MatchResults {
         if (enablePrints && logNodeTraversal) {
-            println("${indent(depth)}Matching ConcatenationNode $name; parent is $parentNode")
-            println("${indent(depth + 1)}${lightGray}Tokens: ${tokens.joinToString(" ")}${noColor}")
+            println("${indent(depth)}Matching ConcatenationNode $name")
+            println("${indent(depth + 1)}${lightGray}Tokens: ${tokens_.joinToString(" ")}${noColor}")
         }
+
+        // Create a separate mutable tokens variable to alter it during parsing
+        var tokens = tokens_
 
         // If this node contains its own mapped FASTNode, use it.
-        // If not, propagate parent FASTNode instead.
-        val fastNode = attachedTo?.newInstance() ?: parentNode
+        val fastNode = attachedTo?.newInstance()
+        // In case fastNode is undefined, results are stored in this list instead
+        var results = mutableListOf<FASTNode>()
 
-        // Offset in the token list
-        var offset = 0
+        var result = MatchResults(listOf(), tokens, ParsingError(name, "Empty cases in ConcatenationNode"))
 
-        // First try applying on the clone node, then on the real one
-        for (node in listOf(fastNode.clone(), fastNode)) {
-            offset = 0
+        if (children.size == 0)
+            return result
 
-            for (child in children) {
-                // Try to match the AST node
-                val m = child.match(transformTokens(tokens.subList(offset, tokens.size)),
-                    node, depth + 1, enablePrints && System.identityHashCode(node) != System.identityHashCode(fastNode))
+        for (child in children) {
+            // Try to match the AST node
+            result = child.match(
+//                    transformTokens(tokens.subList(offset, tokens.size)),
+                tokens,
+                depth + 1,
+                enablePrints
+            )
 
-                // If child did not match, abort and propagate the error up
-                if (m.error != null) return m
+            // If child did not match, abort and propagate the error up
+            if (result.error != null) return result
 
-                offset += m.parsedTokens!!
-            }
+            if (fastNode != null)
+                result.result.forEach { node -> fastNode.consume(node) }
+            else
+            // TODO: think about this
+                results.addAll(result.result)
+
+            val parsedTokensSize = tokens.size - result.remainingTokens.size
+            tokens = tokens.subList(parsedTokensSize, tokens.size)
         }
 
-        if (attachedTo != null)
-            parentNode.consume(fastNode)
-
         if (enablePrints)
-            println("${indent(depth + 1)}${yellowColor}Stopping $name with parent = $parentNode$noColor")
-        return MatchResults(offset, null)
+            println("${indent(depth + 1)}${yellowColor}Stopping $name")
+
+        return MatchResults(
+            if (fastNode != null)
+                listOf(fastNode)
+            else
+                results,
+            tokens,
+            null
+        )
     }
 
     override fun clone(): ASTNode = ConcatenationNode(children.toMutableList()).also { it.name = name }

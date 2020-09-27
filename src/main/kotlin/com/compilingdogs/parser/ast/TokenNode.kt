@@ -15,13 +15,15 @@ class TokenNode<T>(
     val shouldBeReturned: Boolean = false,
 ) : ASTNode() where T : Token {
 
-    override fun match(tokens: List<Token>, parentNode: FASTNode, depth: Int, enablePrints: Boolean): MatchResults {
+    override fun match(tokens: List<Token>, depth: Int, enablePrints: Boolean): MatchResults {
         if (enablePrints && logNodeTraversal) {
-            println("${indent(depth)}Matching TokenNode of type ${nodeType.simpleName}; parent is $parentNode")
+            println("${indent(depth)}Matching TokenNode of type ${nodeType.simpleName}")
             println("${indent(depth + 1)}${lightGray}Tokens: ${tokens.joinToString(" ")}$noColor")
         }
 
         if (tokens.isNotEmpty() && tokens[0].javaClass == nodeType) {
+            // Node matched
+
             if (shouldBeReturned) {
                 val toConsume = if (attachedTo != null) {
                     val oneArgNode =
@@ -34,18 +36,15 @@ class TokenNode<T>(
                     FASTToken(tokens[0] as T)
                 }
 
-                parentNode.consume(toConsume.apply {
-                    if (enablePrints && logFASTTokens)
-                        println("Matched ${tokens[0]} to $this")
-                })
+                return MatchResults(listOf(toConsume), tokens.subList(1, tokens.size), null)
             }
-            return MatchResults(1, null)
+            return MatchResults(listOf(), tokens.subList(1, tokens.size), null)
+
         } else
-            return MatchResults(null,
-                if (tokens.isNotEmpty())
-                    Error("Expected $name, got \"${tokens[0]}\"")
-                else
-                    Error("Expected $name, got end of file")
+            return MatchResults(
+                listOf(),
+                tokens,
+                ParsingError(name, if (tokens.isNotEmpty()) tokens[0].token else "end of file")
             )
     }
 

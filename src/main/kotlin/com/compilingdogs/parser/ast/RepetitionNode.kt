@@ -12,51 +12,53 @@ class RepetitionNode(
 
     operator fun ASTNode.unaryPlus() = children.add(this)
 
-    override fun match(tokens: List<Token>, parentNode: FASTNode, depth: Int, enablePrints: Boolean): MatchResults {
+    override fun match(tokens: List<Token>, depth: Int, enablePrints: Boolean): MatchResults {
         if (enablePrints && logNodeTraversal) {
-            println("${indent(depth)}Matching RepetitionNode $name; parent is $parentNode")
+            println("${indent(depth)}Matching RepetitionNode $name")
             println("${indent(depth + 1)}${lightGray}Tokens: ${tokens.joinToString(" ")}${noColor}")
         }
 
         // If this node contains its own mapped FASTNode, use it.
-        // If not, propagate parent FASTNode instead.
-        val fastNode = attachedTo?.newInstance() ?: parentNode
+        val fastNode = attachedTo?.newInstance()
 
         // Offset in the token list
-        var offset = 0
+        val results = mutableListOf<FASTNode>()
+        var lastSuccessfulRemainingTokens = tokens
 
         while (true) {
-            var tmpOffset = 0
+            for (child in children) {
+                // Try to match the AST node
+                val res = child.match(
+                    lastSuccessfulRemainingTokens,
+                    depth + 1,
+                    enablePrints
+                )
 
-            for (node in listOf(fastNode.clone(), fastNode)) {
-                var localOffset = 0
+                // If child did not match, abort
+                if (res.error != null) {
+                    if (fastNode != null)
+                        res.result.forEach { node -> fastNode.consume(node) }
 
-                for (child in children) {
-                    // Try to match the AST node
-                    val res = child.match(
-                        transformTokens(tokens.subList(offset + localOffset, tokens.size)),
-                        node,
-                        depth + 1,
-                        enablePrints && System.identityHashCode(node) != System.identityHashCode(fastNode)
+                    if (enablePrints)
+                        println("${indent(depth + 1)}${magentaColor}Stopping $name")
+
+                    return MatchResults(
+                        if (fastNode != null)
+                            listOf(fastNode)
+                        else
+                            results,
+                        lastSuccessfulRemainingTokens,
+                        null
                     )
-
-                    // If child did not match, abort
-                    if (res.error != null) {
-                        if (attachedTo != null)
-                            parentNode.consume(fastNode)
-
-                        if (enablePrints)
-                            println("${indent(depth + 1)}${magentaColor}Stopping $name with parent = $parentNode$noColor")
-                        return MatchResults(offset, null)
-                    }
-
-                    localOffset += res.parsedTokens!!
                 }
 
-                tmpOffset = localOffset
-            }
+                if (fastNode != null)
+                    res.result.forEach { node -> fastNode.consume(node) }
+                else
+                    results.addAll(res.result)
 
-            offset += tmpOffset
+                lastSuccessfulRemainingTokens = res.remainingTokens
+            }
         }
     }
 
