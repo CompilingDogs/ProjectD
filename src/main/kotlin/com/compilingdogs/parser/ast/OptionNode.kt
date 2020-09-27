@@ -54,5 +54,9 @@ class OptionalNode(
     }
 }
 
+/**
+ * Creates a node that may be present, but is not necessary.
+ * If such node fails to match, nothing happens, it is just being skipped.
+ */
 fun maybe(name: String = "", init: () -> ASTNode): OptionalNode = OptionalNode(init()).apply { this.name = name }
 

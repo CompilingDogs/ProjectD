@@ -71,4 +71,8 @@ class RepetitionNode(
     }
 }
 
+/**
+ * Creates a node that may be repeated arbitrary amount of times (0 or more).
+ * If no matches occur - this node has no effect. It may not fail.
+ */
 fun repeat(name: String = "", init: RepetitionNode.() -> Unit): RepetitionNode = initialize(init, name)

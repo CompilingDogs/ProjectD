@@ -75,4 +75,8 @@ open class ConcatenationNode(
 }
 
 
+/**
+ * Creates a node that should match all the children specified in it sequentially.
+ * If at least one child node fails - entire concat node fails.
+ * */
 fun concat(name: String = "", init: ConcatenationNode.() -> Unit): ConcatenationNode = initialize(init, name)

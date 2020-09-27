@@ -70,5 +70,9 @@ class AlternationNode(
     }
 }
 
-// DSL function to create an empty node. Have no idea why anyone would need this.
+/**
+ * Creates a node that should match at least one of the children.
+ * The first occurrence is taken, other ones are ignored.
+ * If no child matches, this node fails to match as well.
+ */
 fun any(name: String = "", init: AlternationNode.() -> Unit): AlternationNode = initialize(init, name)
