@@ -33,7 +33,7 @@ class OptionalNode(
 
         // Debugging stuff.
         if (enablePrints)
-            println("${indent(depth + 1)}${blueColor}Stopping $name")
+            println("${indent(depth + 1)}${blueColor}Stopping $name${noColor}")
 
         return MatchResults(
             if (fastNode != null)

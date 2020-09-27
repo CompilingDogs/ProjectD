@@ -40,7 +40,7 @@ class RepetitionNode(
                         res.result.forEach { node -> fastNode.consume(node) }
 
                     if (enablePrints)
-                        println("${indent(depth + 1)}${magentaColor}Stopping $name")
+                        println("${indent(depth + 1)}${magentaColor}Stopping $name${noColor}")
 
                     return MatchResults(
                         if (fastNode != null)

@@ -53,7 +53,7 @@ open class ConcatenationNode(
         }
 
         if (enablePrints)
-            println("${indent(depth + 1)}${yellowColor}Stopping $name")
+            println("${indent(depth + 1)}${yellowColor}Stopping $name${noColor}")
 
         return MatchResults(
             if (fastNode != null)

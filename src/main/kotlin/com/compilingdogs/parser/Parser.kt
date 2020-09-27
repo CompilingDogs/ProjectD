@@ -195,12 +195,12 @@ val unary = any("unary") {
 }
 
 
-var termMult = concat("unaryTerm") {
+var termMult = concat("termMult") {
     mapTo<FASTMultiplyOperator>()
 
     +unary
-    +repeat("termRepeat") {
-        +concat("termConcat") {
+    +repeat("termMultRepeat") {
+        +concat("termMultConcat") {
             +mult
 //            +term // this is added separately to break circular dependency cycle
         }
@@ -211,8 +211,8 @@ val termDiv = concat("termDiv") {
     mapTo<FASTDivideOperator>()
 
     +unary
-    +repeat("termRepeat") {
-        +concat("termConcat") {
+    +repeat("termDivRepeat") {
+        +concat("termDivConcat") {
             +div
 //            +term // this is added separately to break circular dependency cycle
         }
@@ -609,8 +609,8 @@ fun initialize() {
     (primary["functionCall"]!!["maybe"]!!["concat"]!!["repeat"] as RepetitionNode).children.add(expression)
     (primary["groupedExpression"] as ConcatenationNode).children.add(1, expression)
 
-    (termMult["termRepeat"]!!["termConcat"] as ConcatenationNode).children.add(term)
-    (termDiv["termRepeat"]!!["termConcat"] as ConcatenationNode).children.add(term)
+    (termMult["termMultRepeat"]!!["termMultConcat"] as ConcatenationNode).children.add(term)
+    (termDiv["termDivRepeat"]!!["termDivConcat"] as ConcatenationNode).children.add(term)
 
     (factorPlus["factorRepeat"]!!["factorConcat"] as ConcatenationNode).children.add(term)
     (factorMinus["factorRepeat"]!!["factorConcat"] as ConcatenationNode).children.add(term)
@@ -654,6 +654,9 @@ fun parse(tokens: List<Token>): FASTNode {
     val results = program.match(tokens, 0, true)
     if (results.error != null)
         error(results.error)
+
+    println(results.error)
+
     println("Node: ${results.result}")
     return results.result.first()
 }

@@ -48,7 +48,7 @@ class AlternationNode(
         result.result.forEach { node -> fastNode?.consume(node) }
 
         if (enablePrints) {
-            println("${indent(depth + 1)}${greenColor}Stopping $name")
+            println("${indent(depth + 1)}${greenColor}Stopping $name${noColor}")
         }
 
         return MatchResults(
