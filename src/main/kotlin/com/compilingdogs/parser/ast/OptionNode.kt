@@ -12,9 +12,9 @@ class OptionalNode(
     var node: ASTNode
 ) : ASTNode() {
 
-    override fun match(tokens: List<Token>, depth: Int, enablePrints: Boolean): MatchResults {
+    override fun match(tokens: List<Token>, depth: Int): MatchResults {
         // Debugging stuff.
-        if (enablePrints && logNodeTraversal) {
+        if (logNodeTraversal) {
             println("${indent(depth)}Matching OptionalNode $name")
             println("${indent(depth + 1)}${lightGray}Tokens: ${tokens.joinToString(" ")}${noColor}")
         }
@@ -22,7 +22,7 @@ class OptionalNode(
         // If this node contains its own mapped FASTNode, use it.
         val fastNode = attachedTo?.newInstance()
 
-        val res = node.match(tokens, depth + 1, enablePrints)
+        val res = node.match(tokens, depth + 1)
 
         // Check if parsing failed. Do nothing in this case.
         if (res.error != null)
@@ -32,7 +32,7 @@ class OptionalNode(
             res.result.forEach { node -> fastNode.consume(node) }
 
         // Debugging stuff.
-        if (enablePrints)
+        if (logNodeTraversal)
             println("${indent(depth + 1)}${blueColor}Stopping $name${noColor}")
 
         return MatchResults(

@@ -15,8 +15,8 @@ class TokenNode<T>(
     val shouldBeReturned: Boolean = false,
 ) : ASTNode() where T : Token {
 
-    override fun match(tokens: List<Token>, depth: Int, enablePrints: Boolean): MatchResults {
-        if (enablePrints && logNodeTraversal) {
+    override fun match(tokens: List<Token>, depth: Int): MatchResults {
+        if (logNodeTraversal) {
             println("${indent(depth)}Matching TokenNode of type ${nodeType.simpleName}")
             println("${indent(depth + 1)}${lightGray}Tokens: ${tokens.joinToString(" ")}$noColor")
         }

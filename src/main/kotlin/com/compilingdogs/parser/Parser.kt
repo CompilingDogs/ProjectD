@@ -651,7 +651,7 @@ fun parse(tokens: List<Token>): FASTNode {
         initialized = true
     }
 
-    val results = program.match(tokens, 0, true)
+    val results = program.match(tokens, 0)
     if (results.error != null)
         error(results.error)
 

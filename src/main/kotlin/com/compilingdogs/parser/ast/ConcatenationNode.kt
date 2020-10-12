@@ -11,8 +11,8 @@ open class ConcatenationNode(
     operator fun ASTNode.unaryPlus() = children.add(this)
 
 
-    override fun match(tokens_: List<Token>, depth: Int, enablePrints: Boolean): MatchResults {
-        if (enablePrints && logNodeTraversal) {
+    override fun match(tokens_: List<Token>, depth: Int): MatchResults {
+        if (logNodeTraversal) {
             println("${indent(depth)}Matching ConcatenationNode $name")
             println("${indent(depth + 1)}${lightGray}Tokens: ${tokens_.joinToString(" ")}${noColor}")
         }
@@ -35,8 +35,7 @@ open class ConcatenationNode(
             result = child.match(
 //                    transformTokens(tokens.subList(offset, tokens.size)),
                 tokens,
-                depth + 1,
-                enablePrints
+                depth + 1
             )
 
             // If child did not match, abort and propagate the error up
@@ -52,7 +51,7 @@ open class ConcatenationNode(
             tokens = tokens.subList(parsedTokensSize, tokens.size)
         }
 
-        if (enablePrints)
+        if (logNodeTraversal)
             println("${indent(depth + 1)}${yellowColor}Stopping $name${noColor}")
 
         return MatchResults(

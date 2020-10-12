@@ -10,7 +10,7 @@ import tokens.Token
 */
 
 
-val logNodeTraversal = true
+val logNodeTraversal = false
 val logFASTNodes = false
 val logFASTTokens = false
 
@@ -45,7 +45,7 @@ abstract class ASTNode(
 
 //    var transformTokens: (List<Token>) -> List<Token> = { s -> s }
 ) {
-    abstract fun match(tokens: List<Token>, depth: Int, enablePrints: Boolean): MatchResults
+    abstract fun match(tokens: List<Token>, depth: Int): MatchResults
 
     abstract fun clone(): ASTNode
 
