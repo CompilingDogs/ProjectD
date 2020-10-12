@@ -427,6 +427,26 @@ val statement = any("statement") {
 }
 
 
+val body = any("body") {
+    mapTo<FASTBody>()
+
+    +concat("statement+separator") {
+        +repeat("repeatSeparator") {
+            +newLine
+        }
+
+        +statement
+
+        +any("anySeparator") {
+            +newLine
+            +semicolon
+        }
+        +repeat("repeatSeparator2") {
+            +newLine
+        }
+    }
+}
+
 val program = repeat("program") {
     mapTo<FASTProgram>()
 
@@ -447,12 +467,6 @@ val program = repeat("program") {
     }
 }
 
-
-val body = any("body") {
-    mapTo<FASTBody>()
-
-    +program
-}
 
 val ifControlStructure = concat("ifControlStructure") {
     mapTo<FASTIfStructure>()
