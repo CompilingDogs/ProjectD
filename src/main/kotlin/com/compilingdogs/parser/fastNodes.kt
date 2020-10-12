@@ -595,7 +595,7 @@ class FASTReadStringCall : FASTExpression() {
 
 data class FASTFunctionCall(
     var args: MutableList<FASTExpression> = mutableListOf()
-) : FASTNode() {
+) : FASTExpression() {
     override fun clone() = FASTFunctionCall(args.toMutableList())
 
     override fun consume(node: FASTNode) {

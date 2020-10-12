@@ -1,21 +1,15 @@
 // Defining different variables
 
-var int1: = 1
-var float1: = 1.0
-var string1: = "some string"
+var int1 := 1
+var float1 := 1.0
+var string1 := "some string"
 
 // some loops
-for i in 1..10
-loop
-// and branching
-if i > 5 then
-print
-i
-else
-print
-10 - i
+for i in 1..10 loop
+    // and branching
+    if i > 5 then
+        print i
+    else
+        print 10 - i
+    end
 end
-end
-
-
-

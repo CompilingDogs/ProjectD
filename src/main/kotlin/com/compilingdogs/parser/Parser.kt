@@ -158,6 +158,7 @@ val primary = any("primary") {
                 }
             }
         }
+        +closeParenthesis
     }
     +concat("groupedExpression") {
         // TODO: think if we need to make a fast node for that
@@ -254,7 +255,7 @@ val factor = any("factor") {
     +factorMinus
 }
 
-val lessRelation = concat {
+val lessRelation = concat("lessRelation") {
     mapTo<FASTLessOperator>()
 
     +factor
@@ -266,7 +267,7 @@ val lessRelation = concat {
     }
 }
 
-val lessOrEqualRelation = concat {
+val lessOrEqualRelation = concat("lessOrEqualRelation") {
     mapTo<FASTLessEqualOperator>()
 
     +factor
@@ -278,7 +279,7 @@ val lessOrEqualRelation = concat {
     }
 }
 
-val equalRelation = concat {
+val equalRelation = concat("equalRelation") {
     mapTo<FASTEqualOperator>()
 
     +factor
@@ -290,7 +291,7 @@ val equalRelation = concat {
     }
 }
 
-val greaterRelation = concat {
+val greaterRelation = concat("greaterRelation") {
     mapTo<FASTGreaterOperator>()
 
     +factor
@@ -302,7 +303,7 @@ val greaterRelation = concat {
     }
 }
 
-val greaterOrEqualRelation = concat {
+val greaterOrEqualRelation = concat("greaterOrEqualRelation") {
     mapTo<FASTGreaterEqualOperator>()
 
     +factor
@@ -427,7 +428,7 @@ val statement = any("statement") {
 }
 
 
-val body = any("body") {
+val body = repeat("body") {
     mapTo<FASTBody>()
 
     +concat("statement+separator") {
