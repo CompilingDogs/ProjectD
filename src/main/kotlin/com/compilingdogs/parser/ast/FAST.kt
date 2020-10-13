@@ -1,5 +1,8 @@
 package com.compilingdogs.parser.ast
 
+import com.compilingdogs.interpretation.value.Runtime
+import com.compilingdogs.interpretation.value.Value
+
 /**
  * FAST stands for Final Abstract Syntax Tree :)
  */
@@ -7,4 +10,5 @@ package com.compilingdogs.parser.ast
 abstract class FASTNode {
     abstract fun clone(): FASTNode
     abstract fun consume(node: FASTNode)
+    abstract fun evaluate(runtime: Runtime): Value?
 }

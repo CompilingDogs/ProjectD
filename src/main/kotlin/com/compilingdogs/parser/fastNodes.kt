@@ -1,10 +1,19 @@
 package com.compilingdogs.parser
 
+import com.compilingdogs.interpretation.exception.InterpretationException
+import com.compilingdogs.interpretation.value.NumericValue
+import com.compilingdogs.interpretation.value.Runtime
+import com.compilingdogs.interpretation.value.Value
+import com.compilingdogs.interpretation.value.impl.BoolValue
+import com.compilingdogs.interpretation.value.impl.DecValue
+import com.compilingdogs.interpretation.value.impl.IntValue
+import com.compilingdogs.interpretation.value.impl.StrValue
 import com.compilingdogs.parser.ast.FASTNode
 import tokens.Identifier
+import tokens.Literal
 import tokens.Token
-import java.lang.IllegalArgumentException
-import java.lang.IllegalStateException
+import java.math.BigDecimal
+import java.math.BigInteger
 
 class FASTToken<T : Token>(
     val token: T
@@ -15,6 +24,15 @@ class FASTToken<T : Token>(
 
     override fun consume(node: FASTNode) {
         throw NotImplementedError("Consume not applicable to " + this::class.simpleName)
+    }
+
+    override fun evaluate(runtime: Runtime): Value? {
+        var value = runtime.getValue(this.token.token)
+        return if (value != null) {
+            value
+        } else throw InterpretationException(
+            "Unresolved reference ${this.token.token} at line ${this.token.line} column ${this.token.column}"
+        )
     }
 
     override fun toString(): String {
@@ -34,6 +52,19 @@ data class FASTProgram(
             statements.add(node)
         } else {
             throw IllegalArgumentException("Argument of type " + node::class.simpleName + " not supported")
+        }
+    }
+
+    override fun evaluate(runtime: Runtime): Value? {
+        // TODO: Change catch to return Exit Status https://en.wikipedia.org/wiki/Exit_status
+        return try {
+            this.statements.forEach {
+                it.evaluate(runtime)
+            }
+            IntValue(BigInteger.valueOf(0))
+        } catch (e: Exception) {
+            e.printStackTrace()
+            StrValue(e.localizedMessage)
         }
     }
 
@@ -59,6 +90,13 @@ data class FASTDeclarationStatement(
         }
     }
 
+    override fun evaluate(runtime: Runtime): Value? {
+        this.definitions.forEach {
+            it.evaluate(runtime)
+        }
+        return null
+    }
+
     override fun toString(): String {
         return "FASTDeclarationStatement($definitions)"
     }
@@ -79,6 +117,10 @@ data class FASTAssignmentStatement(
             else -> throw IllegalArgumentException("Argument of type " + node::class.simpleName + " not supported")
         }
     }
+
+    override fun evaluate(runtime: Runtime): Value? {
+        TODO("Not yet implemented")
+    }
 }
 
 abstract class FASTControlStatement : FASTStatement()
@@ -97,6 +139,10 @@ data class FASTPrintStatement(
             throw IllegalArgumentException("Argument of type " + node::class.simpleName + " not supported")
         }
     }
+
+    override fun evaluate(runtime: Runtime): Value? {
+        TODO("Not yet implemented")
+    }
 }
 
 data class FASTReturnStatement(
@@ -112,6 +158,10 @@ data class FASTReturnStatement(
         } else {
             throw IllegalArgumentException("Argument of type " + node::class.simpleName + " not supported")
         }
+    }
+
+    override fun evaluate(runtime: Runtime): Value? {
+        TODO("Not yet implemented")
     }
 }
 
@@ -130,6 +180,12 @@ data class FASTVarDefinition(
             this.value = node
         else
             throw IllegalArgumentException("Argument of type " + node::class.simpleName + " not supported")
+    }
+
+    override fun evaluate(runtime: Runtime): Value? {
+        val value = this.value!!.evaluate(runtime)
+        runtime.register(this.name!!.token, value!!)
+        return null
     }
 
     override fun toString(): String {
@@ -158,6 +214,10 @@ data class FASTMemberReference(
             throw IllegalArgumentException("Argument of type " + node::class.simpleName + " not supported")
         }
     }
+
+    override fun evaluate(runtime: Runtime): Value? {
+        TODO("Not yet implemented")
+    }
 }
 
 // TODO: Done By Alecsey
@@ -177,6 +237,10 @@ data class FASTReference(
         else
             throw IllegalArgumentException("Argument of type " + node::class.simpleName + " not supported")
     }
+
+    override fun evaluate(runtime: Runtime): Value? {
+        TODO("Not yet implemented")
+    }
 }
 
 abstract class FASTExpression : FASTNode()
@@ -187,6 +251,14 @@ class FASTOrOperator : FASTBinaryOperator() {
         return FASTOrOperator().also {
             it.left = left
             it.right = right
+        }
+    }
+
+    override fun evaluate(runtime: Runtime): Value? { // todo
+        if (this.right == null) {
+            return this.left!!.evaluate(runtime)
+        } else {
+            return null
         }
     }
 
@@ -204,6 +276,10 @@ class FASTAndOperator : FASTBinaryOperator() {
         }
     }
 
+    override fun evaluate(runtime: Runtime): Value? {
+        TODO("Not yet implemented")
+    }
+
     override fun toString(): String {
         return "FASTAndOperator(left=$left, right=$right)"
     }
@@ -216,6 +292,10 @@ class FASTXorOperator : FASTBinaryOperator() {
             it.left = left
             it.right = right
         }
+    }
+
+    override fun evaluate(runtime: Runtime): Value? {
+        TODO("Not yet implemented")
     }
 
     override fun toString(): String {
@@ -233,6 +313,14 @@ class FASTLessOperator : FASTBinaryOperator() {
         }
     }
 
+    override fun evaluate(runtime: Runtime): Value? { // todo
+        if (this.right == null) {
+            return this.left!!.evaluate(runtime)
+        } else {
+            return null
+        }
+    }
+
     override fun toString(): String {
         return "FASTLessOperator(left=$left, right=$right)"
     }
@@ -245,6 +333,10 @@ class FASTLessEqualOperator : FASTBinaryOperator() {
             it.left = left
             it.right = right
         }
+    }
+
+    override fun evaluate(runtime: Runtime): Value? {
+        TODO("Not yet implemented")
     }
 
     override fun toString(): String {
@@ -261,6 +353,10 @@ class FASTGreaterOperator : FASTBinaryOperator() {
         }
     }
 
+    override fun evaluate(runtime: Runtime): Value? {
+        TODO("Not yet implemented")
+    }
+
     override fun toString(): String {
         return "FASTGreaterOperator(left=$left, right=$right)"
     }
@@ -273,6 +369,10 @@ class FASTGreaterEqualOperator : FASTBinaryOperator() {
             it.left = left
             it.right = right
         }
+    }
+
+    override fun evaluate(runtime: Runtime): Value? {
+        TODO("Not yet implemented")
     }
 
     override fun toString(): String {
@@ -289,6 +389,10 @@ class FASTEqualOperator : FASTBinaryOperator() {
         }
     }
 
+    override fun evaluate(runtime: Runtime): Value? {
+        TODO("Not yet implemented")
+    }
+
     override fun toString(): String {
         return "FASTEqualOperator(left=$left, right=$right)"
     }
@@ -301,6 +405,10 @@ class FASTNotEqualOperator : FASTBinaryOperator() {
             it.left = left
             it.right = right
         }
+    }
+
+    override fun evaluate(runtime: Runtime): Value? {
+        TODO("Not yet implemented")
     }
 
     override fun toString(): String {
@@ -318,6 +426,35 @@ class FASTAddOperator : FASTBinaryOperator() {
         }
     }
 
+    // TODO: complete
+    override fun evaluate(runtime: Runtime): Value? {
+        if (this.right == null) {
+            return this.left!!.evaluate(runtime)
+        }
+
+        val left = this.left!!.evaluate(runtime)
+        val right = this.right!!.evaluate(runtime)
+
+        if (left is IntValue && right is IntValue) {
+            return IntValue(
+                left.value.add(right.value)
+            )
+        } else if (left is StrValue && right is StrValue) {
+            return StrValue(
+                left.value + right.value
+            )
+        } else if (left is NumericValue && right is NumericValue) {
+            val lval =
+                if (left is IntValue) DecValue(BigDecimal.valueOf(left.value.longValueExact())) else left as DecValue
+            val rval =
+                if (right is IntValue) DecValue(BigDecimal.valueOf(right.value.longValueExact())) else right as DecValue
+
+            return DecValue(lval.value.add(rval.value))
+        } else {
+            throw InterpretationException("Error in Addition: Unsupported operand types")
+        }
+    }
+
     override fun toString(): String {
         return "FASTAddOperator(left=$left, right=$right)"
     }
@@ -329,6 +466,32 @@ class FASTSubtractOperator : FASTBinaryOperator() {
         return FASTSubtractOperator().also {
             it.left = left
             it.right = right
+        }
+    }
+
+
+    // TODO: complete
+    override fun evaluate(runtime: Runtime): Value? {
+        if (this.right == null) {
+            return this.left!!.evaluate(runtime)
+        }
+
+        val left = this.left!!.evaluate(runtime)
+        val right = this.right!!.evaluate(runtime)
+
+        return if (left is IntValue && right is IntValue) {
+            IntValue(
+                left.value.subtract(right.value)
+            )
+        } else if (left is NumericValue && right is NumericValue) {
+            val lval =
+                if (left is IntValue) DecValue(BigDecimal.valueOf(left.value.longValueExact())) else left as DecValue
+            val rval =
+                if (right is IntValue) DecValue(BigDecimal.valueOf(right.value.longValueExact())) else right as DecValue
+
+            DecValue(lval.value.subtract(rval.value))
+        } else {
+            throw InterpretationException("Error in Subtraction: Unsupported operand types")
         }
     }
 
@@ -347,6 +510,31 @@ class FASTMultiplyOperator : FASTBinaryOperator() {
         }
     }
 
+    // TODO: complete
+    override fun evaluate(runtime: Runtime): Value? {
+        if (this.right == null) {
+            return this.left!!.evaluate(runtime)
+        }
+
+        val left = this.left!!.evaluate(runtime)
+        val right = this.right!!.evaluate(runtime)
+
+        return if (left is IntValue && right is IntValue) {
+            IntValue(
+                left.value.multiply(right.value)
+            )
+        } else if (left is NumericValue && right is NumericValue) {
+            val lval =
+                if (left is IntValue) DecValue(BigDecimal.valueOf(left.value.longValueExact())) else left as DecValue
+            val rval =
+                if (right is IntValue) DecValue(BigDecimal.valueOf(right.value.longValueExact())) else right as DecValue
+
+            DecValue(lval.value.multiply(rval.value))
+        } else {
+            throw InterpretationException("Error in Multiplication: Unsupported operand types")
+        }
+    }
+
     override fun toString(): String {
         return "FASTMultiplyOperator(left=$left, right=$right)"
     }
@@ -358,6 +546,31 @@ class FASTDivideOperator : FASTBinaryOperator() {
         return FASTDivideOperator().also {
             it.left = left
             it.right = right
+        }
+    }
+
+    // TODO: complete
+    override fun evaluate(runtime: Runtime): Value? {
+        if (this.right == null) {
+            return this.left!!.evaluate(runtime)
+        }
+
+        val left = this.left!!.evaluate(runtime)
+        val right = this.right!!.evaluate(runtime)
+
+        return if (left is IntValue && right is IntValue) {
+            IntValue(
+                left.value.divide(right.value)
+            )
+        } else if (left is NumericValue && right is NumericValue) {
+            val lval =
+                if (left is IntValue) DecValue(BigDecimal.valueOf(left.value.longValueExact())) else left as DecValue
+            val rval =
+                if (right is IntValue) DecValue(BigDecimal.valueOf(right.value.longValueExact())) else right as DecValue
+
+            DecValue(lval.value.divide(rval.value))
+        } else {
+            throw InterpretationException("Error in Division: Unsupported operand types")
         }
     }
 
@@ -373,6 +586,10 @@ class FASTIsOperator : FASTBinaryOperator() {
             it.left = left
             it.right = right
         }
+    }
+
+    override fun evaluate(runtime: Runtime): Value? {
+        TODO("Not yet implemented")
     }
 }
 
@@ -436,6 +653,7 @@ abstract class FASTBinaryOperator(
             throw IllegalArgumentException("Argument of type " + node::class.simpleName + " not supported")
         }
     }
+
 }
 
 abstract class FASTUnaryOperator(
@@ -447,6 +665,10 @@ abstract class FASTUnaryOperator(
         } else {
             throw IllegalArgumentException("Argument of type " + node::class.simpleName + " not supported")
         }
+    }
+
+    override fun evaluate(runtime: Runtime): Value {
+        TODO("Not yet implemented")
     }
 }
 
@@ -461,6 +683,10 @@ class FASTTypeIndicatorInt : FASTTypeIndicator("int") {
         return FASTTypeIndicatorInt()
     }
 
+    override fun evaluate(runtime: Runtime): Value? {
+        TODO("Not yet implemented")
+    }
+
     override fun toString(): String {
         return "FASTTypeIndicatorInt"
     }
@@ -469,6 +695,10 @@ class FASTTypeIndicatorInt : FASTTypeIndicator("int") {
 class FASTTypeIndicatorReal : FASTTypeIndicator("real") {
     override fun clone(): FASTNode {
         return FASTTypeIndicatorReal()
+    }
+
+    override fun evaluate(runtime: Runtime): Value? {
+        TODO("Not yet implemented")
     }
 
     override fun toString(): String {
@@ -481,6 +711,10 @@ class FASTTypeIndicatorBool : FASTTypeIndicator("bool") {
         return FASTTypeIndicatorBool()
     }
 
+    override fun evaluate(runtime: Runtime): Value? {
+        TODO("Not yet implemented")
+    }
+
     override fun toString(): String {
         return "FASTTypeIndicatorBool"
     }
@@ -489,6 +723,10 @@ class FASTTypeIndicatorBool : FASTTypeIndicator("bool") {
 class FASTTypeIndicatorString : FASTTypeIndicator("string") {
     override fun clone(): FASTNode {
         return FASTTypeIndicatorString()
+    }
+
+    override fun evaluate(runtime: Runtime): Value? {
+        TODO("Not yet implemented")
     }
 
     override fun toString(): String {
@@ -501,6 +739,10 @@ class FASTTypeIndicatorEmpty : FASTTypeIndicator("empty") {
         return FASTTypeIndicatorEmpty()
     }
 
+    override fun evaluate(runtime: Runtime): Value? {
+        TODO("Not yet implemented")
+    }
+
     override fun toString(): String {
         return "FASTTypeIndicatorEmpty"
     }
@@ -509,6 +751,10 @@ class FASTTypeIndicatorEmpty : FASTTypeIndicator("empty") {
 class FASTTypeIndicatorArray : FASTTypeIndicator("[]") {
     override fun clone(): FASTNode {
         return FASTTypeIndicatorArray()
+    }
+
+    override fun evaluate(runtime: Runtime): Value? {
+        TODO("Not yet implemented")
     }
 
     override fun toString(): String {
@@ -521,6 +767,10 @@ class FASTTypeIndicatorTuple : FASTTypeIndicator("{}") {
         return FASTTypeIndicatorTuple()
     }
 
+    override fun evaluate(runtime: Runtime): Value? {
+        TODO("Not yet implemented")
+    }
+
     override fun toString(): String {
         return "FASTTypeIndicatorTuple"
     }
@@ -529,6 +779,10 @@ class FASTTypeIndicatorTuple : FASTTypeIndicator("{}") {
 class FASTTypeIndicatorFunc : FASTTypeIndicator("func") {
     override fun clone(): FASTNode {
         return FASTTypeIndicatorFunc()
+    }
+
+    override fun evaluate(runtime: Runtime): Value? {
+        TODO("Not yet implemented")
     }
 
     override fun toString(): String {
@@ -553,6 +807,10 @@ data class FASTFunctionLiteral(
         else
             throw IllegalArgumentException("Argument of type " + node::class.simpleName + " not supported")
     }
+
+    override fun evaluate(runtime: Runtime): Value? {
+        TODO("Not yet implemented")
+    }
 }
 
 
@@ -561,6 +819,10 @@ class FASTReadIntCall : FASTExpression() {
 
     override fun consume(node: FASTNode) {
         throw IllegalStateException("Not implemented for this node")
+    }
+
+    override fun evaluate(runtime: Runtime): Value? {
+        TODO("Not yet implemented")
     }
 
     override fun toString(): String {
@@ -575,6 +837,10 @@ class FASTReadRealCall : FASTExpression() {
         throw IllegalStateException("Not implemented for this node")
     }
 
+    override fun evaluate(runtime: Runtime): Value? {
+        TODO("Not yet implemented")
+    }
+
     override fun toString(): String {
         return "FASTReadRealCall"
     }
@@ -585,6 +851,10 @@ class FASTReadStringCall : FASTExpression() {
 
     override fun consume(node: FASTNode) {
         throw IllegalStateException("Not implemented for this node")
+    }
+
+    override fun evaluate(runtime: Runtime): Value? {
+        TODO("Not yet implemented")
     }
 
     override fun toString(): String {
@@ -604,12 +874,20 @@ data class FASTFunctionCall(
             else -> throw IllegalArgumentException()
         }
     }
+
+    override fun evaluate(runtime: Runtime): Value? {
+        TODO("Not yet implemented")
+    }
 }
 
 class FASTTypeCheckOperator : FASTBinaryOperator() {
     override fun clone() = FASTTypeCheckOperator().also {
         it.left = left
         it.right = right
+    }
+
+    override fun evaluate(runtime: Runtime): Value? {
+        TODO("Not yet implemented")
     }
 
     override fun toString(): String {
@@ -628,6 +906,10 @@ data class FASTBody(
             throw IllegalArgumentException("Argument of type " + node::class.simpleName + " not supported")
         }
     }
+
+    override fun evaluate(runtime: Runtime): Value? {
+        TODO("Not yet implemented")
+    }
 }
 
 data class FASTIntegerLiteral(
@@ -638,6 +920,10 @@ data class FASTIntegerLiteral(
     override fun clone() = FASTIntegerLiteral(value)
     override fun consume(node: FASTNode) {
         throw NotImplementedError("Consume not applicable to " + this::class.simpleName)
+    }
+
+    override fun evaluate(runtime: Runtime): Value? {
+        return IntValue(BigInteger.valueOf(this.value!!.toLong()))
     }
 }
 
@@ -650,16 +936,24 @@ data class FASTRealLiteral(
     override fun consume(node: FASTNode) {
         throw NotImplementedError("Consume not applicable to " + this::class.simpleName)
     }
+
+    override fun evaluate(runtime: Runtime): Value? {
+        return DecValue(BigDecimal.valueOf(this.value!!.toDouble()))
+    }
 }
 
 data class FASTStringLiteral(
     var value: String? = null
 ) : FASTExpression() {
-    constructor(token: Token) : this(token.token)
+    constructor(token: Token) : this((token as Literal.StringLiteral).value)
 
     override fun clone() = FASTStringLiteral(value)
     override fun consume(node: FASTNode) {
         throw NotImplementedError("Consume not applicable to " + this::class.simpleName)
+    }
+
+    override fun evaluate(runtime: Runtime): Value? {
+        return StrValue(this.value!!)
     }
 }
 
@@ -672,12 +966,20 @@ data class FASTBooleanLiteral(
     override fun consume(node: FASTNode) {
         throw NotImplementedError("Consume not applicable to " + this::class.simpleName)
     }
+
+    override fun evaluate(runtime: Runtime): Value? {
+        return BoolValue(this.value!!)
+    }
 }
 
 class FASTEmptyLiteral : FASTExpression() {
     override fun clone() = this
     override fun consume(node: FASTNode) {
         throw NotImplementedError("Consume not applicable to " + this::class.simpleName)
+    }
+
+    override fun evaluate(runtime: Runtime): Value? {
+        TODO("Not yet implemented")
     }
 
     override fun toString(): String {
@@ -700,6 +1002,10 @@ data class FASTArrayLiteral(
             throw IllegalArgumentException("Argument of type " + node::class.simpleName + " not supported")
         }
     }
+
+    override fun evaluate(runtime: Runtime): Value? {
+        TODO("Not yet implemented")
+    }
 }
 
 data class FASTTupleLiteral(
@@ -712,6 +1018,10 @@ data class FASTTupleLiteral(
         } else {
             throw IllegalArgumentException("Argument of type " + node::class.simpleName + " not supported")
         }
+    }
+
+    override fun evaluate(runtime: Runtime): Value? {
+        TODO("Not yet implemented")
     }
 }
 
@@ -727,6 +1037,10 @@ data class FASTTupleElement(
             this.value = node
         else
             throw IllegalArgumentException("Argument of type " + node::class.simpleName + " not supported")
+    }
+
+    override fun evaluate(runtime: Runtime): Value? {
+        TODO("Not yet implemented")
     }
 }
 
@@ -749,6 +1063,10 @@ data class FASTIfStructure(
                 }
             }
         }
+    }
+
+    override fun evaluate(runtime: Runtime): Value? {
+        TODO("Not yet implemented")
     }
 }
 
@@ -785,6 +1103,10 @@ data class FASTForLoop(
             else -> throw IllegalArgumentException("Argument of type " + node::class.simpleName + " not supported")
         }
     }
+
+    override fun evaluate(runtime: Runtime): Value? {
+        TODO("Not yet implemented")
+    }
 }
 
 data class FASTWhileLoop(
@@ -798,6 +1120,10 @@ data class FASTWhileLoop(
             is FASTBody -> this.body = node
             else -> throw IllegalArgumentException("Argument of type " + node::class.simpleName + " not supported")
         }
+    }
+
+    override fun evaluate(runtime: Runtime): Value? {
+        TODO("Not yet implemented")
     }
 }
 

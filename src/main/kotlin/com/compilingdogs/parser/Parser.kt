@@ -1,5 +1,6 @@
 package com.compilingdogs.parser
 
+import com.compilingdogs.interpretation.value.Runtime
 import com.compilingdogs.parser.ast.*
 import stages.LexicalAnalyzer
 import tokens.*
@@ -17,13 +18,16 @@ val varKeyword = TokenNode(Keyword.VarKeyword::class.java)
 val int = TokenNode(Keyword.IntKeyword::class.java, true).apply { mapTo<FASTTypeIndicatorInt>() }
 var real = TokenNode(Keyword.RealKeyword::class.java, true).apply { mapTo<FASTTypeIndicatorReal>() }
 var bool = TokenNode(Keyword.BoolKeyword::class.java, true).apply { mapTo<FASTTypeIndicatorBool>() }
-val string = TokenNode(Keyword.StringKeyword::class.java, true).apply { mapTo<FASTTypeIndicatorString>() }
+val string =
+    TokenNode(Keyword.StringKeyword::class.java, true).apply { mapTo<FASTTypeIndicatorString>() }
 var empty =
     TokenNode(Keyword.EmptyKeyword::class.java, true).apply { mapTo<FASTTypeIndicatorEmpty>() }
 var func = TokenNode(Keyword.FuncKeyword::class.java, true).apply { mapTo<FASTTypeIndicatorFunc>() }
 val readInt = TokenNode(Keyword.ReadIntKeyword::class.java, true).apply { mapTo<FASTReadIntCall>() }
-val readReal = TokenNode(Keyword.ReadRealKeyword::class.java, true).apply { mapTo<FASTReadRealCall>() }
-val readString = TokenNode(Keyword.ReadStringKeyword::class.java, true).apply { mapTo<FASTReadStringCall>() }
+val readReal =
+    TokenNode(Keyword.ReadRealKeyword::class.java, true).apply { mapTo<FASTReadRealCall>() }
+val readString =
+    TokenNode(Keyword.ReadStringKeyword::class.java, true).apply { mapTo<FASTReadStringCall>() }
 val end = TokenNode(Keyword.EndKeyword::class.java)
 val print = TokenNode(Keyword.PrintKeyword::class.java)
 val returnKeyword = TokenNode(Keyword.ReturnKeyword::class.java)
@@ -620,8 +624,13 @@ fun initialize() {
 
     (reference["operatorGet"] as ConcatenationNode).children.add(2, expression)
 
-    (primary["functionCall"]!!["maybe"]!!["concat"] as ConcatenationNode).children.add(0, expression)
-    (primary["functionCall"]!!["maybe"]!!["concat"]!!["repeat"] as RepetitionNode).children.add(expression)
+    (primary["functionCall"]!!["maybe"]!!["concat"] as ConcatenationNode).children.add(
+        0,
+        expression
+    )
+    (primary["functionCall"]!!["maybe"]!!["concat"]!!["repeat"] as RepetitionNode).children.add(
+        expression
+    )
     (primary["groupedExpression"] as ConcatenationNode).children.add(1, expression)
 
     (termMult["termMultRepeat"]!!["termMultConcat"] as ConcatenationNode).children.add(term)
@@ -630,15 +639,29 @@ fun initialize() {
     (factorPlus["factorRepeat"]!!["factorConcat"] as ConcatenationNode).children.add(term)
     (factorMinus["factorRepeat"]!!["factorConcat"] as ConcatenationNode).children.add(term)
 
-    (expressionOr["expressionRepeat"]!!["expressionRepeatConcat"]!! as ConcatenationNode).children.add(expression)
-    (expressionAnd["expressionRepeat"]!!["expressionRepeatConcat"]!! as ConcatenationNode).children.add(expression)
-    (expressionXor["expressionRepeat"]!!["expressionRepeatConcat"]!! as ConcatenationNode).children.add(expression)
+    (expressionOr["expressionRepeat"]!!["expressionRepeatConcat"]!! as ConcatenationNode).children.add(
+        expression
+    )
+    (expressionAnd["expressionRepeat"]!!["expressionRepeatConcat"]!! as ConcatenationNode).children.add(
+        expression
+    )
+    (expressionXor["expressionRepeat"]!!["expressionRepeatConcat"]!! as ConcatenationNode).children.add(
+        expression
+    )
 
     (lessRelation["relationMaybe"]!!["relationConcat"]!! as ConcatenationNode).children.add(relation)
-    (lessOrEqualRelation["relationMaybe"]!!["relationConcat"]!! as ConcatenationNode).children.add(relation)
-    (equalRelation["relationMaybe"]!!["relationConcat"]!! as ConcatenationNode).children.add(relation)
-    (greaterOrEqualRelation["relationMaybe"]!!["relationConcat"]!! as ConcatenationNode).children.add(relation)
-    (greaterRelation["relationMaybe"]!!["relationConcat"]!! as ConcatenationNode).children.add(relation)
+    (lessOrEqualRelation["relationMaybe"]!!["relationConcat"]!! as ConcatenationNode).children.add(
+        relation
+    )
+    (equalRelation["relationMaybe"]!!["relationConcat"]!! as ConcatenationNode).children.add(
+        relation
+    )
+    (greaterOrEqualRelation["relationMaybe"]!!["relationConcat"]!! as ConcatenationNode).children.add(
+        relation
+    )
+    (greaterRelation["relationMaybe"]!!["relationConcat"]!! as ConcatenationNode).children.add(
+        relation
+    )
 
     controlStructure.apply { +ifControlStructure }
     controlStructure.apply { +loopControlStructure }
@@ -653,9 +676,17 @@ fun runTest() {
     val path = "src/test/resources/maxim_test_1.pd"
     val lexer = LexicalAnalyzer.getInstance()
     val tokens = lexer.tokenize(File(path))
+    val runtime = Runtime()
 
+    var tree: FASTNode
     val time = measureTimeMillis {
-        parse(tokens)
+        tree = parse(tokens)
+        tree.evaluate(runtime)
+
+        println(tree)
+        runtime.symbolTable.entries.forEach {
+            println("${it.key} : ${it.value.value}")
+        }
     }
     println("Elapsed time: ${time.toFloat() / 1000} seconds")
 }
