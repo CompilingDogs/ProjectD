@@ -1,7 +1,8 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     java
     kotlin("jvm") version "1.4.0"
-    kotlin("kapt") version "1.4.0"
     application
 }
 
@@ -9,14 +10,16 @@ application {
     mainClassName = "Main"
 }
 
+tasks.withType<KotlinCompile> {
+    kotlinOptions.jvmTarget = "1.8"
+}
+
 group = "com.compilingdogs"
 version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
-    maven(url = "https://dl.bintray.com/arrow-kt/arrow-kt/")
 }
-
 
 dependencies {
     implementation(kotlin("stdlib", "1.4.0"))
