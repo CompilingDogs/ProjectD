@@ -703,9 +703,10 @@ fun runTest() {
         tree = parse(tokens)
         tree.evaluate(runtime)
 
-//        runtime.symbolTable.entries.forEach {
-//            println("${it.key} : ${it.value}")
-//        }
+        println()
+        runtime.symbolTable.entries.forEach {
+            println("${it.key} : ${it.value}")
+        }
     }
     println("Elapsed time: ${time.toFloat() / 1000} seconds")
 }
@@ -721,5 +722,6 @@ fun parse(tokens: List<Token>): FASTNode {
         error(results.error)
 
     println("Node: ${results.result}")
+    println()
     return results.result.first()
 }

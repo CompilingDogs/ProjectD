@@ -4,7 +4,7 @@ import com.compilingdogs.interpretation.value.Value
 
 class ArrValue : Value {
 
-    override val value: MutableList<Value>
+    override var value: MutableList<Value>
 
     constructor(values: List<Value>) {
         value = values.toMutableList()
@@ -16,6 +16,10 @@ class ArrValue : Value {
 
     override fun toString(): String {
         return "[${value.map { it.value }.joinToString(", ")}]"
+    }
+
+    fun update(idx: Int, value: Value) {
+        this.value[idx] = value
     }
 
 

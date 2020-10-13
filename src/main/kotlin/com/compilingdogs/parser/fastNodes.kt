@@ -11,6 +11,7 @@ import tokens.Literal
 import tokens.Token
 import java.math.BigDecimal
 import java.math.BigInteger
+import kotlin.math.abs
 
 class FASTToken<T : Token>(
     val token: T
@@ -111,8 +112,14 @@ data class FASTAssignmentStatement(
     }
 
     override fun evaluate(runtime: Runtime): Value? {
-        println("In ${this}")
-        return runtime.assignment(reference!!, value!!.evaluate(runtime)!!)
+        val value = this.value!!.evaluate(runtime)!!
+
+        if (this.reference is FASTArrayReference)
+            runtime.assignment(reference as FASTArrayReference, value)
+        else
+            runtime.register(reference!!.identifier!!.token, value)
+
+        return value
     }
 }
 
@@ -185,8 +192,8 @@ data class FASTVarDefinition(
     }
 
     override fun evaluate(runtime: Runtime): Value? {
-        val value = this.value!!.evaluate(runtime)
-        runtime.register(this.name!!.token, value!!)
+        val value = this.value?.evaluate(runtime)
+        runtime.register(this.name!!.token, value)
         return null
     }
 
@@ -194,33 +201,6 @@ data class FASTVarDefinition(
         return "FASTVarDefinition($name = $value)"
     }
 }
-
-// TODO: Done By Alecsey
-enum class FASTMemberReferenceType {
-    DOT_REFERENCE, BRACKETS_REFERENCE
-}
-
-//// TODO: Done By Alecsey
-//data class FASTMemberReference(
-//    var member: FASTExpression? = null,
-//    var type: FASTMemberReferenceType? = null
-//) : FASTExpression() {
-//    override fun clone(): FASTNode {
-//        return FASTMemberReference(member, type)
-//    }
-//
-//    override fun consume(node: FASTNode) {
-//        if (node is FASTExpression) {
-//            this.member = node
-//        } else {
-//            throw IllegalArgumentException("Argument of type " + node::class.simpleName + " not supported")
-//        }
-//    }
-//
-//    override fun evaluate(runtime: Runtime): Value? {
-//        TODO("Not yet implemented")
-//    }
-//}
 
 // TODO: Done By Alecsey
 open class FASTReference(
@@ -245,8 +225,9 @@ open class FASTReference(
     }
 
     override fun evaluate(runtime: Runtime): Value? {
-        TODO("Not yet implemented")
+        return runtime.getValue(identifier!!.token)
     }
+
 }
 
 class FASTArrayReference(
@@ -271,7 +252,23 @@ class FASTArrayReference(
     }
 
     override fun evaluate(runtime: Runtime): Value? {
-        TODO("Not yet implemented")
+        var r: Value = StrValue("")
+        try {
+            r = reference!!.evaluate(runtime)!!
+            val v = runtime.getValue(identifier!!.token)
+
+            if (v is ArrValue && r is IntValue)
+                return v.value[r.value.toInt()]
+            else if (v is TupleValue && r is StrValue)
+                return v.value[r.value]
+            else
+                throw Exception("ERROR")
+
+        } catch (e: Exception) {
+            throw InterpretationException(
+                "Error: Could not interpret ${identifier!!.token}[${r.value}] at line ${identifier!!.line} and column ${identifier!!.column}"
+            )
+        }
     }
 
 }
@@ -287,11 +284,19 @@ class FASTOrOperator : FASTBinaryOperator() {
         }
     }
 
-    override fun evaluate(runtime: Runtime): Value? { // todo
+    override fun evaluate(runtime: Runtime): Value? {
         if (this.right == null) {
             return this.left!!.evaluate(runtime)
         } else {
-            return null
+            try {
+                val left = left!!.evaluate(runtime) as BoolValue
+                val right = right!!.evaluate(runtime) as BoolValue
+                return BoolValue(
+                    left.value or right.value
+                )
+            } catch (e: Exception) {
+                throw InterpretationException("Something went wrong during execution of OR Operation")
+            }
         }
     }
 
@@ -310,7 +315,19 @@ class FASTAndOperator : FASTBinaryOperator() {
     }
 
     override fun evaluate(runtime: Runtime): Value? {
-        TODO("Not yet implemented")
+        if (this.right == null) {
+            return this.left!!.evaluate(runtime)
+        } else {
+            try {
+                val left = left!!.evaluate(runtime) as BoolValue
+                val right = right!!.evaluate(runtime) as BoolValue
+                return BoolValue(
+                    left.value and right.value
+                )
+            } catch (e: Exception) {
+                throw InterpretationException("Something went wrong during execution of OR Operation")
+            }
+        }
     }
 
     override fun toString(): String {
@@ -328,7 +345,19 @@ class FASTXorOperator : FASTBinaryOperator() {
     }
 
     override fun evaluate(runtime: Runtime): Value? {
-        TODO("Not yet implemented")
+        if (this.right == null) {
+            return this.left!!.evaluate(runtime)
+        } else {
+            try {
+                val left = left!!.evaluate(runtime) as BoolValue
+                val right = right!!.evaluate(runtime) as BoolValue
+                return BoolValue(
+                    left.value xor right.value
+                )
+            } catch (e: Exception) {
+                throw InterpretationException("Something went wrong during execution of OR Operation")
+            }
+        }
     }
 
     override fun toString(): String {
@@ -346,11 +375,35 @@ class FASTLessOperator : FASTBinaryOperator() {
         }
     }
 
-    override fun evaluate(runtime: Runtime): Value? { // todo
+    override fun evaluate(runtime: Runtime): Value? {
         if (this.right == null) {
             return this.left!!.evaluate(runtime)
         } else {
-            return null
+            try {
+                val left = left!!.evaluate(runtime)
+                val right = right!!.evaluate(runtime)
+
+                if (left is IntValue && right is IntValue) {
+                    return BoolValue(
+                        left.value.toLong() < right.value.toLong()
+                    )
+                } else if (left is NumericValue && right is NumericValue) {
+                    val l =
+                        if (left is IntValue) BigDecimal(left.value.toLong()) else left as BigDecimal
+                    val r =
+                        if (right is IntValue) BigDecimal(right.value.toLong()) else right as BigDecimal
+
+                    return BoolValue(
+                        l.toDouble() < r.toDouble()
+                    )
+                } else {
+                    throw InterpretationException(
+                        "Less Operation is not applicable to $left. $right"
+                    )
+                }
+            } catch (e: Exception) {
+                throw InterpretationException("Something went wrong during execution of Less Operation: " + e.message)
+            }
         }
     }
 
@@ -369,7 +422,35 @@ class FASTLessEqualOperator : FASTBinaryOperator() {
     }
 
     override fun evaluate(runtime: Runtime): Value? {
-        TODO("Not yet implemented")
+        if (this.right == null) {
+            return this.left!!.evaluate(runtime)
+        } else {
+            try {
+                val left = left!!.evaluate(runtime)
+                val right = right!!.evaluate(runtime)
+
+                if (left is IntValue && right is IntValue) {
+                    return BoolValue(
+                        left.value.toLong() <= right.value.toLong()
+                    )
+                } else if (left is NumericValue && right is NumericValue) {
+                    val l =
+                        if (left is IntValue) BigDecimal(left.value.toLong()) else left as BigDecimal
+                    val r =
+                        if (right is IntValue) BigDecimal(right.value.toLong()) else right as BigDecimal
+
+                    return BoolValue(
+                        l.toDouble() <= r.toDouble()
+                    )
+                } else {
+                    throw InterpretationException(
+                        "Less Or Equal Operation is not applicable to $left. $right"
+                    )
+                }
+            } catch (e: Exception) {
+                throw InterpretationException("Something went wrong during execution of LEQ Operation: " + e.message)
+            }
+        }
     }
 
     override fun toString(): String {
@@ -387,7 +468,35 @@ class FASTGreaterOperator : FASTBinaryOperator() {
     }
 
     override fun evaluate(runtime: Runtime): Value? {
-        TODO("Not yet implemented")
+        if (this.right == null) {
+            return this.left!!.evaluate(runtime)
+        } else {
+            try {
+                val left = left!!.evaluate(runtime)
+                val right = right!!.evaluate(runtime)
+
+                if (left is IntValue && right is IntValue) {
+                    return BoolValue(
+                        left.value.toLong() > right.value.toLong()
+                    )
+                } else if (left is NumericValue && right is NumericValue) {
+                    val l =
+                        if (left is IntValue) BigDecimal(left.value.toLong()) else left as BigDecimal
+                    val r =
+                        if (right is IntValue) BigDecimal(right.value.toLong()) else right as BigDecimal
+
+                    return BoolValue(
+                        l.toDouble() > r.toDouble()
+                    )
+                } else {
+                    throw InterpretationException(
+                        "Greater Operation is not applicable to $left. $right"
+                    )
+                }
+            } catch (e: Exception) {
+                throw InterpretationException("Something went wrong during execution of Greater Operation: " + e.message)
+            }
+        }
     }
 
     override fun toString(): String {
@@ -405,7 +514,35 @@ class FASTGreaterEqualOperator : FASTBinaryOperator() {
     }
 
     override fun evaluate(runtime: Runtime): Value? {
-        TODO("Not yet implemented")
+        if (this.right == null) {
+            return this.left!!.evaluate(runtime)
+        } else {
+            try {
+                val left = left!!.evaluate(runtime)
+                val right = right!!.evaluate(runtime)
+
+                if (left is IntValue && right is IntValue) {
+                    return BoolValue(
+                        left.value.toLong() >= right.value.toLong()
+                    )
+                } else if (left is NumericValue && right is NumericValue) {
+                    val l =
+                        if (left is IntValue) BigDecimal(left.value.toLong()) else left as BigDecimal
+                    val r =
+                        if (right is IntValue) BigDecimal(right.value.toLong()) else right as BigDecimal
+
+                    return BoolValue(
+                        l.toDouble() >= r.toDouble()
+                    )
+                } else {
+                    throw InterpretationException(
+                        "Greater or Equal Operation is not applicable to $left. $right"
+                    )
+                }
+            } catch (e: Exception) {
+                throw InterpretationException("Something went wrong during execution of GEQ Operation: " + e.message)
+            }
+        }
     }
 
     override fun toString(): String {
@@ -423,7 +560,35 @@ class FASTEqualOperator : FASTBinaryOperator() {
     }
 
     override fun evaluate(runtime: Runtime): Value? {
-        TODO("Not yet implemented")
+        if (this.right == null) {
+            return this.left!!.evaluate(runtime)
+        } else {
+            try {
+                val left = left!!.evaluate(runtime)
+                val right = right!!.evaluate(runtime)
+
+                if (left is IntValue && right is IntValue) {
+                    return BoolValue(
+                        left.value.toLong() == right.value.toLong()
+                    )
+                } else if (left is NumericValue && right is NumericValue) {
+                    val l =
+                        if (left is IntValue) BigDecimal(left.value.toLong()) else left as BigDecimal
+                    val r =
+                        if (right is IntValue) BigDecimal(right.value.toLong()) else right as BigDecimal
+
+                    return BoolValue(
+                        l.toDouble() == r.toDouble()
+                    )
+                } else {
+                    throw InterpretationException(
+                        "Equal Operation is not applicable to $left. $right"
+                    )
+                }
+            } catch (e: Exception) {
+                throw InterpretationException("Something went wrong during execution of Equal Operation: " + e.message)
+            }
+        }
     }
 
     override fun toString(): String {
@@ -441,7 +606,35 @@ class FASTNotEqualOperator : FASTBinaryOperator() {
     }
 
     override fun evaluate(runtime: Runtime): Value? {
-        TODO("Not yet implemented")
+        if (this.right == null) {
+            return this.left!!.evaluate(runtime)
+        } else {
+            try {
+                val left = left!!.evaluate(runtime)
+                val right = right!!.evaluate(runtime)
+
+                if (left is IntValue && right is IntValue) {
+                    return BoolValue(
+                        left.value.toLong() != right.value.toLong()
+                    )
+                } else if (left is NumericValue && right is NumericValue) {
+                    val l =
+                        if (left is IntValue) BigDecimal(left.value.toLong()) else left as BigDecimal
+                    val r =
+                        if (right is IntValue) BigDecimal(right.value.toLong()) else right as BigDecimal
+
+                    return BoolValue(
+                        l.toDouble() != r.toDouble()
+                    )
+                } else {
+                    throw InterpretationException(
+                        "Not Equal Operation is not applicable to $left. $right"
+                    )
+                }
+            } catch (e: Exception) {
+                throw InterpretationException("Something went wrong during execution of Not Equal Operation: " + e.message)
+            }
+        }
     }
 
     override fun toString(): String {
@@ -484,9 +677,11 @@ class FASTAddOperator : FASTBinaryOperator() {
 
             return DecValue(lval.value.add(rval.value))
         } else if (left is TupleValue && right is TupleValue) {
-            TODO() // todo
+            val r = left.value + right.value
+            return TupleValue(r.toMutableMap())
         } else if (left is ArrValue && right is ArrValue) {
-            TODO() // todo
+            val res = left.value + right.value
+            return ArrValue(res)
         } else {
             throw InterpretationException("Error in Addition: Unsupported operand types")
         }
@@ -616,7 +811,7 @@ class FASTDivideOperator : FASTBinaryOperator() {
     }
 }
 
-// TODO: Done By Alecsey
+// TODO: unused statement
 class FASTIsOperator : FASTBinaryOperator() {
     override fun clone(): FASTNode {
         return FASTIsOperator().also {
@@ -639,7 +834,18 @@ class FASTPositiveOperator : FASTUnaryOperator() {
     }
 
     override fun evaluate(runtime: Runtime): Value? {
-        TODO("Not yet implemented")
+        val v = this.value!!.evaluate(runtime)
+
+        return if (v is NumericValue) {
+            if (v is IntValue) {
+                IntValue(BigInteger.valueOf(abs(v.value.toLong())))
+            } else {
+                DecValue(BigDecimal.valueOf(abs((v as DecValue).value.toDouble())))
+            }
+        } else {
+            throw InterpretationException("Unary Operator + is not applicable to $v")
+        }
+
     }
 
     override fun toString(): String {
@@ -656,7 +862,18 @@ class FASTNegativeOperator : FASTUnaryOperator() {
     }
 
     override fun evaluate(runtime: Runtime): Value? {
-        TODO("Not yet implemented")
+        val v = this.value!!.evaluate(runtime)
+
+        return if (v is NumericValue) {
+            if (v is IntValue) {
+                IntValue(BigInteger.valueOf(-(v.value.toLong())))
+            } else {
+                DecValue(BigDecimal.valueOf(-((v as DecValue).value.toDouble())))
+            }
+        } else {
+            throw InterpretationException("Unary Operator + is not applicable to $v")
+        }
+
     }
 
     override fun toString(): String {
@@ -674,9 +891,15 @@ class FASTNotOperator : FASTUnaryOperator() {
     }
 
     override fun evaluate(runtime: Runtime): Value? {
-        TODO("Not yet implemented")
-    }
+        val v = this.value!!.evaluate(runtime)
 
+        return if (v is BoolValue) {
+            BoolValue(!v.value)
+        } else {
+            throw InterpretationException("Unary Operator + is not applicable to $v")
+        }
+
+    }
     override fun toString(): String {
         return "FASTNotOperator(value=$value)"
     }
@@ -729,7 +952,7 @@ class FASTTypeIndicatorInt : FASTTypeIndicator("int") {
     }
 
     override fun evaluate(runtime: Runtime): Value? {
-        TODO("Not yet implemented")
+        return IntValue(BigInteger.ZERO)
     }
 
     override fun toString(): String {
@@ -743,7 +966,7 @@ class FASTTypeIndicatorReal : FASTTypeIndicator("real") {
     }
 
     override fun evaluate(runtime: Runtime): Value? {
-        TODO("Not yet implemented")
+        return DecValue(BigDecimal.ZERO)
     }
 
     override fun toString(): String {
@@ -757,7 +980,7 @@ class FASTTypeIndicatorBool : FASTTypeIndicator("bool") {
     }
 
     override fun evaluate(runtime: Runtime): Value? {
-        TODO("Not yet implemented")
+        return BoolValue(false)
     }
 
     override fun toString(): String {
@@ -771,7 +994,7 @@ class FASTTypeIndicatorString : FASTTypeIndicator("string") {
     }
 
     override fun evaluate(runtime: Runtime): Value? {
-        TODO("Not yet implemented")
+        return StrValue("")
     }
 
     override fun toString(): String {
@@ -785,7 +1008,7 @@ class FASTTypeIndicatorEmpty : FASTTypeIndicator("empty") {
     }
 
     override fun evaluate(runtime: Runtime): Value? {
-        TODO("Not yet implemented")
+        return null
     }
 
     override fun toString(): String {
@@ -799,7 +1022,7 @@ class FASTTypeIndicatorArray : FASTTypeIndicator("[]") {
     }
 
     override fun evaluate(runtime: Runtime): Value? {
-        TODO("Not yet implemented")
+        return ArrValue(ArrayList())
     }
 
     override fun toString(): String {
@@ -813,7 +1036,7 @@ class FASTTypeIndicatorTuple : FASTTypeIndicator("{}") {
     }
 
     override fun evaluate(runtime: Runtime): Value? {
-        TODO("Not yet implemented")
+        return TupleValue(ArrayList())
     }
 
     override fun toString(): String {
@@ -821,6 +1044,7 @@ class FASTTypeIndicatorTuple : FASTTypeIndicator("{}") {
     }
 }
 
+// todo
 class FASTTypeIndicatorFunc : FASTTypeIndicator("func") {
     override fun clone(): FASTNode {
         return FASTTypeIndicatorFunc()
@@ -933,7 +1157,23 @@ class FASTTypeCheckOperator : FASTBinaryOperator() {
     }
 
     override fun evaluate(runtime: Runtime): Value? {
-        TODO("Not yet implemented")
+        if (right == null)
+            return left!!.evaluate(runtime)
+
+        if (left!!.evaluate(runtime) == null && !(right is FASTTypeIndicatorEmpty)) {
+            return BoolValue(
+                false
+            )
+        }
+
+        if (right is FASTTypeIndicatorEmpty)
+            return BoolValue(
+                left!!.evaluate(runtime) == null
+            )
+
+        return BoolValue(
+            left!!.evaluate(runtime)!!::class == right!!.evaluate(runtime)!!::class
+        )
     }
 
     override fun toString(): String {

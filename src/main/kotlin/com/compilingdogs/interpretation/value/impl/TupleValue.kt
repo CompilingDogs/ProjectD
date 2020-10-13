@@ -14,4 +14,8 @@ class TupleValue(override val value: MutableMap<String, Value> = HashMap()) : Va
         return "{${value.entries.map { TupleElement(it.key, it.value) }.joinToString(", ")}}"
     }
 
+    fun update(key: String, value: Value) {
+        this.value[key] = value
+    }
+
 }
