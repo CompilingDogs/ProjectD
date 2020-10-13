@@ -51,14 +51,17 @@ open class ConcatenationNode(
             tokens = tokens.subList(parsedTokensSize, tokens.size)
         }
 
+        val res =
+            if (fastNode != null)
+            listOf(fastNode)
+        else
+            results
+
         if (logNodeTraversal)
-            println("${indent(depth + 1)}${yellowColor}Stopping $name${noColor}")
+            println("${indent(depth + 1)}${yellowColor}Stopping $name${noColor} with result $res")
 
         return MatchResults(
-            if (fastNode != null)
-                listOf(fastNode)
-            else
-                results,
+            res,
             tokens,
             null
         )

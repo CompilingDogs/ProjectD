@@ -31,15 +31,18 @@ class OptionalNode(
         if (fastNode != null)
             res.result.forEach { node -> fastNode.consume(node) }
 
-        // Debugging stuff.
-        if (logNodeTraversal)
-            println("${indent(depth + 1)}${blueColor}Stopping $name${noColor}")
-
-        return MatchResults(
+        val result =
             if (fastNode != null)
                 listOf(fastNode)
             else
-                res.result,
+                res.result
+
+        // Debugging stuff.
+        if (logNodeTraversal)
+            println("${indent(depth + 1)}${blueColor}Stopping $name${noColor} with result $result")
+
+        return MatchResults(
+            result,
             res.remainingTokens,
             null
         )

@@ -38,14 +38,17 @@ class RepetitionNode(
                     if (fastNode != null)
                         res.result.forEach { node -> fastNode.consume(node) }
 
-                    if (logNodeTraversal)
-                        println("${indent(depth + 1)}${magentaColor}Stopping $name${noColor}")
-
-                    return MatchResults(
+                    val result =
                         if (fastNode != null)
                             listOf(fastNode)
                         else
-                            results,
+                            results
+
+                    if (logNodeTraversal)
+                        println("${indent(depth + 1)}${magentaColor}Stopping $name${noColor} with result $result")
+
+                    return MatchResults(
+                        result,
                         lastSuccessfulRemainingTokens,
                         null
                     )

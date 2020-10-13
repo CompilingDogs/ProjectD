@@ -66,15 +66,18 @@ class AlternationNode(
         if (fastNode != null)
             maxParsedResult.result.forEach { node -> fastNode.consume(node) }
 
-        if (logNodeTraversal) {
-            println("${indent(depth + 1)}${greenColor}Stopping $name${noColor}")
-        }
-
-        return MatchResults(
+        val result =
             if (fastNode == null)
                 maxParsedResult.result
             else
-                listOf(fastNode),
+                listOf(fastNode)
+
+        if (logNodeTraversal) {
+            println("${indent(depth + 1)}${greenColor}Stopping $name${noColor} with result $result")
+        }
+
+        return MatchResults(
+            result,
             maxParsedResult.remainingTokens,
             null
         )

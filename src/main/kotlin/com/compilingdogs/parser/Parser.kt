@@ -180,6 +180,7 @@ val primary = any("primary") {
 //        +expression // this is added separately to break circular dependency cycle
         +closeParenthesis
     }
+    +reference
     +readInt
     +readReal
     +readString
@@ -196,27 +197,25 @@ val unary = any("unary") {
         +typeIndicator
     }
     +reference
-    +any("unaryPrimary") {
+    +primary
+
+    +concat("unaryPrimaryPlus") {
+        mapTo<FASTPositiveOperator>()
+
+        +plus
         +primary
+    }
+    +concat("unaryPrimaryMinus") {
+        mapTo<FASTNegativeOperator>()
 
-        +concat("unaryPrimaryPlus") {
-            mapTo<FASTPositiveOperator>()
+        +minus
+        +primary
+    }
+    +concat("unaryPrimaryNot") {
+        mapTo<FASTNotOperator>()
 
-            +plus
-            +primary
-        }
-        +concat("unaryPrimaryMinus") {
-            mapTo<FASTNegativeOperator>()
-
-            +minus
-            +primary
-        }
-        +concat("unaryPrimaryNot") {
-            mapTo<FASTNotOperator>()
-
-            +not
-            +primary
-        }
+        +not
+        +primary
     }
 }
 
