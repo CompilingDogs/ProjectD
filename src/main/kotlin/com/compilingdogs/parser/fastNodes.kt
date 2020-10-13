@@ -51,16 +51,12 @@ data class FASTProgram(
     }
 
     override fun evaluate(runtime: Runtime): Value? {
-        // TODO: Change catch to return Exit Status https://en.wikipedia.org/wiki/Exit_status
-        return try {
-            this.statements.forEach {
-                it.evaluate(runtime)
-            }
-            IntValue(BigInteger.valueOf(0))
-        } catch (e: Exception) {
-            e.printStackTrace()
-            StrValue(e.localizedMessage)
-        }
+        return statements.map {
+            if (!runtime.stopped)
+                it.evaluate(runtime) ?: IntValue(BigInteger.ZERO)
+            else
+                null
+        }.findLast { true }
     }
 
     override fun toString(): String {
@@ -167,6 +163,7 @@ data class FASTReturnStatement(
     }
 
     override fun evaluate(runtime: Runtime): Value? {
+        runtime.stopped = true
         if (this.value == null) {
             return null
         }
@@ -900,6 +897,7 @@ class FASTNotOperator : FASTUnaryOperator() {
         }
 
     }
+
     override fun toString(): String {
         return "FASTNotOperator(value=$value)"
     }
@@ -1194,7 +1192,12 @@ data class FASTBody(
     }
 
     override fun evaluate(runtime: Runtime): Value? {
-        TODO("Not yet implemented")
+        return statements.map {
+            if (!runtime.stopped)
+                it.evaluate(runtime) ?: IntValue(BigInteger.ZERO)
+            else
+                null
+        }.findLast { true }
     }
 }
 
@@ -1355,7 +1358,15 @@ data class FASTIfStructure(
     }
 
     override fun evaluate(runtime: Runtime): Value? {
-        TODO("Not yet implemented")
+        val condition = (condition!!.evaluate(runtime) as BoolValue).value
+
+        if (condition){
+            return body!!.evaluate(runtime)
+        } else if (elseBody != null){
+            return elseBody!!.evaluate(runtime)
+        } else {
+            return null
+        }
     }
 }
 

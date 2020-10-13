@@ -9,6 +9,7 @@ import kotlin.collections.HashMap
 class Runtime {
     val symbolTable: HashMap<String, Value?> = HashMap()
     val scanner = Scanner(System.`in`).useLocale(Locale.ENGLISH)
+    var stopped: Boolean = false
 
     fun getValue(identifier: String): Value? {
         return symbolTable[identifier]

@@ -1,0 +1,101 @@
+{
+  "statements": [
+    {
+      "definitions": [
+        {
+          "name": {
+            "token": "int1",
+            "line": 3,
+            "column": 5
+          },
+          "value": {
+            "value": 1
+          }
+        }
+      ]
+    },
+    {
+      "definitions": [
+        {
+          "name": {
+            "token": "float1",
+            "line": 4,
+            "column": 5
+          },
+          "value": {
+            "value": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "definitions": [
+        {
+          "name": {
+            "token": "string1",
+            "line": 5,
+            "column": 5
+          },
+          "value": {
+            "value": "\"some string\""
+          }
+        }
+      ]
+    },
+    {
+      "varName": {
+        "token": "i",
+        "line": 8,
+        "column": 5
+      },
+      "rangeBegin": {
+        "value": 1
+      },
+      "rangeEnd": {
+        "value": 10
+      },
+      "body": {
+        "statements": [
+          {
+            "condition": {
+              "value": 5
+            },
+            "body": {
+              "statements": [
+                {
+                  "values": [
+                    {
+                      "token": {
+                        "token": "i",
+                        "line": 11,
+                        "column": 7
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "elseBody": {
+              "statements": [
+                {
+                  "values": [
+                    {
+                      "value": 10
+                    },
+                    {
+                      "token": {
+                        "token": "i",
+                        "line": 13,
+                        "column": 12
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

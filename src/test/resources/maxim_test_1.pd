@@ -1,4 +1,7 @@
 
-var a := -10
-var b := true
-print +a, not b
+str := "asad";
+if (str is string) then
+	print "str is String";
+else
+	print "str is not String";
+end
