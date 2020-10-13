@@ -4,10 +4,7 @@ import com.compilingdogs.interpretation.exception.InterpretationException
 import com.compilingdogs.interpretation.value.NumericValue
 import com.compilingdogs.interpretation.value.Runtime
 import com.compilingdogs.interpretation.value.Value
-import com.compilingdogs.interpretation.value.impl.BoolValue
-import com.compilingdogs.interpretation.value.impl.DecValue
-import com.compilingdogs.interpretation.value.impl.IntValue
-import com.compilingdogs.interpretation.value.impl.StrValue
+import com.compilingdogs.interpretation.value.impl.*
 import com.compilingdogs.parser.ast.FASTNode
 import tokens.Identifier
 import tokens.Literal
@@ -27,10 +24,7 @@ class FASTToken<T : Token>(
     }
 
     override fun evaluate(runtime: Runtime): Value? {
-        var value = runtime.getValue(this.token.token)
-        return if (value != null) {
-            value
-        } else throw InterpretationException(
+        return runtime.getValue(token.token) ?: throw InterpretationException(
             "Unresolved reference ${this.token.token} at line ${this.token.line} column ${this.token.column}"
         )
     }
@@ -91,9 +85,7 @@ data class FASTDeclarationStatement(
     }
 
     override fun evaluate(runtime: Runtime): Value? {
-        this.definitions.forEach {
-            it.evaluate(runtime)
-        }
+        this.definitions.forEach { it.evaluate(runtime) }
         return null
     }
 
@@ -119,7 +111,8 @@ data class FASTAssignmentStatement(
     }
 
     override fun evaluate(runtime: Runtime): Value? {
-        TODO("Not yet implemented")
+        println("In ${this}")
+        return runtime.assignment(reference!!, value!!.evaluate(runtime)!!)
     }
 }
 
@@ -141,7 +134,13 @@ data class FASTPrintStatement(
     }
 
     override fun evaluate(runtime: Runtime): Value? {
-        TODO("Not yet implemented")
+        println(
+            values.map {
+                it.evaluate(runtime)!!
+            }.joinToString(", ")
+        )
+
+        return null
     }
 }
 
@@ -161,7 +160,10 @@ data class FASTReturnStatement(
     }
 
     override fun evaluate(runtime: Runtime): Value? {
-        TODO("Not yet implemented")
+        if (this.value == null) {
+            return null
+        }
+        return this.value!!.evaluate(runtime)
     }
 }
 
@@ -275,6 +277,7 @@ class FASTArrayReference(
     override fun evaluate(runtime: Runtime): Value? {
         TODO("Not yet implemented")
     }
+
 }
 
 abstract class FASTExpression : FASTNode()
@@ -484,6 +487,10 @@ class FASTAddOperator : FASTBinaryOperator() {
                 if (right is IntValue) DecValue(BigDecimal.valueOf(right.value.longValueExact())) else right as DecValue
 
             return DecValue(lval.value.add(rval.value))
+        } else if (left is TupleValue && right is TupleValue) {
+            TODO() // todo
+        } else if (left is ArrValue && right is ArrValue) {
+            TODO() // todo
         } else {
             throw InterpretationException("Error in Addition: Unsupported operand types")
         }
@@ -635,6 +642,10 @@ class FASTPositiveOperator : FASTUnaryOperator() {
         }
     }
 
+    override fun evaluate(runtime: Runtime): Value? {
+        TODO("Not yet implemented")
+    }
+
     override fun toString(): String {
         return "FASTPositiveOperator(value=$value)"
     }
@@ -646,6 +657,10 @@ class FASTNegativeOperator : FASTUnaryOperator() {
         return FASTNegativeOperator().also {
             it.value = value
         }
+    }
+
+    override fun evaluate(runtime: Runtime): Value? {
+        TODO("Not yet implemented")
     }
 
     override fun toString(): String {
@@ -660,6 +675,10 @@ class FASTNotOperator : FASTUnaryOperator() {
         return FASTNotOperator().also {
             it.value = value
         }
+    }
+
+    override fun evaluate(runtime: Runtime): Value? {
+        TODO("Not yet implemented")
     }
 
     override fun toString(): String {
@@ -699,10 +718,6 @@ abstract class FASTUnaryOperator(
         } else {
             throw IllegalArgumentException("Argument of type " + node::class.simpleName + " not supported")
         }
-    }
-
-    override fun evaluate(runtime: Runtime): Value {
-        TODO("Not yet implemented")
     }
 }
 
@@ -856,7 +871,7 @@ class FASTReadIntCall : FASTExpression() {
     }
 
     override fun evaluate(runtime: Runtime): Value? {
-        TODO("Not yet implemented")
+        return runtime.readInt()
     }
 
     override fun toString(): String {
@@ -872,7 +887,7 @@ class FASTReadRealCall : FASTExpression() {
     }
 
     override fun evaluate(runtime: Runtime): Value? {
-        TODO("Not yet implemented")
+        return runtime.readReal()
     }
 
     override fun toString(): String {
@@ -888,7 +903,8 @@ class FASTReadStringCall : FASTExpression() {
     }
 
     override fun evaluate(runtime: Runtime): Value? {
-        TODO("Not yet implemented")
+
+        return runtime.readString()
     }
 
     override fun toString(): String {
@@ -1006,6 +1022,7 @@ data class FASTBooleanLiteral(
     }
 }
 
+// todo: Not Used
 class FASTEmptyLiteral : FASTExpression() {
     override fun clone() = this
     override fun consume(node: FASTNode) {
@@ -1038,7 +1055,7 @@ data class FASTArrayLiteral(
     }
 
     override fun evaluate(runtime: Runtime): Value? {
-        TODO("Not yet implemented")
+        return ArrValue(this.members.map { it.evaluate(runtime)!! }.toList())
     }
 }
 
@@ -1055,7 +1072,9 @@ data class FASTTupleLiteral(
     }
 
     override fun evaluate(runtime: Runtime): Value? {
-        TODO("Not yet implemented")
+        return TupleValue(
+            this.members.map { it.evaluate(runtime) as TupleElement }
+        )
     }
 }
 
@@ -1074,7 +1093,7 @@ data class FASTTupleElement(
     }
 
     override fun evaluate(runtime: Runtime): Value? {
-        TODO("Not yet implemented")
+        return TupleElement(name!!.token, value!!.evaluate(runtime)!!)
     }
 }
 

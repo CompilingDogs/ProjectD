@@ -2,8 +2,8 @@ package com.compilingdogs.interpretation.value.impl
 
 import com.compilingdogs.interpretation.value.Value
 
-class StrValue(override val value: String) : Value {
+class TupleElement(val key: String, override val value: Value) : Value {
     override fun toString(): String {
-        return value.toString()
+        return "$key = ${value.value}"
     }
 }
