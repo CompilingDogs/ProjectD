@@ -196,16 +196,27 @@ val unary = any("unary") {
         +typeIndicator
     }
     +reference
-    +concat("unaryPrimary") {
-        // TODO: implement this
-        +maybe("unaryPrimaryMaybe") {
-            any("unaryPrimaryMaybeSign") {
-                +plus
-                +minus
-                +not
-            }
-        }
+    +any("unaryPrimary") {
         +primary
+
+        +concat("unaryPrimaryPlus") {
+            mapTo<FASTPositiveOperator>()
+
+            +plus
+            +primary
+        }
+        +concat("unaryPrimaryMinus") {
+            mapTo<FASTNegativeOperator>()
+
+            +minus
+            +primary
+        }
+        +concat("unaryPrimaryNot") {
+            mapTo<FASTNotOperator>()
+
+            +not
+            +primary
+        }
     }
 }
 

@@ -232,8 +232,6 @@ open class FASTReference(
     }
 
     override fun consume(node: FASTNode) {
-        println("ref: consuming $node")
-
         if (node is FASTToken<*> && node.token is Identifier)
             this.identifier = (node as FASTToken<Identifier>).token
         else if (node is FASTExpression)
@@ -260,8 +258,6 @@ class FASTArrayReference(
     }
 
     override fun consume(node: FASTNode) {
-        println("arrref: consuming $node")
-
         if (node is FASTToken<*> && node.token is Identifier)
             this.identifier = (node as FASTToken<Identifier>).token
         else if (node is FASTExpression)
@@ -711,7 +707,7 @@ abstract class FASTBinaryOperator(
 
 abstract class FASTUnaryOperator(
     var value: FASTExpression? = null
-) : FASTNode() {
+) : FASTExpression() {
     override fun consume(node: FASTNode) {
         if (node is FASTExpression) {
             this.value = node
