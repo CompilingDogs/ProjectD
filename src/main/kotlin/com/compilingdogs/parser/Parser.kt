@@ -114,16 +114,26 @@ val referencePath = any("referencePath") {
     }
 }
 
+val simpleReference = concat("simpleReference") {
+    mapTo<FASTReference>()
+    +identifier
+
+//    +referencePath
+}
+
+val arrayReference = concat("arrayReference") {
+    mapTo<FASTArrayReference>()
+
+    +referencePath
+    +openBracket
+//        +expression // this is added separately to break circular dependency cycle
+    +closeBracket
+}
+
 // TODO: and this
 val reference = any("reference") {
-//    +identifier
-    +referencePath
-    +concat("operatorGet") {
-        +referencePath
-        +openBracket
-//        +expression // this is added separately to break circular dependency cycle
-        +closeBracket
-    }
+    +simpleReference
+    +arrayReference
 }
 
 val typeIndicator = any("typeIndicator") {
@@ -622,7 +632,7 @@ fun initialize() {
     (referencePath["path"] as ConcatenationNode).children.add(referencePath)
 //    (referencePath["path"] as ConcatenationNode).apply { children.add(reference) }
 
-    (reference["operatorGet"] as ConcatenationNode).children.add(2, expression)
+    arrayReference.children.add(2, expression)
 
     (primary["functionCall"]!!["maybe"]!!["concat"] as ConcatenationNode).children.add(
         0,

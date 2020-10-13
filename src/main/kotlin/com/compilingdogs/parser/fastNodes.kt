@@ -198,21 +198,50 @@ enum class FASTMemberReferenceType {
     DOT_REFERENCE, BRACKETS_REFERENCE
 }
 
+//// TODO: Done By Alecsey
+//data class FASTMemberReference(
+//    var member: FASTExpression? = null,
+//    var type: FASTMemberReferenceType? = null
+//) : FASTExpression() {
+//    override fun clone(): FASTNode {
+//        return FASTMemberReference(member, type)
+//    }
+//
+//    override fun consume(node: FASTNode) {
+//        if (node is FASTExpression) {
+//            this.member = node
+//        } else {
+//            throw IllegalArgumentException("Argument of type " + node::class.simpleName + " not supported")
+//        }
+//    }
+//
+//    override fun evaluate(runtime: Runtime): Value? {
+//        TODO("Not yet implemented")
+//    }
+//}
+
 // TODO: Done By Alecsey
-data class FASTMemberReference(
-    var member: FASTExpression? = null,
-    var type: FASTMemberReferenceType? = null
-) : FASTNode() {
+open class FASTReference(
+    open var identifier: Identifier? = null,
+    open var reference: FASTExpression? = null
+) : FASTExpression() {
     override fun clone(): FASTNode {
-        return FASTMemberReference(member, type)
+        return FASTReference(identifier, reference)
     }
 
     override fun consume(node: FASTNode) {
-        if (node is FASTExpression) {
-            this.member = node
-        } else {
+        println("ref: consuming $node")
+
+        if (node is FASTToken<*> && node.token is Identifier)
+            this.identifier = (node as FASTToken<Identifier>).token
+        else if (node is FASTExpression)
+            this.reference = node
+        else
             throw IllegalArgumentException("Argument of type " + node::class.simpleName + " not supported")
-        }
+    }
+
+    override fun toString(): String {
+        return "FASTReference(identifier=$identifier, reference=$reference)"
     }
 
     override fun evaluate(runtime: Runtime): Value? {
@@ -220,22 +249,27 @@ data class FASTMemberReference(
     }
 }
 
-// TODO: Done By Alecsey
-data class FASTReference(
-    var identifier: Identifier? = null,
-    var references: MutableList<FASTMemberReference> = mutableListOf()
-) : FASTNode() {
+class FASTArrayReference(
+    override var identifier: Identifier? = null,
+    override var reference: FASTExpression? = null
+) : FASTReference(identifier, reference) {
     override fun clone(): FASTNode {
-        return FASTReference(identifier, references)
+        return FASTArrayReference(identifier, reference)
     }
 
     override fun consume(node: FASTNode) {
+        println("arrref: consuming $node")
+
         if (node is FASTToken<*> && node.token is Identifier)
             this.identifier = (node as FASTToken<Identifier>).token
-        else if (node is FASTMemberReference)
-            this.references.add(node)
+        else if (node is FASTExpression)
+            this.reference = node
         else
             throw IllegalArgumentException("Argument of type " + node::class.simpleName + " not supported")
+    }
+
+    override fun toString(): String {
+        return "FASTArrayReference(identifier=$identifier, reference=$reference)"
     }
 
     override fun evaluate(runtime: Runtime): Value? {
