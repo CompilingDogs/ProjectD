@@ -55,4 +55,21 @@ class Runtime {
     fun readInt(): IntValue {
         return IntValue(scanner.nextBigInteger())
     }
+
+    fun clone(): Runtime {
+        val newRuntime = Runtime()
+        symbolTable.entries.forEach{
+            newRuntime.register(it.key, it.value?.clone())
+        }
+        newRuntime.stopped = stopped
+        return newRuntime
+    }
+
+    fun merge(other: Runtime) {
+        this.stopped = other.stopped
+        other.symbolTable.entries.forEach{
+            if (this.symbolTable.containsKey(it.key))
+                this.symbolTable.replace(it.key, it.value)
+        }
+    }
 }

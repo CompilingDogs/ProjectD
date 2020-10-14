@@ -2,25 +2,25 @@ package com.compilingdogs.interpretation.value.impl
 
 import com.compilingdogs.interpretation.value.Value
 
-class ArrValue : Value {
+class ArrValue(override val value: MutableMap<Int, Value> = HashMap()) : Value {
 
-    override var value: MutableList<Value>
-
-    constructor(values: List<Value>) {
-        value = values.toMutableList()
+    constructor(elements: List<ArrElement>) : this() {
+        elements.forEach {
+            this.value[it.key] = it.value
+        }
     }
 
-    constructor(values: Array<Value>) {
-        value = mutableListOf(*values)
+    override fun clone(): Value? {
+        val arrElements = value.entries.map { ArrElement(it.key, it.value.clone()!!) }
+        return ArrValue(arrElements)
     }
 
     override fun toString(): String {
-        return "[${value.map { it.value }.joinToString(", ")}]"
+        return "{${value.entries.map { ArrElement(it.key, it.value) }.joinToString(", ")}}"
     }
 
-    fun update(idx: Int, value: Value) {
-        this.value[idx] = value
+    fun update(key: Int, value: Value) {
+        this.value[key] = value
     }
-
 
 }

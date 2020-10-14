@@ -678,7 +678,7 @@ class FASTAddOperator : FASTBinaryOperator() {
             return TupleValue(r.toMutableMap())
         } else if (left is ArrValue && right is ArrValue) {
             val res = left.value + right.value
-            return ArrValue(res)
+            return ArrValue(res.toMutableMap())
         } else {
             throw InterpretationException("Error in Addition: Unsupported operand types")
         }
@@ -1294,7 +1294,7 @@ data class FASTArrayLiteral(
     }
 
     override fun evaluate(runtime: Runtime): Value? {
-        return ArrValue(this.members.map { it.evaluate(runtime)!! }.toList())
+        return ArrValue(this.members.mapIndexed { index, fastExpression -> ArrElement(index + 1, fastExpression.evaluate(runtime)!!) }.toList())
     }
 }
 
@@ -1358,15 +1358,23 @@ data class FASTIfStructure(
     }
 
     override fun evaluate(runtime: Runtime): Value? {
-        val condition = (condition!!.evaluate(runtime) as BoolValue).value
+        val newRuntime = runtime.clone()
+        val condition = (condition!!.evaluate(newRuntime) as BoolValue).value
 
-        if (condition){
-            return body!!.evaluate(runtime)
-        } else if (elseBody != null){
-            return elseBody!!.evaluate(runtime)
-        } else {
-            return null
+        val res = when {
+            condition -> {
+                body!!.evaluate(runtime)
+            }
+            elseBody != null -> {
+                elseBody!!.evaluate(runtime)
+            }
+            else -> {
+                null
+            }
         }
+
+        runtime.merge(newRuntime)
+        return res
     }
 }
 
@@ -1405,7 +1413,53 @@ data class FASTForLoop(
     }
 
     override fun evaluate(runtime: Runtime): Value? {
-        TODO("Not yet implemented")
+        try {
+            val newRuntime = runtime.clone()
+            val results = ArrayList<Value?>()
+            val varName = this.varName!!.token
+
+            if (iterable != null){
+                val iterable = this.iterable!!.evaluate(newRuntime)
+
+                if (iterable is ArrValue){
+                    iterable.value.forEach { (_, value) ->
+                        run {
+                            if (!newRuntime.stopped) {
+                                newRuntime.register(varName, value)
+                                results.add(body!!.evaluate(newRuntime))
+                            }
+                        }
+                    }
+                } else if (iterable is TupleValue){
+                    iterable.value.forEach { (_, value) ->
+                        run {
+                            if (!newRuntime.stopped) {
+                                newRuntime.register(varName, value)
+                                results.add(body!!.evaluate(newRuntime))
+                            }
+                        }
+                    }
+                } else {
+                    throw Exception("ERROR")
+                }
+
+            } else {
+                var i = (rangeBegin!!.evaluate(runtime) as IntValue).value.toLong()
+                val max = (rangeEnd!!.evaluate(runtime) as IntValue).value.toLong()
+
+                while (i < max && !newRuntime.stopped){
+                    newRuntime.register(varName, IntValue(BigInteger.valueOf(i)))
+                    results.add(body!!.evaluate(newRuntime))
+                    ++i
+                }
+
+            }
+
+            runtime.merge(newRuntime)
+            return results.findLast { true }
+        } catch (e: Exception){
+            throw InterpretationException("Condition for FOR loop is Incomplete at line $this.varName!!.line")
+        }
     }
 }
 
@@ -1423,7 +1477,19 @@ data class FASTWhileLoop(
     }
 
     override fun evaluate(runtime: Runtime): Value? {
-        TODO("Not yet implemented")
+        try {
+            val newRuntime = runtime.clone()
+            val results = ArrayList<Value?>()
+
+            while ((cond!!.evaluate(newRuntime) as BoolValue).value && !newRuntime.stopped) {
+                results.add(body!!.evaluate(newRuntime))
+            }
+
+            runtime.merge(newRuntime)
+            return results.findLast { true }
+        } catch (e: Exception){
+            throw InterpretationException("Condition for while loop can not be empty")
+        }
     }
 }
 

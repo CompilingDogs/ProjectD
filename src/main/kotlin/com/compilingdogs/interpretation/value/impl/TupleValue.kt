@@ -10,6 +10,11 @@ class TupleValue(override val value: MutableMap<String, Value> = HashMap()) : Va
         }
     }
 
+    override fun clone(): Value? {
+        val tupleElements = value.entries.map { TupleElement(it.key, it.value.clone()!!) }
+        return TupleValue(tupleElements)
+    }
+
     override fun toString(): String {
         return "{${value.entries.map { TupleElement(it.key, it.value) }.joinToString(", ")}}"
     }

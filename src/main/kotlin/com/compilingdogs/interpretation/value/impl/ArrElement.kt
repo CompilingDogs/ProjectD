@@ -2,15 +2,12 @@ package com.compilingdogs.interpretation.value.impl
 
 import com.compilingdogs.interpretation.value.Value
 
-class BoolValue(override val value: Boolean) : Value {
+class ArrElement (val key: Int, override val value: Value) : Value {
     override fun clone(): Value? {
-        if (this.value)
-            return BoolValue(true)
-
-        return BoolValue(false)
+        return ArrElement(key, value.clone()!!)
     }
 
     override fun toString(): String {
-        return value.toString()
+        return "$key = ${value.value}"
     }
 }

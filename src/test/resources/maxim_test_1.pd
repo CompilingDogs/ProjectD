@@ -1,7 +1,17 @@
 
-str := "asad";
-if (str is string) then
-	print "str is String";
-else
-	print "str is not String";
+var fib1 := 1
+var fib2 := 1
+var i := 1
+var arr := [fib1, fib2]
+n := 12;
+
+var ns := [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+
+for i in ns loop
+    var fib_sum := fib1 + fib2;
+    fib1 := fib2;
+    fib2 := fib_sum;
+    arr[i+2] := fib2
 end
+
+print arr[n], arr
