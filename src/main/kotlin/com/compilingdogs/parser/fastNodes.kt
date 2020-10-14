@@ -904,7 +904,7 @@ abstract class FASTUnaryOperator(
 
 abstract class FASTTypeIndicator(val name: String) : FASTExpression() {
     override fun consume(node: FASTNode) {
-       return
+        return
     }
 }
 
@@ -1041,9 +1041,9 @@ data class FASTFunctionLiteral(
     override fun evaluate(runtime: Runtime): Value? {
         try {
             return FunctionValue(
-                args.map{it.token}, body!!, body!!.statements.size == 1
+                args.map { it.token }, body!!, body!!.statements.size == 1
             )
-        } catch (e: Exception){
+        } catch (e: Exception) {
             throw InterpretationException("Error: Could not execute function definition")
         }
     }
@@ -1115,7 +1115,7 @@ data class FASTFunctionCall(
         try {
             val function = this.args[0].evaluate(runtime) as FunctionValue
             return function.call(runtime, args.slice(IntRange(1, args.size - 1)).toMutableList())
-        } catch(e:Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
             throw InterpretationException("ERROR: Was not able to call function!")
         }
@@ -1171,7 +1171,7 @@ data class FASTBody(
                 it.evaluate(runtime) ?: IntValue(BigInteger.ZERO)
             else
                 null
-        }.findLast { true }
+        }.findLast { it != null }
     }
 }
 
@@ -1252,7 +1252,12 @@ data class FASTArrayLiteral(
     }
 
     override fun evaluate(runtime: Runtime): Value? {
-        return ArrValue(this.members.mapIndexed { index, fastExpression -> ArrElement(index + 1, fastExpression.evaluate(runtime)!!) }.toList())
+        return ArrValue(this.members.mapIndexed { index, fastExpression ->
+            ArrElement(
+                index + 1,
+                fastExpression.evaluate(runtime)!!
+            )
+        }.toList())
     }
 }
 
@@ -1319,19 +1324,15 @@ data class FASTIfStructure(
         val newRuntime = runtime.clone()
         val condition = (condition!!.evaluate(newRuntime) as BoolValue).value
 
-        val res = when {
-            condition -> {
-                body!!.evaluate(runtime)
-            }
-            elseBody != null -> {
-                elseBody!!.evaluate(runtime)
-            }
-            else -> {
-                null
-            }
+        var res: Value? = null
+
+        if (condition) {
+            res = body!!.evaluate(newRuntime)
+        } else if (elseBody != null) {
+            res = elseBody!!.evaluate(newRuntime)
         }
 
-        runtime.merge(newRuntime)
+        runtime.stopped = newRuntime.stopped
         return res
     }
 }
@@ -1376,10 +1377,10 @@ data class FASTForLoop(
             val results = ArrayList<Value?>()
             val varName = this.varName!!.token
 
-            if (iterable != null){
+            if (iterable != null) {
                 val iterable = this.iterable!!.evaluate(newRuntime)
 
-                if (iterable is ArrValue){
+                if (iterable is ArrValue) {
                     iterable.value.forEach { (_, value) ->
                         run {
                             if (!newRuntime.stopped) {
@@ -1388,7 +1389,7 @@ data class FASTForLoop(
                             }
                         }
                     }
-                } else if (iterable is TupleValue){
+                } else if (iterable is TupleValue) {
                     iterable.value.forEach { (_, value) ->
                         run {
                             if (!newRuntime.stopped) {
@@ -1405,7 +1406,7 @@ data class FASTForLoop(
                 var i = (rangeBegin!!.evaluate(runtime) as IntValue).value.toLong()
                 val max = (rangeEnd!!.evaluate(runtime) as IntValue).value.toLong()
 
-                while (i < max && !newRuntime.stopped){
+                while (i < max && !newRuntime.stopped) {
                     newRuntime.register(varName, IntValue(BigInteger.valueOf(i)))
                     results.add(body!!.evaluate(newRuntime))
                     ++i
@@ -1415,7 +1416,7 @@ data class FASTForLoop(
 
             runtime.merge(newRuntime)
             return results.findLast { true }
-        } catch (e: Exception){
+        } catch (e: Exception) {
             throw InterpretationException("Condition for FOR loop is Incomplete at line $this.varName!!.line")
         }
     }
@@ -1445,7 +1446,7 @@ data class FASTWhileLoop(
 
             runtime.merge(newRuntime)
             return results.findLast { true }
-        } catch (e: Exception){
+        } catch (e: Exception) {
             throw InterpretationException("Condition for while loop can not be empty")
         }
     }

@@ -1,12 +1,22 @@
 
-var arr := [];
-arr[10] := 25;
-var f := func(x) => return x + 1
-arr[100] := func(f, y) => return f + y
-arr[1000] := {a:=1, b:=2.0000007};
-
-if arr is [] then
-    print arr;
+var fact := func(n) is
+    if (n = 1) then
+        return 1
+    else
+        var prev := fact(n-1)
+        return n * prev
+    end
 end
 
-print f is func
+var fibonacci := func(n) is
+    if (n = 1 or n = 2) then
+        return 1
+    end
+    var fn_1 := fibonacci(n - 1)
+    var fn_2 := fibonacci(n - 2)
+    return fn_1 + fn_2
+end
+
+print fibonacci(10)
+
+print fact(4)

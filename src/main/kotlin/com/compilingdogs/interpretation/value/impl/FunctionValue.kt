@@ -9,18 +9,18 @@ import java.util.stream.Collectors
 class FunctionValue(private val arguments: List<String>, override val value: FASTBody, private val isLambda: Boolean) : Value {
 
     fun call(runtime: Runtime, args: MutableList<FASTExpression>): Value?{
-        return if (isLambda){
-            val newRuntime = runtime.clone()
-            args.forEachIndexed { index, fastExpression ->  newRuntime.register(arguments[index], fastExpression.evaluate(runtime))}
-            val result = this.value.statements[0].evaluate(newRuntime)
+        val newRuntime = runtime.clone()
+        args.forEachIndexed { index, fastExpression ->  newRuntime.register(arguments[index], fastExpression.evaluate(runtime))}
+        val res = value.evaluate(newRuntime)
+
+        if (isLambda){
+            args.forEachIndexed { index, _ ->  newRuntime.register(arguments[index], runtime.getValue(arguments[index]))}
+
             runtime.merge(newRuntime)
             runtime.stopped = false
-            result
-        } else {
-            val newRuntime = runtime.clone()
-            args.forEachIndexed { index, fastExpression ->  newRuntime.register(arguments[index], fastExpression.evaluate(runtime))}
-            value.evaluate(newRuntime)
         }
+
+        return res
     }
 
     override fun clone(): Value? {

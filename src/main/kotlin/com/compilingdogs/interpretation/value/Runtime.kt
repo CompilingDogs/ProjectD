@@ -70,4 +70,10 @@ class Runtime {
                 this.symbolTable.replace(it.key, it.value)
         }
     }
+
+    override fun toString(): String {
+        return "Runtime(symbolTable=$symbolTable, scanner=$scanner, stopped=$stopped)"
+    }
+
+
 }
