@@ -50,6 +50,7 @@ val not = TokenNode(Operator.LogicNotOperator::class.java)
 val less = TokenNode(Operator.ComparisonLessOperator::class.java)
 val lessOrEqual = TokenNode(Operator.ComparisonLessEqualOperator::class.java)
 val equal = TokenNode(Operator.ComparisonEqualOperator::class.java)
+val notEqual = TokenNode(Operator.ComparisonNotEqualOperator::class.java)
 val greaterOrEqual = TokenNode(Operator.ComparisonGreaterEqualOperator::class.java)
 val greater = TokenNode(Operator.ComparisonGreaterOperator::class.java)
 val plus = TokenNode(Operator.ArithmeticPlusOperator::class.java)
@@ -315,6 +316,18 @@ val equalRelation = concat("equalRelation") {
     }
 }
 
+val notEqualRelation = concat("notEqualRelation") {
+    mapTo<FASTNotEqualOperator>()
+
+    +factor
+    +maybe("relationMaybe") {
+        concat("relationConcat") {
+            +notEqual
+//            +relation // this is added separately to break circular dependency cycle
+        }
+    }
+}
+
 val greaterRelation = concat("greaterRelation") {
     mapTo<FASTGreaterOperator>()
 
@@ -343,6 +356,7 @@ val relation = any("relation") {
     +lessRelation
     +lessOrEqualRelation
     +equalRelation
+    +notEqualRelation
     +greaterRelation
     +greaterOrEqualRelation
 }
@@ -670,18 +684,11 @@ fun initialize() {
     )
 
     (lessRelation["relationMaybe"]!!["relationConcat"]!! as ConcatenationNode).children.add(relation)
-    (lessOrEqualRelation["relationMaybe"]!!["relationConcat"]!! as ConcatenationNode).children.add(
-        relation
-    )
-    (equalRelation["relationMaybe"]!!["relationConcat"]!! as ConcatenationNode).children.add(
-        relation
-    )
-    (greaterOrEqualRelation["relationMaybe"]!!["relationConcat"]!! as ConcatenationNode).children.add(
-        relation
-    )
-    (greaterRelation["relationMaybe"]!!["relationConcat"]!! as ConcatenationNode).children.add(
-        relation
-    )
+    (lessOrEqualRelation["relationMaybe"]!!["relationConcat"]!! as ConcatenationNode).children.add(relation)
+    (notEqualRelation["relationMaybe"]!!["relationConcat"]!! as ConcatenationNode).children.add(relation)
+    (equalRelation["relationMaybe"]!!["relationConcat"]!! as ConcatenationNode).children.add(relation)
+    (greaterOrEqualRelation["relationMaybe"]!!["relationConcat"]!! as ConcatenationNode).children.add(relation)
+    (greaterRelation["relationMaybe"]!!["relationConcat"]!! as ConcatenationNode).children.add(relation)
 
     controlStructure.apply { +ifControlStructure }
     controlStructure.apply { +loopControlStructure }
