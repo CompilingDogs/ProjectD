@@ -199,7 +199,6 @@ data class FASTVarDefinition(
     }
 }
 
-// TODO: Done By Alecsey
 open class FASTReference(
     open var identifier: Identifier? = null,
     open var reference: FASTExpression? = null
@@ -272,7 +271,6 @@ class FASTArrayReference(
 
 abstract class FASTExpression : FASTNode()
 
-// TODO: Done By Alecsey
 class FASTOrOperator : FASTBinaryOperator() {
     override fun clone(): FASTNode {
         return FASTOrOperator().also {
@@ -302,7 +300,6 @@ class FASTOrOperator : FASTBinaryOperator() {
     }
 }
 
-// TODO: Done By Alecsey
 class FASTAndOperator : FASTBinaryOperator() {
     override fun clone(): FASTNode {
         return FASTAndOperator().also {
@@ -332,7 +329,6 @@ class FASTAndOperator : FASTBinaryOperator() {
     }
 }
 
-// TODO: Done By Alecsey
 class FASTXorOperator : FASTBinaryOperator() {
     override fun clone(): FASTNode {
         return FASTXorOperator().also {
@@ -363,7 +359,6 @@ class FASTXorOperator : FASTBinaryOperator() {
 }
 
 
-// TODO: Done By Alecsey
 class FASTLessOperator : FASTBinaryOperator() {
     override fun clone(): FASTNode {
         return FASTLessOperator().also {
@@ -409,7 +404,6 @@ class FASTLessOperator : FASTBinaryOperator() {
     }
 }
 
-// TODO: Done By Alecsey
 class FASTLessEqualOperator : FASTBinaryOperator() {
     override fun clone(): FASTNode {
         return FASTLessEqualOperator().also {
@@ -455,7 +449,6 @@ class FASTLessEqualOperator : FASTBinaryOperator() {
     }
 }
 
-// TODO: Done By Alecsey
 class FASTGreaterOperator : FASTBinaryOperator() {
     override fun clone(): FASTNode {
         return FASTGreaterOperator().also {
@@ -501,7 +494,6 @@ class FASTGreaterOperator : FASTBinaryOperator() {
     }
 }
 
-// TODO: Done By Alecsey
 class FASTGreaterEqualOperator : FASTBinaryOperator() {
     override fun clone(): FASTNode {
         return FASTGreaterEqualOperator().also {
@@ -547,7 +539,6 @@ class FASTGreaterEqualOperator : FASTBinaryOperator() {
     }
 }
 
-// TODO: Done By Alecsey
 class FASTEqualOperator : FASTBinaryOperator() {
     override fun clone(): FASTNode {
         return FASTEqualOperator().also {
@@ -593,7 +584,6 @@ class FASTEqualOperator : FASTBinaryOperator() {
     }
 }
 
-// TODO: Done By Alecsey
 class FASTNotEqualOperator : FASTBinaryOperator() {
     override fun clone(): FASTNode {
         return FASTNotEqualOperator().also {
@@ -640,7 +630,6 @@ class FASTNotEqualOperator : FASTBinaryOperator() {
 }
 
 
-// TODO: Done By Alecsey
 class FASTAddOperator : FASTBinaryOperator() {
     override fun clone(): FASTNode {
         return FASTAddOperator().also {
@@ -649,7 +638,6 @@ class FASTAddOperator : FASTBinaryOperator() {
         }
     }
 
-    // TODO: complete
     override fun evaluate(runtime: Runtime): Value? {
         if (this.right == null) {
             return this.left!!.evaluate(runtime)
@@ -689,7 +677,6 @@ class FASTAddOperator : FASTBinaryOperator() {
     }
 }
 
-// TODO: Done By Alecsey
 class FASTSubtractOperator : FASTBinaryOperator() {
     override fun clone(): FASTNode {
         return FASTSubtractOperator().also {
@@ -699,7 +686,6 @@ class FASTSubtractOperator : FASTBinaryOperator() {
     }
 
 
-    // TODO: complete
     override fun evaluate(runtime: Runtime): Value? {
         if (this.right == null) {
             return this.left!!.evaluate(runtime)
@@ -729,8 +715,6 @@ class FASTSubtractOperator : FASTBinaryOperator() {
     }
 }
 
-
-// TODO: Done By Alecsey
 class FASTMultiplyOperator : FASTBinaryOperator() {
     override fun clone(): FASTNode {
         return FASTMultiplyOperator().also {
@@ -739,7 +723,6 @@ class FASTMultiplyOperator : FASTBinaryOperator() {
         }
     }
 
-    // TODO: complete
     override fun evaluate(runtime: Runtime): Value? {
         if (this.right == null) {
             return this.left!!.evaluate(runtime)
@@ -769,7 +752,6 @@ class FASTMultiplyOperator : FASTBinaryOperator() {
     }
 }
 
-// TODO: Done By Alecsey
 class FASTDivideOperator : FASTBinaryOperator() {
     override fun clone(): FASTNode {
         return FASTDivideOperator().also {
@@ -778,7 +760,6 @@ class FASTDivideOperator : FASTBinaryOperator() {
         }
     }
 
-    // TODO: complete
     override fun evaluate(runtime: Runtime): Value? {
         if (this.right == null) {
             return this.left!!.evaluate(runtime)
@@ -808,21 +789,6 @@ class FASTDivideOperator : FASTBinaryOperator() {
     }
 }
 
-// TODO: unused statement
-class FASTIsOperator : FASTBinaryOperator() {
-    override fun clone(): FASTNode {
-        return FASTIsOperator().also {
-            it.left = left
-            it.right = right
-        }
-    }
-
-    override fun evaluate(runtime: Runtime): Value? {
-        TODO("Not yet implemented")
-    }
-}
-
-// TODO: Done By Alecsey
 class FASTPositiveOperator : FASTUnaryOperator() {
     override fun clone(): FASTNode {
         return FASTPositiveOperator().also {
@@ -850,7 +816,6 @@ class FASTPositiveOperator : FASTUnaryOperator() {
     }
 }
 
-// TODO: Done By Alecsey
 class FASTNegativeOperator : FASTUnaryOperator() {
     override fun clone(): FASTNode {
         return FASTNegativeOperator().also {
@@ -879,7 +844,6 @@ class FASTNegativeOperator : FASTUnaryOperator() {
 
 }
 
-// TODO: Done By Alecsey
 class FASTNotOperator : FASTUnaryOperator() {
     override fun clone(): FASTNode {
         return FASTNotOperator().also {
@@ -940,7 +904,7 @@ abstract class FASTUnaryOperator(
 
 abstract class FASTTypeIndicator(val name: String) : FASTExpression() {
     override fun consume(node: FASTNode) {
-        TODO("Not yet implemented")
+       return
     }
 }
 
@@ -1258,22 +1222,6 @@ data class FASTBooleanLiteral(
 
     override fun evaluate(runtime: Runtime): Value? {
         return BoolValue(this.value!!)
-    }
-}
-
-// todo: Not Used
-class FASTEmptyLiteral : FASTExpression() {
-    override fun clone() = this
-    override fun consume(node: FASTNode) {
-        throw NotImplementedError("Consume not applicable to " + this::class.simpleName)
-    }
-
-    override fun evaluate(runtime: Runtime): Value? {
-        TODO("Not yet implemented")
-    }
-
-    override fun toString(): String {
-        return "FASTEmptyLiteral"
     }
 }
 

@@ -22,7 +22,6 @@ class Runtime {
         ) else symbolTable[identifier] = value
     }
 
-    // todo: finish
     fun assignment(reference: FASTArrayReference, value: Value): Value {
         val identifier = reference.identifier!!
         val r = reference.reference!!.evaluate(this)
@@ -39,7 +38,6 @@ class Runtime {
                 "Error: Could not interpret ${identifier.token}[$r] at line ${identifier.line} and column ${identifier.column}"
             )
         }
-
 
         return value
     }
