@@ -728,7 +728,7 @@ fun parse(tokens: List<Token>): FASTNode {
     if (results.error != null)
         error(results.error)
 
-    println("Node: ${results.result}")
-    println()
+//    println("Node: ${results.result}")
+//    println()
     return results.result.first()
 }
