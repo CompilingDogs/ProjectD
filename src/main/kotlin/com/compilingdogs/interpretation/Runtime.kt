@@ -1,6 +1,7 @@
-package com.compilingdogs.interpretation.value
+package com.compilingdogs.interpretation
 
 import com.compilingdogs.interpretation.exception.InterpretationException
+import com.compilingdogs.interpretation.value.Value
 import com.compilingdogs.interpretation.value.impl.*
 import com.compilingdogs.parser.FASTArrayReference
 import java.util.*

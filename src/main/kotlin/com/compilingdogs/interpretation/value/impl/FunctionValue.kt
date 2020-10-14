@@ -1,6 +1,6 @@
 package com.compilingdogs.interpretation.value.impl
 
-import com.compilingdogs.interpretation.value.Runtime
+import com.compilingdogs.interpretation.Runtime
 import com.compilingdogs.interpretation.value.Value
 import com.compilingdogs.parser.FASTBody
 import com.compilingdogs.parser.FASTExpression

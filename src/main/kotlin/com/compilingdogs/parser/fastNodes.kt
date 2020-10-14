@@ -1,8 +1,8 @@
 package com.compilingdogs.parser
 
+import com.compilingdogs.interpretation.Runtime
 import com.compilingdogs.interpretation.exception.InterpretationException
 import com.compilingdogs.interpretation.value.NumericValue
-import com.compilingdogs.interpretation.value.Runtime
 import com.compilingdogs.interpretation.value.Value
 import com.compilingdogs.interpretation.value.impl.*
 import com.compilingdogs.parser.ast.FASTNode
@@ -1116,7 +1116,6 @@ data class FASTFunctionCall(
             val function = this.args[0].evaluate(runtime) as FunctionValue
             return function.call(runtime, args.slice(IntRange(1, args.size - 1)).toMutableList())
         } catch (e: Exception) {
-            e.printStackTrace()
             throw InterpretationException("ERROR: Was not able to call function!")
         }
     }

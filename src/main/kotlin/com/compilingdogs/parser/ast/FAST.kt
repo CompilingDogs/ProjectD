@@ -1,6 +1,6 @@
 package com.compilingdogs.parser.ast
 
-import com.compilingdogs.interpretation.value.Runtime
+import com.compilingdogs.interpretation.Runtime
 import com.compilingdogs.interpretation.value.Value
 
 /**
