@@ -1006,14 +1006,13 @@ class FASTTypeIndicatorTuple : FASTTypeIndicator("{}") {
     }
 }
 
-// todo
 class FASTTypeIndicatorFunc : FASTTypeIndicator("func") {
     override fun clone(): FASTNode {
         return FASTTypeIndicatorFunc()
     }
 
     override fun evaluate(runtime: Runtime): Value? {
-        TODO("Not yet implemented")
+        return FunctionValue(ArrayList(), FASTBody(), false)
     }
 
     override fun toString(): String {
@@ -1040,7 +1039,13 @@ data class FASTFunctionLiteral(
     }
 
     override fun evaluate(runtime: Runtime): Value? {
-        TODO("Not yet implemented")
+        try {
+            return FunctionValue(
+                args.map{it.token}, body!!, body!!.statements.size == 1
+            )
+        } catch (e: Exception){
+            throw InterpretationException("Error: Could not execute function definition")
+        }
     }
 }
 
@@ -1085,7 +1090,6 @@ class FASTReadStringCall : FASTExpression() {
     }
 
     override fun evaluate(runtime: Runtime): Value? {
-
         return runtime.readString()
     }
 
@@ -1108,7 +1112,13 @@ data class FASTFunctionCall(
     }
 
     override fun evaluate(runtime: Runtime): Value? {
-        TODO("Not yet implemented")
+        try {
+            val function = this.args[0].evaluate(runtime) as FunctionValue
+            return function.call(runtime, args.slice(IntRange(1, args.size - 1)).toMutableList())
+        } catch(e:Exception){
+            e.printStackTrace()
+            throw InterpretationException("ERROR: Was not able to call function!")
+        }
     }
 }
 

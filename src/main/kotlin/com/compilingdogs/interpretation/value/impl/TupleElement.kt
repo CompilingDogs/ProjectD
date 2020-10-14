@@ -8,6 +8,6 @@ class TupleElement(val key: String, override val value: Value) : Value {
     }
 
     override fun toString(): String {
-        return "$key = ${value.value}"
+        return "$key = $value"
     }
 }
